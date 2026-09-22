@@ -141,6 +141,14 @@ agy
 
 `agy` 대화형 세션에서 로그인하고 Gemini 모델을 선택합니다. `agy models`에 표시되는 Gemini 모델 ID를 `config.json`의 `pipeline.model`에 넣으면 매 실행에서 고정됩니다. 빈 문자열은 CLI에 설정된 기본 모델을 사용합니다. 인증 토큰은 CLI 자격 증명 저장소에 두고 저장소에 기록하지 않습니다. 기존 `login-gemini.cmd`는 기존 Gemini CLI용이며 agy 로그인과 별개입니다.
 
+첫 실행 전에 파이프라인 전용 파일 작업 폴더의 권한을 설정합니다.
+
+```powershell
+.\.venv\Scripts\python.exe -B paper_pipeline.py setup-agy
+```
+
+이 명령은 agy 사용자 설정의 기존 값들을 유지하면서 `write_file(<agy_work_dir의 절대 경로>)` 한 개만 추가합니다. 기본 폴더는 `~/.paper-blog/agy-work`이며 저장소 밖입니다. 변경 전 설정은 같은 설정 디렉터리의 `settings.paper-blog-backup.json`으로 보관합니다. 전체 파일 시스템 쓰기나 명령 실행 권한은 허용하지 않습니다. `setup-agy --dry-run`으로 변경 예정 경로만 확인할 수 있습니다.
+
 ### 명령과 dry-run
 
 ```powershell
@@ -173,6 +181,7 @@ dry-run은 로그 파일, 큐, 원문 보관본, 임시 LLM 파일, 초안, 게�
 | 설정 | 기본값 / 의미 |
 | --- | --- |
 | `keywords`, `arxiv_categories`, `use_eprint` | 관심 키워드, arXiv 범주, ePrint RSS 사용 여부 |
+| `topic_filters` | 분야 ID별 키워드 그룹. 그룹 사이는 AND, 그룹 내부는 OR |
 | `weekly_new`, `pool_limit`, `expiry_weeks` | 신규 10편, candidate 최대 20편, 만료 3주 |
 | `llm_shortlist`, `fetch_limit` | LLM 평가 최대 30편, arXiv API 페이지당 200편 |
 | `rule_weight`, `llm_weight` | 0.3, 0.7; 각 0~5점 척도의 가중평균 |
@@ -181,6 +190,7 @@ dry-run은 로그 파일, 큐, 원문 보관본, 임시 LLM 파일, 초안, 게�
 | `queue_path` | `data/paper-queue.json` |
 | `draft_dir`, `archive_dir`, `log_dir` | `drafts`, `data/papers`, `logs` |
 | `agy_path`, `model`, `timeout` | `agy`, CLI 기본 모델, 호출당 300초 |
+| `agy_work_dir` | `~/.paper-blog/agy-work`; agy에 파일 권한을 허용하는 전용 작업 폴더 |
 | `http_timeout`, `max_pdf_bytes` | HTTP 60초, PDF 최대 50 MiB |
 | `abstract_mode` | `original`만 지원; 제목·초록은 메타데이터에서 가져옴 |
 | `max_quote_words` | 직접 인용 제한 25단어; 원문 초록과 코드가 복사한 참고문헌 제외 |
@@ -192,7 +202,11 @@ dry-run은 로그 파일, 큐, 원문 보관본, 임시 LLM 파일, 초안, 게�
 
 주간 작업은 최근 7일의 arXiv 제출 논문과 ePrint RSS 항목을 읽습니다. arXiv는 페이지를 순회하고 요청 간 3.1초를 둡니다. ePrint RSS는 서버가 제공하는 최신 항목 범위만 수집하므로 제출량이 많으면 최근 일주일 전체가 포함되지 않을 수 있습니다. API 장애는 로그를 남기고 실행을 실패시킵니다.
 
-키워드 일치마다 1점, 범주 일치마다 2점으로 최대 5점을 부여합니다. 양수인 상위 후보만 LLM 평가로 넘깁니다. 관련성·새로움·방법론·재현 가능성의 정수 1~5점 및 근거를 JSON Schema로 검증하며 잘못된 JSON만 1회 재시도합니다. 메타데이터에 코드·데이터 공개 근거가 없으면 추측하지 않도록 지시합니다. 평가를 통과한 신규 상위 후보를 기존 후보와 합치고, 만료→상한 정리→잔존 후보의 대기 주 수 증가 순서로 처리합니다. 7일 이내 주간 재실행은 중복 노화를 방지하기 위해 건너뜁니다.
+키워드 일치마다 1점, 범주 일치마다 2점으로 최대 5점을 부여합니다. 양수인 상위 후보만 LLM 평가로 넘깁니다. 관련성·새로움·방법론·재현 가능성의 정수 1~5점 및 근거를 JSON Schema로 검증하며 잘못된 JSON만 1회 재시도합니다. 메타데이터에 코드·데이터 공개 근거가 없으면 추측하지 않도록 지시합니다. 평가를 통과한 신규 상위 후보를 기존 후보와 합치고, 만료→상한 정리→잔존 후보의 대기 주 수 증가 순서로 처리합니다. 같은 로컬 달력 주의 재실행은 중복 노화를 방지하기 위해 건너뜁니다. 화요일에 처음 실행해도 다음 주 월요일 작업은 정상 실행됩니다.
+
+검증을 통과한 개별 평가는 `data/paper-rank-cache.json`에 즉시 원자적으로 저장합니다. 중간에 모델 서비스 오류가 발생하면 큐는 미완료 상태로 유지하고, 다음 실행에서는 메타데이터·검색 관심사·모델·스키마가 같은 평가를 재사용합니다. 쿼터 오류는 자동 재시도하지 않습니다. 캐시는 Git 게시 대상이 아닙니다.
+
+현재 운영 주제는 **AI CryptAnalysis**와 **AI Digital Forensics**입니다. `topic_filters`가 설정되면 모든 그룹에서 하나 이상의 표현이 일치해야 합니다. 즉 AI 표현과 해당 분야 표현이 함께 있어야 하며 `cs.AI`/`cs.CR` 범주만으로는 통과하지 않습니다. 이 모드에서는 일치 키워드와 범주에 각 1점씩, 최대 5점을 주고 가장 많이 일치한 분야를 선택합니다. arXiv 검색에도 그룹의 AND 조건을 적용하고 ePrint에는 같은 필터를 적용합니다. 후보의 `topic_id`에 따라 `content/ai-cryptanalysis/` 또는 `content/ai-digital-forensics/`에 게시하고 frontmatter `category`도 맞춥니다. 수동 추가 논문은 매칭되는 분야를 사용하며 미일치 시 설정의 기본 `category`를 사용합니다.
 
 `seen`은 과거 큐에 들어간 ID를 영구 보관합니다. arXiv 버전 접미사를 제거하고 출처 접두사를 붙여 중복을 막습니다. 수동 추가는 seen 여부와 관계없이 pinned로 승격하며, 원래 `addedAt` 순서가 FIFO 기준입니다. pinned는 정리 대상에서 제외합니다. done·failed·expired는 일간 선택에서 제외됩니다. failed를 다시 시도하려면 `paper:add`로 승격합니다. 이미 게시된 파일은 덮어쓰지 않습니다.
 
@@ -219,12 +233,12 @@ References/Bibliography의 `[번호]` 또는 `번호.` 항목을 코드로 분�
 2026-09-22 이 PC의 `agy --help`로 `--print`, `--sandbox`, `--disable-slash-commands`, `--print-timeout`, `--model`을 확인했습니다. 어댑터는 대략 다음 방식으로 호출합니다.
 
 ```text
-agy --print "Read prompt.txt ... write result.txt ..." --sandbox --disable-slash-commands --print-timeout 300s
+agy --print "Read <absolute prompt path> ... write <absolute result path> ..." --sandbox --disable-slash-commands --output-format json --print-timeout 300s
 ```
 
-출력 파일 전용 플래그는 확인되지 않았습니다. 저장소 밖의 고유 임시 디렉터리에 `prompt.txt`를 만들고 파일 도구로 `result.txt`에 답변을 쓰게 한 뒤 읽습니다. 비TTY stdout이 비어도 동작하며, 파일이 없으면 stdout으로 대체하지 않고 실패합니다. timeout이나 쿼터 감지 시 하위 프로세스도 종료합니다. `generate(prompt, options) -> str` 인터페이스 뒤에 감췄으므로 나중에 API 키 백엔드로 교체할 수 있습니다.
+출력 파일 전용 플래그는 확인되지 않았습니다. `agy_work_dir` 아래 호출마다 고유 디렉터리에 `prompt.txt`를 만들고 파일 도구로 `result.txt`에 답변을 쓰게 한 뒤 읽습니다. 모든 파일 경로를 절대 경로로 전달합니다. 비TTY stdout이 비어도 동작하며, 파일이 없으면 stdout으로 대체하지 않고 실패합니다. stdout JSON은 `denied_actions` 및 상태 진단에만 사용합니다. agy가 종료 코드 0과 `SUCCESS`를 반환해도 `write_file`을 거부할 수 있으며, 이 경우 `setup-agy` 실행을 안내합니다. timeout이나 쿼터 감지 시 하위 프로세스도 종료합니다. `generate(prompt, options) -> str` 인터페이스 뒤에 감췄으므로 나중에 API 키 백엔드로 교체할 수 있습니다.
 
-print 모드의 도구 자동 승인 여부는 버전·권한 설정에 따라 다릅니다. 현재 공식 문서는 workspace 파일 쓰기의 자동 허용과, 별도 승인 없는 명령의 soft-deny를 설명합니다. 광범위한 권한 설정을 전제로 운영하지 말고, 아래 예시를 `%USERPROFILE%/.gemini/antigravity-cli/settings.json`의 기존 permissions에 병합하세요. **프로그램이 사용자 설정을 자동 변경하지는 않습니다.** 명령 도구 전체를 막으면 `rm`, `del`, `Remove-Item`, `git push`도 차단됩니다. 이 작업은 파일 읽기/쓰기 도구만 필요합니다.
+print 모드의 도구 자동 승인 여부는 버전·권한 설정에 따라 다릅니다. 현재 공식 문서는 workspace 파일 쓰기의 자동 허용과, 별도 승인 없는 명령의 soft-deny를 설명하지만 실제 Windows 실행에서는 명시적인 파일 권한이 필요했습니다. `setup-agy`가 추가하는 전용 폴더 allow 규칙은 유지하면서 아래 예시의 deny 규칙을 기존 permissions에 병합할 수 있습니다. **weekly/daily는 사용자 권한 설정을 변경하지 않습니다.** 명령 도구 전체를 막으면 `rm`, `del`, `Remove-Item`, `git push`도 차단됩니다. 이 작업은 파일 읽기/쓰기 도구만 필요합니다.
 
 ```json
 {

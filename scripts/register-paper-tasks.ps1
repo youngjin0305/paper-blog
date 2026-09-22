@@ -4,7 +4,7 @@ param(
     [string]$DailyTime = '09:00',
     [ValidateSet('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')]
     [string]$WeeklyDay = 'Monday',
-    [string]$TaskPrefix = 'PaperGarden',
+    [string]$TaskPrefix = 'PaperBlog',
     [string]$PythonPath = ''
 )
 $ErrorActionPreference = 'Stop'

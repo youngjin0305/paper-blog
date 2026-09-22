@@ -35,6 +35,8 @@ class GardenTests(unittest.TestCase):
         config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
         config["schedule_enabled"] = False
         config["topics"] = config["topics"][:1]
+        config["topics"][0]["id"] = "ai"
+        config["pipeline"].update(category="ai", post_dir="content/ai", topic_filters={})
         (self.root / "config.json").write_text(json.dumps(config), encoding="utf-8")
         self.summary = FakeSummary()
         self.garden = Garden(self.root, FakeSource(), self.summary)

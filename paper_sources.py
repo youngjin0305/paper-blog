@@ -70,6 +70,11 @@ class Sources:
         cutoff = current - timedelta(days=7)
         terms = ["cat:" + c for c in self.config["arxiv_categories"]]
         terms += ['all:"' + k.replace('"', '') + '"' for k in self.config["keywords"]]
+        if self.config.get("topic_filters"):
+            # A category alone cannot widen an intersection topic to all AI/security papers.
+            terms = ["(" + " AND ".join("(" + " OR ".join('all:"' + term.replace('"', '') + '"'
+                     for term in group) + ")" for group in groups) + ")"
+                     for groups in self.config["topic_filters"].values()]
         papers = []
         if terms:
             query = "(" + " OR ".join(terms) + f") AND submittedDate:[{cutoff:%Y%m%d%H%M} TO {current:%Y%m%d%H%M}]"
@@ -189,9 +194,28 @@ def parse_eprint_feed(content):
     return papers
 
 
+def keyword_matches(text, term):
+    # Normalize hyphenation while avoiding matches such as AI inside 'training'.
+    normalize = lambda value: re.sub(r"\s+", " ", re.sub(r"[-‐‑–—]", " ", value.casefold()))
+    return re.search(r"(?<!\w)" + re.escape(normalize(term)) + r"(?:s)?(?!\w)", normalize(text)) is not None
+
+
 def rule_score(paper, config):
-    text = (paper["title"] + " " + paper["abstract"]).casefold()
-    keywords = [k for k in config["keywords"] if k.casefold() in text]
+    text = paper["title"] + " " + paper["abstract"]
+    keywords = [k for k in config["keywords"] if keyword_matches(text, k)]
     categories = sorted(set(config["arxiv_categories"]) & set(paper.get("categories", [])))
+    topic_matches = {}
+    for topic, groups in config.get("topic_filters", {}).items():
+        matches = [[term for term in group if keyword_matches(text, term)] for group in groups]
+        if all(matches):
+            topic_matches[topic] = [term for group in matches for term in group]
+    if config.get("topic_filters"):
+        if not topic_matches:
+            return 0, {"keywords": [], "categories": categories, "score": 0, "topic": None}
+        topic = max(topic_matches, key=lambda name: len(topic_matches[name]))
+        keywords = topic_matches[topic]
+        score = min(5.0, len(keywords) + len(categories))
+        return score, {"keywords": keywords, "categories": categories, "score": score,
+                       "topic": topic, "topicMatches": topic_matches}
     score = min(5.0, len(keywords) + 2 * len(categories))
     return score, {"keywords": keywords, "categories": categories, "score": score}

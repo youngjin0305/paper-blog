@@ -1,48 +1,46 @@
 {
   "title": "Paper Blog",
-  "model": "",
+  "model": "gemini-3.8-flash-high",
   "schedule_enabled": false,
   "topics": [
     {
-      "id": "ai",
-      "name": "인공지능",
-      "description": "LLM, 에이전트, 추론의 다음 장면",
-      "query": "cat:cs.AI OR cat:cs.CL",
-      "instructions": "LLM 추론, RAG, 에이전트에 특히 관심이 있습니다. 기존 연구와의 차이, 재현 가능성, 실제 활용 아이디어를 설명하세요.",
+      "id": "ai-cryptanalysis",
+      "name": "AI CryptAnalysis",
+      "description": "AI와 머신러닝을 활용한 암호분석 연구",
+      "query": "(all:cryptanalysis OR all:cryptanalytic OR all:\"side channel\") AND (all:\"machine learning\" OR all:\"deep learning\" OR all:neural OR all:\"large language model\")",
+      "instructions": "AI 기반 암호분석, 신경망 구별자, 학습 기반 부채널 분석을 중심으로 정리하세요. 대상 암호, 공격자 가정, 데이터 구성, 실험 조건과 재현 가능성을 원문에 근거해 설명하세요.",
       "interval_hours": 24,
       "lookback_days": 7,
       "max_papers": 5,
       "enabled": true
     },
     {
-      "id": "security",
-      "name": "보안 · 암호학",
-      "description": "안전한 시스템을 만드는 새로운 연구",
-      "query": "cat:cs.CR",
-      "instructions": "포스트 양자 암호, 시스템 보안, 디지털 포렌식에 주목하세요. 위협 모델과 가정, 초록에서 확인할 수 없는 점을 구분하세요.",
-      "interval_hours": 48,
-      "lookback_days": 14,
+      "id": "ai-digital-forensics",
+      "name": "AI Digital Forensics",
+      "description": "AI 기반 디지털 증거 분석과 멀티미디어 포렌식 연구",
+      "query": "(all:forensic OR all:deepfake OR all:\"digital evidence\") AND (all:\"machine learning\" OR all:\"deep learning\" OR all:neural OR all:\"large language model\")",
+      "instructions": "AI를 활용한 디지털 포렌식, 디지털 증거 분석, 딥페이크와 조작 탐지 연구를 정리하세요. 데이터셋, 증거의 출처, 평가 지표, 일반화와 오탐 한계를 원문에 근거해 설명하세요.",
+      "interval_hours": 24,
+      "lookback_days": 7,
       "max_papers": 5,
       "enabled": true
-    },
-    {
-      "id": "robotics",
-      "name": "로보틱스",
-      "description": "세상과 상호작용하는 지능",
-      "query": "cat:cs.RO",
-      "instructions": "로봇 학습과 비전-언어-행동 모델에 관심이 있습니다. 현실 환경 적용 가능성과 실험 조건을 중심으로 정리하세요.",
-      "interval_hours": 72,
-      "lookback_days": 14,
-      "max_papers": 3,
-      "enabled": false
     }
   ],
   "pipeline": {
     "keywords": [
-      "large language model",
-      "cryptography",
-      "retrieval"
+      "AI CryptAnalysis",
+      "AI Digital Forensics"
     ],
+    "topic_filters": {
+      "ai-cryptanalysis": [
+        ["artificial intelligence", "machine learning", "deep learning", "neural", "large language model", "LLM", "reinforcement learning", "transformer"],
+        ["cryptanalysis", "cryptanalytic", "neural distinguisher", "differential attack", "side channel", "key recovery"]
+      ],
+      "ai-digital-forensics": [
+        ["artificial intelligence", "machine learning", "deep learning", "neural", "large language model", "LLM", "reinforcement learning", "transformer", "diffusion model"],
+        ["forensic", "forensics", "digital evidence", "deepfake", "image manipulation", "audio spoofing", "synthetic media detection", "tampering detection"]
+      ]
+    },
     "arxiv_categories": [
       "cs.AI",
       "cs.CL",
@@ -55,14 +53,15 @@
     "llm_shortlist": 30,
     "method_min_chars": 1200,
     "experiment_min_chars": 1000,
-    "post_dir": "content/ai",
-    "category": "ai",
+    "post_dir": "content/ai-cryptanalysis",
+    "category": "ai-cryptanalysis",
     "queue_path": "data/paper-queue.json",
     "draft_dir": "drafts",
     "archive_dir": "data/papers",
     "log_dir": "logs",
-    "agy_path": "agy",
-    "model": "",
+    "agy_path": "C:/Users/jiyeon/AppData/Local/agy/bin/agy.exe",
+    "agy_work_dir": "~/.paper-blog/agy-work",
+    "model": "gemini-3.8-flash-high",
     "timeout": 300,
     "http_timeout": 60,
     "max_pdf_bytes": 52428800,

@@ -15,10 +15,10 @@ from app import create_app, export_site
 from garden import Garden, ROOT, atomic_write
 from paper_config import validate_pipeline
 from paper_git import Publisher
-from paper_llm import AgyBackend, QuotaExceeded
+from paper_llm import AgyBackend, QuotaExceeded, AgyPermissionError, configure_workspace
 from paper_pipeline import Pipeline, FixtureBackend, assemble
-from paper_queue import canonical_id, empty_queue, entry, merge_weekly, ordered, pin
-from paper_sources import Sources, identify, parse_eprint_feed
+from paper_queue import canonical_id, empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
+from paper_sources import Sources, identify, parse_eprint_feed, rule_score, keyword_matches
 from paper_validation import parse_rank, parse_references, numbers, validate_document, validate_group
 
 
@@ -72,6 +72,11 @@ class QueueTests(unittest.TestCase):
         before = deepcopy(queue)
         self.assertFalse(merge_weekly(queue, [], CONFIG, STAMP))
         self.assertEqual(queue, before)
+
+    def test_manual_tuesday_setup_does_not_skip_next_monday(self):
+        queue = empty_queue()
+        queue["lastWeeklyAt"] = "2026-09-22T12:00:00+09:00"
+        self.assertFalse(weekly_completed(queue, "2026-09-28T12:00:00+09:00"))
 
 
 class ValidationTests(unittest.TestCase):
@@ -141,6 +146,10 @@ class PipelineTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         shutil.copy(ROOT / "config.json", self.root / "config.json")
+        config = json.loads((self.root / "config.json").read_text(encoding="utf-8"))
+        config["topics"][0]["id"] = "ai"
+        config["pipeline"] = deepcopy(CONFIG)
+        (self.root / "config.json").write_text(json.dumps(config), encoding="utf-8")
         self.pipeline = Pipeline(self.root, dry_run=True, fixture=deepcopy(FIXTURE))
         self.output = io.StringIO()
         self.redirect = redirect_stdout(self.output)
@@ -212,6 +221,20 @@ class PipelineTests(unittest.TestCase):
                 self.pipeline.weekly()
         self.assertEqual(generate.call_count, 1)
         self.assertEqual(self.pipeline.queue, empty_queue())
+
+    def test_completed_ranks_survive_mid_weekly_service_failure(self):
+        self.pipeline.dry_run = False
+        self.pipeline.fixture["papers"].append({**PAPER, "id": "arxiv:2609.00002"})
+        with patch.object(self.pipeline.backend, "generate", side_effect=[json.dumps(FIXTURE["rank"]), RuntimeError("service unavailable")]):
+            with self.assertRaises(RuntimeError):
+                self.pipeline.weekly()
+        cache = json.loads((self.root / "data/paper-rank-cache.json").read_text(encoding="utf-8"))
+        self.assertIn(PAPER["id"], cache)
+        self.assertEqual(self.pipeline.queue, empty_queue())
+        with patch.object(self.pipeline.backend, "generate", return_value=json.dumps(FIXTURE["rank"])) as generate:
+            self.pipeline.weekly()
+        self.assertEqual(generate.call_count, 1)
+        self.assertEqual(len(ordered(self.pipeline.queue)), 2)
 
     def test_frontmatter_posts_visible_without_db_registration(self):
         path, document = assemble(PAPER, FIXTURE["groups"], {}, [], CONFIG)
@@ -299,7 +322,9 @@ class AgyTests(unittest.TestCase):
 
     def setUp(self):
         self.answer, self.stdout, self.stderr, self.running = "file answer", b"", b"", False
-        self.cli = AgyBackend(CONFIG)
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.cli = AgyBackend({**CONFIG, "agy_work_dir": self.temp.name})
 
     def invoke(self):
         with patch("paper_llm.shutil.which", return_value="agy.exe"), patch("paper_llm.subprocess.Popen", side_effect=self.process):
@@ -331,11 +356,58 @@ class AgyTests(unittest.TestCase):
 
     def test_timeout_terminates_process(self):
         self.running = True
-        self.cli.config = {**CONFIG, "timeout": 0.02}
+        self.cli.config = {**self.cli.config, "timeout": 0.02}
         with patch("paper_llm.stop_process") as stop:
             with self.assertRaises(TimeoutError):
                 self.invoke()
         stop.assert_called_once()
+
+    def test_success_exit_with_denied_action_reports_permission_error(self):
+        self.answer = None
+        self.stdout = json.dumps({"status": "SUCCESS", "response": "", "denied_actions": [{"action": "write_file"}]}).encode()
+        with self.assertRaisesRegex(AgyPermissionError, "setup-agy"):
+            self.invoke()
+
+    def test_setup_preserves_permissions_and_grants_only_workspace(self):
+        settings = Path(self.temp.name) / "settings.json"
+        original = {"trustedWorkspaces": ["original"], "permissions": {"deny": ["command(*)"], "allow": ["read_file(existing)"]}}
+        settings.write_text(json.dumps(original), encoding="utf-8")
+        rule = configure_workspace(self.cli.config, settings)
+        updated = json.loads(settings.read_text(encoding="utf-8"))
+        self.assertEqual(updated["trustedWorkspaces"], original["trustedWorkspaces"])
+        self.assertEqual(updated["permissions"]["deny"], ["command(*)"])
+        self.assertEqual(updated["permissions"]["allow"], ["read_file(existing)", rule])
+        self.assertNotIn("write_file(*)", updated["permissions"]["allow"])
+        configure_workspace(self.cli.config, settings)
+        self.assertEqual(json.loads(settings.read_text())["permissions"]["allow"].count(rule), 1)
+
+
+class TopicTests(unittest.TestCase):
+    def setUp(self):
+        self.config = {**CONFIG, "topic_filters": {
+            "ai-cryptanalysis": [["machine learning", "neural"], ["cryptanalysis", "side channel"]],
+            "ai-digital-forensics": [["machine learning", "neural"], ["forensics", "deepfake"]],
+        }}
+
+    def test_requires_ai_and_domain_even_for_cs_cr(self):
+        for abstract in ("A cryptanalysis of a cipher", "A machine learning model for translation"):
+            score, detail = rule_score({**PAPER, "title": "Study", "abstract": abstract, "categories": ["cs.CR"]}, self.config)
+            self.assertEqual(score, 0)
+        score, detail = rule_score({**PAPER, "abstract": "Neural side-channel cryptanalysis"}, self.config)
+        self.assertGreater(score, 0)
+        self.assertEqual(detail["topic"], "ai-cryptanalysis")
+        self.assertFalse(keyword_matches("training data", "AI"))
+
+    def test_forensics_topic_routes_post_and_frontmatter(self):
+        score, detail = rule_score({**PAPER, "abstract": "Machine learning for digital forensics"}, self.config)
+        self.assertEqual(detail["topic"], "ai-digital-forensics")
+        path, document = assemble({**PAPER, "topic_id": detail["topic"]}, FIXTURE["groups"], {}, [], self.config)
+        self.assertTrue(path.startswith("content/ai-digital-forensics/"))
+        self.assertIn('"category": "ai-digital-forensics"', document)
+
+    def test_invalid_empty_keyword_group_rejected(self):
+        with self.assertRaises(ValueError):
+            validate_pipeline({"topic_filters": {"ai": [[], ["forensics"]]}})
 
 
 class GitTests(unittest.TestCase):

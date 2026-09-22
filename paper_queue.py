@@ -1,6 +1,6 @@
 """Pure queue operations; callers hold the process lock while persisting."""
 from copy import deepcopy
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 
 from garden import now
@@ -31,6 +31,15 @@ def ordered(queue):
     return pins + candidates
 
 
+def weekly_completed(queue, timestamp):
+    last = queue.get("lastWeeklyAt")
+    if not last:
+        return False
+    # Use the scheduler's local calendar week so a Tuesday setup does not skip next Monday.
+    week = lambda stamp: datetime.fromisoformat(stamp).astimezone().isocalendar()[:2]
+    return week(last) == week(timestamp)
+
+
 def pin(queue, paper, note=""):
     identifier = canonical_id(paper["id"], paper["source"])
     existing = next((p for p in queue["papers"] if p["id"] == identifier), None)
@@ -47,8 +56,7 @@ def pin(queue, paper, note=""):
 
 def merge_weekly(queue, newcomers, config, timestamp):
     # A scheduler restart in the same week must not age or expire the pool twice.
-    last = queue.get("lastWeeklyAt")
-    if last and datetime.fromisoformat(timestamp) - datetime.fromisoformat(last) < timedelta(days=7):
+    if weekly_completed(queue, timestamp):
         return False
     seen = set(queue["seen"]) | {p["id"] for p in queue["papers"]}
     for paper in sorted(newcomers, key=lambda p: -p["score"]):
