@@ -1,4 +1,4 @@
-"""Weekly selection and daily full-paper reviews for the existing Paper Garden blog."""
+"""Weekly selection and daily full-paper reviews for the existing Paper Blog."""
 from __future__ import annotations
 
 import argparse
@@ -267,7 +267,7 @@ class Pipeline:
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Paper Garden weekly/daily pipeline")
+    parser = argparse.ArgumentParser(description="Paper Blog weekly/daily pipeline")
     parser.add_argument("command", choices=["weekly", "daily", "add", "list"])
     parser.add_argument("paper", nargs="?")
     parser.add_argument("--note", default="")

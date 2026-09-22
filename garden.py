@@ -423,7 +423,7 @@ class Garden:
                  "authors": ["Ashish Vaswani et al."],
                  "abstract": "[데모에서는 원문 초록을 생략했습니다. 원문 링크에서 확인하세요.]"}
         body = """## 한눈에 보기
-이 글은 Paper Garden의 화면과 Markdown 저장 형식을 확인하기 위한 예시입니다. 2017년 Transformer 논문을 소개하며, 최신 논문 조사나 Gemini 호출 결과가 아닙니다.
+이 글은 Paper Blog의 화면과 Markdown 저장 형식을 확인하기 위한 예시입니다. 2017년 Transformer 논문을 소개하며, 최신 논문 조사나 Gemini 호출 결과가 아닙니다.
 
 ## 문제와 접근 방법
 Transformer는 attention을 중심으로 시퀀스를 처리하는 구조를 제안했습니다. 관심 있는 분야를 설정하면 이 자리에 새로 수집한 논문의 초록 기반 한국어 요약이 채워집니다.

@@ -1,4 +1,4 @@
-name: Publish Paper Garden
+name: Publish Paper Blog
 on:
   push:
     branches: [main, master]

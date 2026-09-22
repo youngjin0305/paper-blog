@@ -164,7 +164,7 @@ def export_site(app, garden):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Paper Garden — 로컬 논문 리서치 블로그")
+    parser = argparse.ArgumentParser(description="Paper Blog — 로컬 논문 리서치 블로그")
     commands = parser.add_subparsers(dest="command", required=True)
     serve = commands.add_parser("serve", help="로컬 블로그 + 스케줄러 실행")
     serve.add_argument("--port", type=int, default=8765)
@@ -194,7 +194,7 @@ def main():
         from waitress import serve as serve_http
         garden.start_scheduler()
         url = f"http://127.0.0.1:{args.port}"
-        print(f"Paper Garden: {url}\nKeep this window open for scheduled research. Ctrl+C to stop.", flush=True)
+        print(f"{garden.config()['title']}: {url}\nKeep this window open for scheduled research. Ctrl+C to stop.", flush=True)
         if args.open:
             threading.Timer(1.5, lambda: webbrowser.open(url)).start()
         try:

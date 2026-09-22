@@ -1,4 +1,4 @@
-# Paper Garden
+# Paper Blog
 
 최신 논문을 찾고 한국어 요약을 Markdown과 분야별 블로그로 모으는 개인 연구실입니다. 기존 로컬 UI의 초록 조사 기능과 별도로, 아래의 **주간 선정·일간 원문 요약 파이프라인**은 Antigravity CLI(`agy`)와 GitHub Pages 자동 게시를 지원합니다.
 
