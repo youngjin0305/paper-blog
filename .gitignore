@@ -1,0 +1,10 @@
+.venv/
+node_modules/
+__pycache__/
+.env
+.gemini/
+data/*
+!data/paper-queue.json
+site/
+*.log
+drafts/

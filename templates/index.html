@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow"><span class="line"></span> A LITTLE KNOWLEDGE, EVERY DAY</div>
+  <h1>{{ selected.name if selected else '오늘의 발견, 내일의 아이디어.' }}</h1>
+  <p>{{ selected.description if selected else '관심 있는 분야의 새 논문을 모으고, 읽기 좋은 기록으로 남깁니다.' }}<br>나만의 속도로 가꾸는 연구 아카이브.</p>
+  <div class="hero-actions">
+    {% if not static_mode %}<button class="primary" data-research="{{ selected.id if selected else '' }}">✧ &nbsp; 지금 논문 조사하기 <span>↗</span></button><a class="quiet-link" href="/settings">조사 설정 <span>→</span></a>{% else %}<span class="badge">정적 블로그 · {{ total }}개의 기록</span>{% endif %}
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="paper paper-back"><i></i><i></i><i></i></div><div class="paper paper-front"><span>FIELD NOTES</span><b>새로운 생각의<br>씨앗을 모으다.</b><i></i><i></i><small>RESEARCH / DISCOVERY</small></div><span class="art-spark">✳</span><span class="art-dot"></span></div>
+</section>
+{% if not static_mode %}
+<section class="status-strip" aria-live="polite"><span><span id="status-dot" class="live-dot muted"></span><strong id="status-text">조사 상태 확인 중</strong></span><span id="status-detail">로그인 후 첫 조사를 시작해 보세요.</span><a href="/settings#history">실행 기록 ↗</a></section>
+{% endif %}
+<section class="library">
+  <div class="section-heading"><div><div class="eyebrow">THE COLLECTION</div><h2>{{ '분야별 기록' if selected else '모아둔 논문' }} <span>{{ posts|length }}</span></h2></div>
+    {% if not static_mode %}<form class="search" method="get"><span>⌕</span><input name="q" value="{{ query }}" placeholder="제목, 저자, 초록 검색" aria-label="논문 검색"><button type="submit">검색</button></form>{% endif %}
+  </div>
+  <div class="filter-row"><a class="chip {{ 'selected' if not selected else '' }}" href="{{ root_url }}">전체 분야</a>{% for topic in topics %}<a class="chip {{ 'selected' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}">{{ topic.name }}</a>{% endfor %}</div>
+  {% if posts %}<div class="post-grid">
+    {% for post in posts %}
+    <article class="post-card"><div class="card-top"><span class="category-label">{% set ns = namespace(name=post.topic_id) %}{% for topic in topics %}{% if topic.id == post.topic_id %}{% set ns.name=topic.name %}{% endif %}{% endfor %}{{ ns.name }}</span><span class="card-arrow">↗</span></div><a class="card-title" href="{{ post_href(post.id) }}"><h3>{{ post.title }}</h3></a><p class="card-description">{{ '블로그 화면을 확인하는 데모 글입니다. 최신 조사 결과가 아닙니다.' if post.demo else ('방법론과 실험을 원문에 근거해 정리한 논문 요약.' if post.basis == 'fulltext' else '논문의 접근 방법부터 핵심 기여, 한계까지. 한국어로 정리한 초록 기반 리서치 노트.') }}</p><div class="card-bottom"><time>{{ post.published[:10] }}</time><span class="badge {{ 'demo' if post.demo else '' }}">{{ 'DEMO' if post.demo else ('원문 기반 요약' if post.basis == 'fulltext' else '초록 기반 요약') }}</span></div></article>
+    {% endfor %}
+  </div>{% else %}
+  <div class="empty-state"><div class="empty-mark">✳</div><h3>{{ '검색 결과가 없습니다.' if query else '첫 번째 발견을 기다리고 있어요.' }}</h3><p>{{ '다른 검색어로 찾아보세요.' if query else '분야를 설정하고 조사를 시작하면 이곳에 논문이 쌓입니다.' }}</p>{% if not static_mode and not query %}<button class="secondary" id="demo-button">데모 글로 둘러보기 →</button>{% endif %}</div>
+  {% endif %}
+</section>
+{% endblock %}

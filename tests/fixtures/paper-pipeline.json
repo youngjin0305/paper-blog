@@ -1,0 +1,31 @@
+{
+  "papers": [
+    {
+      "id": "arxiv:2609.00001",
+      "source": "arxiv",
+      "title": "Fixture: Retrieval Evaluation (not a real paper)",
+      "authors": ["Fixture Author"],
+      "abstract": "This synthetic fixture describes a retrieval experiment. It is not a real research result.",
+      "url": "https://arxiv.org/abs/2609.00001",
+      "pdfUrl": "https://arxiv.org/pdf/2609.00001",
+      "published": "2026-09-20T00:00:00Z",
+      "categories": ["cs.AI"]
+    }
+  ],
+  "rank": {
+    "relevance": {"score": 5, "reason": "Retrieval matches configured interests."},
+    "novelty": {"score": 2, "reason": "Novelty cannot be established from the abstract."},
+    "methodology": {"score": 3, "reason": "An evaluation procedure is described."},
+    "reproducibility": {"score": 1, "reason": "No code/data release is stated."},
+    "rationale": "Synthetic fixture for pipeline validation only."
+  },
+  "source_text": "Fixture retrieval paper. We address query retrieval evaluation. Our contribution is controlled comparison of ranking and candidate filtering. The method uses a fixed encoder, cosine similarity and exact ranking. Hyperparameters are held fixed. A threshold filters candidates before ranking. All systems share queries and documents. Dataset: 1,000 documents, 100 queries. Baseline accuracy 75.0 percent, method accuracy 82.5 percent. Batch size 16. Without the filter accuracy is 80 percent. Three independent trials are averaged. No code release is stated. The scope is a small synthetic corpus. References\n[1] A. Author. Exact Retrieval. 2024.\n[2] B. Author. Evaluation Design. 2025.",
+  "markdown": "# Fixture retrieval paper\n\n## Problem\nWe address query retrieval evaluation. Our contribution is controlled comparison of ranking and candidate filtering.\n\n## Method\nA fixed encoder maps queries and documents into vectors. Cosine similarity is used for exact ranking. A threshold filters candidates before ranking. All systems share queries and documents. Hyperparameters are held fixed. Batch size is 16.\n\n## Experiments\nThe dataset contains 1,000 documents and 100 queries. Baseline accuracy is 75.0%, method accuracy is 82.5%. Without the filter accuracy is 80%. Three independent trials are averaged. No code release is stated.\n\n## Conclusion\nThe experiment isolates candidate filtering from ranking. The scope is a small synthetic corpus.\n\n## References\n\n[1] A. Author. Exact Retrieval.\n2024.\n\n[2] B. Author. Evaluation Design. 2025.\n\n## Appendix\nSupplement omitted.",
+  "references": [1],
+  "groups": {
+    "A": "## 문제 정의\n\n질의에 적절한 문서를 검색하는 과정을 비교 평가한다. 후보 필터와 순위 결정의 영향을 구분하는 것이 과제다.\n\n## 주요 기여\n\n후보 필터를 적용한 조건과 제거한 조건을 같은 문서 및 질의에서 비교한다. 검색 순위 계산은 고정하여 필터의 영향을 관찰한다 [1].",
+    "B": "## 제시한 방법론\n\n### 구성 요소\n\n질의와 문서를 고정된 인코더로 벡터로 변환하고, 코사인 유사도로 비교한다. 후보 집합을 먼저 필터링한 다음 정확한 순위 계산을 수행한다. 순위 계산 방식과 인코더를 동일하게 유지해 필터링의 영향을 구분하는 구성이다. 이 문단은 파이프라인 검사용 합성 fixture의 설명이며 실제 논문을 요약한 결과가 아니다. 원문의 처리 흐름을 단계별로 나누면 질의 표현을 구성하는 단계와 문서 표현을 구성하는 단계가 있고, 이후 두 표현 사이의 유사도를 계산한다. 계산된 유사도는 후보의 순위를 결정하는 데 사용된다. 필터링은 이러한 순위 결정에 앞서 후보를 제한하는 역할을 수행한다.\n\n### 절차와 설정\n\n모든 비교 조건은 동일한 질의와 문서 집합을 사용한다. 배치 크기는 16이며 하이퍼파라미터는 조건 간 고정한다. 원문은 임계값으로 후보를 걸러낸다고 설명하지만 구체적인 임계값 수치는 제시하지 않는다. 따라서 여기에 임의의 값을 추가하지 않는다. 절차는 입력 표현 구성, 후보 필터링, 유사도 계산, 순위 결정의 순서로 이해할 수 있다. 필터를 제거한 비교 조건에서는 후보를 거르는 과정의 영향을 확인한다. 이때 인코더와 순위 계산 방법을 함께 바꾸지 않는 것이 비교 설계의 핵심이다. 원문에서 설명되지 않은 학습 방식이나 새로운 최적화 과정은 이 요약의 범위에 포함하지 않는다. 문서와 질의의 표현은 고정된 인코더를 통해 얻어지므로 조건 간 결과를 비교할 때 동일한 표현 방식이 사용된다.\n\n### 설계의 범위\n\n본 fixture는 코드와 검증 절차를 시험하기 위한 자료다. 검색 알고리즘의 새로운 효율성 보장을 주장하지 않는다. 원문에 명시된 설계 선택은 후보 필터와 순위 계산을 분리하고, 나머지 조건을 일정하게 유지하는 것이다. 코사인 유사도 자체의 상세 수식이나 인코더의 내부 구조는 원문에 없으므로 추가하지 않는다. 알고리즘의 구현 언어나 라이브러리도 명시되지 않았다. 따라서 해당 정보를 독자가 이미 알고 있다고 가정해 보충하지 않는다. 동일한 문서와 질의를 사용하는 비교는 데이터 차이로 인한 변화를 줄이려는 설정으로 설명된다. 이 설명은 원문의 통제된 비교라는 목적에 한정한다. 다른 데이터 규모에서도 같은 효과가 유지되는지, 다른 인코더를 사용할 때 어떠한 변화가 있는지는 이 방법론 설명만으로 결정할 수 없다. 후보 필터의 적용 여부를 바꾼 조건과 기본 조건을 구분해서 읽어야 한다. 원문이 제공하는 것은 고정된 조건 아래의 비교 절차이며, 일반적인 검색 시스템 전체에 대한 설계 지침은 아니다. 구성 요소의 상세 구현이 공개되었다는 정보도 없으므로 재현 가능성을 단정할 수 없다.",
+    "C": "## 실험 및 평가\n\n### 데이터와 비교 조건\n\n합성 데이터셋은 문서 1,000개와 질의 100개로 구성된다. 모든 시스템은 같은 문서와 질의를 사용한다. 비교 대상은 기본 검색 조건과 후보 필터를 포함한 방법이다. 원문은 작은 합성 자료에서 통제된 비교를 수행한다고 설명한다. 실제 서비스의 사용자 질의 분포나 대규모 공개 벤치마크에서의 결과는 제시하지 않는다. 그러한 평가를 수행한 것처럼 보충해서 해석하면 안 된다. 실험에 사용하는 문서와 질의를 같게 유지한다는 설정은 비교 조건 사이의 입력 차이를 배제하기 위한 것이다. 질의 종류별 결과나 문서 길이별 분석은 제공되지 않는다.\n\n### 지표와 결과\n\n평가 지표는 정확도다. 기본 조건은 75.0%, 필터를 포함한 방법은 82.5%로 보고된다. 필터를 제거한 비교에서는 80%를 얻었다. 원문에 제시된 수치만 그대로 옮겼으며, 차이를 새로 계산한 수치나 임의의 개선율을 덧붙이지 않는다. 결과는 독립적인 반복 실험을 평균한 값으로 설명된다. 분산, 신뢰구간 또는 유의성 검정 결과는 제시되지 않았으므로 통계적 유의성을 주장하지 않는다. 정확도 외에 지연 시간이나 메모리 사용량이 개선되었다는 결과도 없다. 따라서 해당 지표의 장점을 이 실험으로 확인했다고 해석할 수 없다. 본문에 제시된 정확도는 해당 데이터와 설정 아래에서 보고된 결과다. 다른 데이터에 대한 성능을 대신하는 값으로 읽지 않는다.\n\n### 설정과 ablation 해석\n\n실험의 배치 크기는 16이다. 하이퍼파라미터는 비교 조건 간 고정되며 인코더와 순위 계산도 유지된다. 후보 필터를 제거한 조건은 그 구성 요소의 영향을 살피는 비교로 제시된다. 이 결과는 원문이 수행한 제한된 ablation에 해당한다. 임계값을 바꾸는 탐색이나 인코더를 교체하는 실험은 설명되어 있지 않다. 코드와 데이터가 공개되었다는 정보도 없어 공개 자료를 이용한 독립 재현이 가능하다고 단정하지 않는다. 실험은 작은 합성 코퍼스에 한정되며 외부 자료를 통해 평가 범위를 넓히지 않는다. 결과 수치를 읽을 때는 기본 조건, 전체 방법, 필터 제거 조건을 구분해야 한다. 이 비교는 후보 필터를 포함한 설정과 제거한 설정의 차이를 관찰한다는 목적에 맞춰 이해해야 하며, 모든 검색 문제에서 같은 결과가 나온다는 결론으로 확대하지 않는다.",
+    "D": "## 고찰\n\n평가는 작은 합성 코퍼스에 한정된다. 코드 공개 여부는 명시되지 않는다. 다른 데이터에서의 일반화는 이 자료로 판단할 수 없다.\n\n## 결론\n\n고정된 검색 조건에서 후보 필터 적용 여부를 비교하는 평가를 구성한다. 보고된 결과의 범위는 이 합성 데이터와 실험 설정에 한정된다."
+  }
+}

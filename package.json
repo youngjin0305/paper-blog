@@ -1,0 +1,14 @@
+{
+  "name": "paper-garden-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local research journal with Google-authenticated Gemini CLI",
+  "scripts": {
+    "paper:weekly": "python -B paper_pipeline.py weekly",
+    "paper:daily": "python -B paper_pipeline.py daily",
+    "paper:add": "python -B paper_pipeline.py add",
+    "paper:list": "python -B paper_pipeline.py list",
+    "test": "python -m unittest discover -s tests -p test_*.py"
+  },
+  "dependencies": { "@google/gemini-cli": "0.60.0" }
+}

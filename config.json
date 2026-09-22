@@ -1,0 +1,77 @@
+{
+  "title": "Paper Garden",
+  "model": "",
+  "schedule_enabled": false,
+  "topics": [
+    {
+      "id": "ai",
+      "name": "인공지능",
+      "description": "LLM, 에이전트, 추론의 다음 장면",
+      "query": "cat:cs.AI OR cat:cs.CL",
+      "instructions": "LLM 추론, RAG, 에이전트에 특히 관심이 있습니다. 기존 연구와의 차이, 재현 가능성, 실제 활용 아이디어를 설명하세요.",
+      "interval_hours": 24,
+      "lookback_days": 7,
+      "max_papers": 5,
+      "enabled": true
+    },
+    {
+      "id": "security",
+      "name": "보안 · 암호학",
+      "description": "안전한 시스템을 만드는 새로운 연구",
+      "query": "cat:cs.CR",
+      "instructions": "포스트 양자 암호, 시스템 보안, 디지털 포렌식에 주목하세요. 위협 모델과 가정, 초록에서 확인할 수 없는 점을 구분하세요.",
+      "interval_hours": 48,
+      "lookback_days": 14,
+      "max_papers": 5,
+      "enabled": true
+    },
+    {
+      "id": "robotics",
+      "name": "로보틱스",
+      "description": "세상과 상호작용하는 지능",
+      "query": "cat:cs.RO",
+      "instructions": "로봇 학습과 비전-언어-행동 모델에 관심이 있습니다. 현실 환경 적용 가능성과 실험 조건을 중심으로 정리하세요.",
+      "interval_hours": 72,
+      "lookback_days": 14,
+      "max_papers": 3,
+      "enabled": false
+    }
+  ],
+  "pipeline": {
+    "keywords": [
+      "large language model",
+      "cryptography",
+      "retrieval"
+    ],
+    "arxiv_categories": [
+      "cs.AI",
+      "cs.CL",
+      "cs.CR"
+    ],
+    "use_eprint": true,
+    "weekly_new": 10,
+    "pool_limit": 20,
+    "expiry_weeks": 3,
+    "llm_shortlist": 30,
+    "method_min_chars": 1200,
+    "experiment_min_chars": 1000,
+    "post_dir": "content/ai",
+    "category": "ai",
+    "queue_path": "data/paper-queue.json",
+    "draft_dir": "drafts",
+    "archive_dir": "data/papers",
+    "log_dir": "logs",
+    "agy_path": "agy",
+    "model": "",
+    "timeout": 300,
+    "http_timeout": 60,
+    "max_pdf_bytes": 52428800,
+    "rule_weight": 0.3,
+    "llm_weight": 0.7,
+    "abstract_mode": "original",
+    "max_quote_words": 25,
+    "arxiv_api": "https://export.arxiv.org/api/query",
+    "eprint_rss": "https://eprint.iacr.org/rss/rss.xml",
+    "fetch_limit": 200
+  }
+}

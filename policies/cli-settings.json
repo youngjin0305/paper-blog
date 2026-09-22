@@ -1,0 +1,10 @@
+{
+  "security": {
+    "auth": { "selectedType": "oauth-personal", "enforcedType": "oauth-personal" }
+  },
+  "hooksConfig": { "enabled": false },
+  "tools": { "core": [] },
+  "mcp": { "allowed": ["paper-garden-no-mcp"] },
+  "skills": { "enabled": false },
+  "telemetry": { "enabled": false }
+}
