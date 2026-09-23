@@ -15,7 +15,9 @@ $PipelinePath = Join-Path $ProjectRoot 'paper_pipeline.py'
 $Principal = New-ScheduledTaskPrincipal -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited
 $Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 6)
 foreach ($Kind in @('weekly', 'daily')) {
-    $Action = New-ScheduledTaskAction -Execute $PythonPath -Argument ('-B "' + $PipelinePath + '" ' + $Kind) -WorkingDirectory $ProjectRoot
+    $TaskArguments = '-B "' + $PipelinePath + '" ' + $Kind
+    if ($Kind -eq 'daily') { $TaskArguments += ' --resume-draft' }
+    $Action = New-ScheduledTaskAction -Execute $PythonPath -Argument $TaskArguments -WorkingDirectory $ProjectRoot
     if ($Kind -eq 'weekly') {
         $Trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek $WeeklyDay -At $WeeklyTime
     } else {
