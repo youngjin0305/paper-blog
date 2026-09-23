@@ -348,6 +348,8 @@ class AgyTests(unittest.TestCase):
         self.assertIn("fixture prompt", (self.work / "prompt.txt").read_text(encoding="utf-8"))
         if self.answer is not None:
             (self.work / "result.txt").write_text(self.answer, encoding="utf-8")
+        if getattr(self, "internal_log", None):
+            (self.work / "agy.log").write_text(self.internal_log, encoding="utf-8")
         from unittest.mock import Mock
         process = Mock()
         process.stdout = io.BytesIO(self.stdout)
@@ -397,6 +399,20 @@ class AgyTests(unittest.TestCase):
             with self.assertRaises(TimeoutError):
                 self.invoke()
         stop.assert_called_once()
+
+    def test_internal_log_quota_stops_even_with_output_file_and_empty_pipes(self):
+        self.running = True
+        self.internal_log = "Run: attempt 1 failed (RESOURCE_EXHAUSTED (code 429): Individual quota reached), retrying in 4s"
+        with patch("paper_llm.stop_process") as stop:
+            with self.assertRaises(QuotaExceeded):
+                self.invoke()
+        stop.assert_called_once()
+        self.assertIn("--log-file", self.command)
+
+    def test_completed_process_log_is_checked_before_accepting_file(self):
+        self.internal_log = "RESOURCE_EXHAUSTED: Individual quota reached"
+        with self.assertRaises(QuotaExceeded):
+            self.invoke()
 
     def test_success_exit_with_denied_action_reports_permission_error(self):
         self.answer = None
