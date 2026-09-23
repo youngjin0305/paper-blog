@@ -147,7 +147,7 @@ agy
 .\.venv\Scripts\python.exe -B paper_pipeline.py setup-agy
 ```
 
-이 명령은 agy 사용자 설정의 기존 값들을 유지하면서 `write_file(<agy_work_dir의 절대 경로>)` 한 개만 추가합니다. 기본 폴더는 `~/.paper-blog/agy-work`이며 저장소 밖입니다. 변경 전 설정은 같은 설정 디렉터리의 `settings.paper-blog-backup.json`으로 보관합니다. 전체 파일 시스템 쓰기나 명령 실행 권한은 허용하지 않습니다. `setup-agy --dry-run`으로 변경 예정 경로만 확인할 수 있습니다.
+이 명령은 agy 사용자 설정의 기존 값들을 유지하면서 `read_file(<agy_work_dir의 절대 경로>)`와 `write_file(<agy_work_dir의 절대 경로>)`만 추가합니다. 기본 폴더는 `~/.paper-blog/agy-work`이며 저장소 밖입니다. 변경 전 설정은 같은 설정 디렉터리의 `settings.paper-blog-backup.json`으로 보관합니다. 전체 파일 시스템 쓰기나 명령 실행 권한은 허용하지 않습니다. `setup-agy --dry-run`으로 변경 예정 경로만 확인할 수 있습니다.
 
 ### 명령과 dry-run
 
@@ -240,7 +240,7 @@ References/Bibliography의 `[번호]` 또는 `번호.` 항목을 코드로 분�
 agy --print "Read <absolute prompt path> ... write <absolute result path> ..." --sandbox --disable-slash-commands --output-format json --print-timeout 300s
 ```
 
-출력 파일 전용 플래그는 확인되지 않았습니다. `agy_work_dir` 아래 호출마다 고유 디렉터리에 `prompt.txt`를 만들고 파일 도구로 `result.txt`에 답변을 쓰게 한 뒤 읽습니다. 모든 파일 경로를 절대 경로로 전달합니다. 비TTY stdout이 비어도 동작하며, 파일이 없으면 stdout으로 대체하지 않고 실패합니다. stdout JSON은 `denied_actions` 및 상태 진단에만 사용합니다. agy가 종료 코드 0과 `SUCCESS`를 반환해도 `write_file`을 거부할 수 있으며, 이 경우 `setup-agy` 실행을 안내합니다. timeout이나 쿼터 감지 시 하위 프로세스도 종료합니다. `generate(prompt, options) -> str` 인터페이스 뒤에 감췄으므로 나중에 API 키 백엔드로 교체할 수 있습니다.
+출력 파일 전용 플래그는 확인되지 않았습니다. `agy_work_dir` 아래 호출마다 고유 디렉터리에 `prompt.txt`를 만들고 파일 도구로 `result.txt`에 답변을 쓰게 한 뒤 읽습니다. 모든 파일 경로를 절대 경로로 전달합니다. 비TTY stdout이 비어도 동작하며, 파일이 없으면 stdout으로 대체하지 않고 실패합니다. stdout JSON은 `denied_actions` 및 상태 진단에만 사용합니다. agy가 종료 코드 0과 `SUCCESS`를 반환해도 파일 읽기·쓰기 도구를 거부할 수 있으며, 이 경우 `setup-agy` 실행을 안내합니다. timeout이나 쿼터 감지 시 하위 프로세스도 종료합니다. `generate(prompt, options) -> str` 인터페이스 뒤에 감췄으므로 나중에 API 키 백엔드로 교체할 수 있습니다.
 
 print 모드의 도구 자동 승인 여부는 버전·권한 설정에 따라 다릅니다. 현재 공식 문서는 workspace 파일 쓰기의 자동 허용과, 별도 승인 없는 명령의 soft-deny를 설명하지만 실제 Windows 실행에서는 명시적인 파일 권한이 필요했습니다. `setup-agy`가 추가하는 전용 폴더 allow 규칙은 유지하면서 아래 예시의 deny 규칙을 기존 permissions에 병합할 수 있습니다. **weekly/daily는 사용자 권한 설정을 변경하지 않습니다.** 명령 도구 전체를 막으면 `rm`, `del`, `Remove-Item`, `git push`도 차단됩니다. 이 작업은 파일 읽기/쓰기 도구만 필요합니다.
 
@@ -286,6 +286,6 @@ print 모드의 도구 자동 승인 여부는 버전·권한 설정에 따라 �
 
 Python 모듈은 기존 루트 배치와 `unittest` 관례를 따릅니다. `garden.atomic_write`, UTC 시각, 설정 로딩, arXiv 파서를 재사용합니다. 파일명은 기존 날짜+20자리 해시 규칙이며 fulltext 구분자를 해시에 넣어 기존 초록 글과 충돌을 피합니다. frontmatter 필드는 기존과 동일하게 유지하고 `basis` 값만 `fulltext`로 구분합니다. ePrint/manual은 `arxiv_id`를 빈 문자열로 유지하고 `source`에 해당 원문 링크를 기록합니다. [참고 구현](https://github.com/suanlab/suanlab.com/blob/master/scripts/blog/paper-summarizer.ts)의 메타데이터→PDF→파싱→요약→저장 흐름만 참고했고 Claude 호출부는 사용하지 않았습니다. [PyMuPDF4LLM API](https://pymupdf.readthedocs.io/en/latest/pymupdf4llm/api.html).
 
-### ??? ?? ??
+### 중단된 초안 복구
 
-???? ?? ??? ??? ??? `paper_pipeline.py add <ID>`? ?? ??? ? `paper_pipeline.py daily --resume-draft`? ??? ? ????. ??? ??? ????? ??? ???? PDF? ?? ?? ? ??? ??????????? ??? ??????. ??? ??? ????? ??? ??? ?? ?????? ??? ????. ??? ?? ?? ??? Git ?? ??? ??? ?????.
+참고문헌 선택 등에서 중단된 논문은 `paper_pipeline.py add <ID>`로 다시 고정한 뒤 `paper_pipeline.py daily --resume-draft`로 재개할 수 있습니다. 저장된 초안의 제목·원문 링크를 확인하고 PDF를 다시 읽어 각 섹션의 구조·길이·수치·인용 제한을 재검증합니다. 통과한 그룹만 재사용하며 실패한 그룹은 기존 생성·재시도 규칙을 따릅니다. 마지막 전체 문서 검증과 Git 게시 절차도 그대로 적용합니다.
