@@ -63,10 +63,21 @@ def parse_references(source):
     if not heading:
         return {}
     tail = source[heading.end():]
-    ending = re.search(r"(?im)^\s*(?:#{1,6}\s*)?(?:appendix\b|[A-Z][. ]+Appendix\b|acknowledg(?:e)?ments\b)", tail)
+    ending = re.search(r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:appendix\b|[A-Z][. ]+Appendix\b|"
+                       r"supplementary (?:material|information)\b|supplement\b|acknowledg(?:e)?ments\b)", tail)
     if ending:
         tail = tail[:ending.start()]
-    markers = list(re.finditer(r"(?m)^\s*(?:\[(\d+)\]|(\d+)\.)[ \t]+", tail))
+    found = list(re.finditer(r"(?m)^\s*(?:\[(\d+)\]|(\d+)\.)[ \t]+", tail))
+    markers = []
+    previous = 0
+    for marker in found:
+        identifier = int(marker[1] or marker[2])
+        # Unbracketed numbered bibliographies proceed 1,2,... . Wrapped years/pages such
+        # as '2025. pp. ...' are content of the current entry, not new citation numbers.
+        if marker[2] and identifier != previous + 1:
+            continue
+        markers.append(marker)
+        previous = identifier
     result = {}
     for i, marker in enumerate(markers):
         identifier = int(marker[1] or marker[2])

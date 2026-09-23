@@ -51,6 +51,8 @@
     "pool_limit": 20,
     "expiry_weeks": 3,
     "llm_shortlist": 30,
+    "rank_batch_size": 5,
+    "min_relevance_score": 3,
     "method_min_chars": 1200,
     "experiment_min_chars": 1000,
     "post_dir": "content/ai-cryptanalysis",

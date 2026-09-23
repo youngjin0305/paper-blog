@@ -23,7 +23,7 @@ from paper_validation import parse_rank, parse_references, numbers, validate_doc
 
 
 FIXTURE = json.loads((ROOT / "tests/fixtures/paper-pipeline.json").read_text(encoding="utf-8"))
-CONFIG = validate_pipeline({})
+CONFIG = validate_pipeline({"rank_batch_size": 1})
 PAPER = FIXTURE["papers"][0]
 STAMP = "2026-09-22T00:00:00+00:00"
 
@@ -127,6 +127,9 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(parse_references("No references in this text"), {})
         self.assertEqual(parse_references("References\n1. First.\n2. Second."), {1: "First.", 2: "Second."})
         self.assertEqual(parse_references("References\n[1] One\n[1] Another"), {})
+        self.assertEqual(parse_references("**References**\n1. Original entry.\n\n## **Supplementary Material**\n1. An experiment, not a citation."), {1: "Original entry."})
+        refs = parse_references("References\n1. Author. Conference,\n2025. pp. 1-4.\n2. Another author.\n## Appendix\n1. Experiment")
+        self.assertEqual(refs, {1: "Author. Conference,\n2025. pp. 1-4.", 2: "Another author."})
 
     def test_rubric_schema_rejects_missing_and_out_of_range(self):
         self.assertEqual(parse_rank(json.dumps(FIXTURE["rank"])), FIXTURE["rank"])
@@ -198,6 +201,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual((item["status"], item["failCount"]), ("failed", 1))
         self.assertTrue(list((self.root / "data/papers").rglob("source.txt")))
 
+    def test_resume_draft_revalidates_and_regenerates_only_invalid_group(self):
+        pin(self.pipeline.queue, PAPER)
+        groups = {**FIXTURE["groups"], "C": FIXTURE["groups"]["C"] + "\nAbsent 9999.99%"}
+        path, document = assemble(PAPER, groups, {}, [], CONFIG)
+        atomic_write(self.root / "drafts" / Path(path).name, document)
+        backend = FixtureBackend(FIXTURE)
+        with patch.object(self.pipeline.backend, "generate", side_effect=backend.generate) as generate:
+            self.assertTrue(self.pipeline.daily(resume_draft=True)["valid"])
+        self.assertEqual([call.args[1]["kind"] for call in generate.call_args_list], ["C", "references"])
+
     def test_quota_stops_without_retry_or_queue_changes(self):
         pin(self.pipeline.queue, PAPER)
         before = deepcopy(self.pipeline.queue)
@@ -235,6 +248,29 @@ class PipelineTests(unittest.TestCase):
             self.pipeline.weekly()
         self.assertEqual(generate.call_count, 1)
         self.assertEqual(len(ordered(self.pipeline.queue)), 2)
+
+    def test_batch_keeps_valid_paper_and_retries_only_invalid_paper(self):
+        self.pipeline.config["rank_batch_size"] = 5
+        other = "arxiv:2609.00002"
+        self.pipeline.fixture["papers"].append({**PAPER, "id": other})
+        payload = json.dumps({PAPER["id"]: FIXTURE["rank"], other: {"invalid": True}})
+        with patch.object(self.pipeline.backend, "generate", side_effect=[payload, json.dumps(FIXTURE["rank"])]) as generate:
+            self.pipeline.weekly()
+        self.assertEqual(generate.call_count, 2)
+        self.assertEqual(generate.call_args_list[0].args[1]["kind"], "rank_batch")
+        self.assertEqual(generate.call_args_list[1].args[1]["kind"], "rank")
+        self.assertEqual(len(ordered(self.pipeline.queue)), 2)
+
+    def test_low_relevance_candidate_is_excluded_but_manual_pin_is_kept(self):
+        rank = deepcopy(FIXTURE["rank"])
+        rank["relevance"]["score"] = 2
+        with patch.object(self.pipeline.backend, "generate", return_value=json.dumps(rank)):
+            self.pipeline.weekly()
+        self.assertEqual(ordered(self.pipeline.queue), [])
+        paper = pin(self.pipeline.queue, PAPER)
+        paper["scoreDetail"] = {"llm": rank}
+        self.pipeline.apply_topic_gate()
+        self.assertEqual(paper["status"], "pinned")
 
     def test_frontmatter_posts_visible_without_db_registration(self):
         path, document = assemble(PAPER, FIXTURE["groups"], {}, [], CONFIG)
@@ -376,7 +412,7 @@ class AgyTests(unittest.TestCase):
         updated = json.loads(settings.read_text(encoding="utf-8"))
         self.assertEqual(updated["trustedWorkspaces"], original["trustedWorkspaces"])
         self.assertEqual(updated["permissions"]["deny"], ["command(*)"])
-        self.assertEqual(updated["permissions"]["allow"], ["read_file(existing)", rule])
+        self.assertEqual(updated["permissions"]["allow"], ["read_file(existing)", rule.replace("write_file(", "read_file("), rule])
         self.assertNotIn("write_file(*)", updated["permissions"]["allow"])
         configure_workspace(self.cli.config, settings)
         self.assertEqual(json.loads(settings.read_text())["permissions"]["allow"].count(rule), 1)

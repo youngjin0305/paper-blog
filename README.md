@@ -184,6 +184,8 @@ dry-run은 로그 파일, 큐, 원문 보관본, 임시 LLM 파일, 초안, 게�
 | `topic_filters` | 분야 ID별 키워드 그룹. 그룹 사이는 AND, 그룹 내부는 OR |
 | `weekly_new`, `pool_limit`, `expiry_weeks` | 신규 10편, candidate 최대 20편, 만료 3주 |
 | `llm_shortlist`, `fetch_limit` | LLM 평가 최대 30편, arXiv API 페이지당 200편 |
+| `rank_batch_size` | 요청당 평가할 논문 수, 기본 5편; 각 논문은 독립적으로 스키마 검증 |
+| `min_relevance_score` | 관련성 최소 점수, 기본 3/5; 일반 후보에 적용하며 수동 pinned는 제외 |
 | `rule_weight`, `llm_weight` | 0.3, 0.7; 각 0~5점 척도의 가중평균 |
 | `method_min_chars`, `experiment_min_chars` | 방법론 1200자, 실험 1000자; 헤더 제외 본문 길이 |
 | `post_dir`, `category` | `content/ai`, `ai`; category는 기존 topics의 ID |
@@ -205,6 +207,8 @@ dry-run은 로그 파일, 큐, 원문 보관본, 임시 LLM 파일, 초안, 게�
 키워드 일치마다 1점, 범주 일치마다 2점으로 최대 5점을 부여합니다. 양수인 상위 후보만 LLM 평가로 넘깁니다. 관련성·새로움·방법론·재현 가능성의 정수 1~5점 및 근거를 JSON Schema로 검증하며 잘못된 JSON만 1회 재시도합니다. 메타데이터에 코드·데이터 공개 근거가 없으면 추측하지 않도록 지시합니다. 평가를 통과한 신규 상위 후보를 기존 후보와 합치고, 만료→상한 정리→잔존 후보의 대기 주 수 증가 순서로 처리합니다. 같은 로컬 달력 주의 재실행은 중복 노화를 방지하기 위해 건너뜁니다. 화요일에 처음 실행해도 다음 주 월요일 작업은 정상 실행됩니다.
 
 검증을 통과한 개별 평가는 `data/paper-rank-cache.json`에 즉시 원자적으로 저장합니다. 중간에 모델 서비스 오류가 발생하면 큐는 미완료 상태로 유지하고, 다음 실행에서는 메타데이터·검색 관심사·모델·스키마가 같은 평가를 재사용합니다. 쿼터 오류는 자동 재시도하지 않습니다. 캐시는 Git 게시 대상이 아닙니다.
+
+주간 평가는 기본 5편씩 묶어 CLI 실행 횟수를 줄입니다. 응답은 논문 ID별로 검증하며 정상 항목은 저장하고, 잘못된 항목만 한 번 다시 요청합니다. 일간 요약의 A/B/C/D 분리 호출은 그대로 유지합니다.
 
 현재 운영 주제는 **AI CryptAnalysis**와 **AI Digital Forensics**입니다. `topic_filters`가 설정되면 모든 그룹에서 하나 이상의 표현이 일치해야 합니다. 즉 AI 표현과 해당 분야 표현이 함께 있어야 하며 `cs.AI`/`cs.CR` 범주만으로는 통과하지 않습니다. 이 모드에서는 일치 키워드와 범주에 각 1점씩, 최대 5점을 주고 가장 많이 일치한 분야를 선택합니다. arXiv 검색에도 그룹의 AND 조건을 적용하고 ePrint에는 같은 필터를 적용합니다. 후보의 `topic_id`에 따라 `content/ai-cryptanalysis/` 또는 `content/ai-digital-forensics/`에 게시하고 frontmatter `category`도 맞춥니다. 수동 추가 논문은 매칭되는 분야를 사용하며 미일치 시 설정의 기본 `category`를 사용합니다.
 
@@ -281,3 +285,7 @@ print 모드의 도구 자동 승인 여부는 버전·권한 설정에 따라 �
 테스트는 agy를 호출하지 않습니다. 큐 정렬·상한·만료·FIFO·seen, 필수/선택 헤더, 수치 정규화·링크·frontmatter, 참고문헌 복사, 잘못된 JSON 재시도, 그룹별 재생성, quota/timeout, 실제 합성 PDF 변환, 파일 없는 stdout 처리, dry-run 무쓰기, 기존 UI 설정 보존, SQLite 없는 정적 내보내기를 검증합니다. 임시 로컬 Git 저장소와 bare remote로 stage 범위·푸시 실패·커밋 직후 중단 복구도 검증합니다.
 
 Python 모듈은 기존 루트 배치와 `unittest` 관례를 따릅니다. `garden.atomic_write`, UTC 시각, 설정 로딩, arXiv 파서를 재사용합니다. 파일명은 기존 날짜+20자리 해시 규칙이며 fulltext 구분자를 해시에 넣어 기존 초록 글과 충돌을 피합니다. frontmatter 필드는 기존과 동일하게 유지하고 `basis` 값만 `fulltext`로 구분합니다. ePrint/manual은 `arxiv_id`를 빈 문자열로 유지하고 `source`에 해당 원문 링크를 기록합니다. [참고 구현](https://github.com/suanlab/suanlab.com/blob/master/scripts/blog/paper-summarizer.ts)의 메타데이터→PDF→파싱→요약→저장 흐름만 참고했고 Claude 호출부는 사용하지 않았습니다. [PyMuPDF4LLM API](https://pymupdf.readthedocs.io/en/latest/pymupdf4llm/api.html).
+
+### ??? ?? ??
+
+???? ?? ??? ??? ??? `paper_pipeline.py add <ID>`? ?? ??? ? `paper_pipeline.py daily --resume-draft`? ??? ? ????. ??? ??? ????? ??? ???? PDF? ?? ?? ? ??? ??????????? ??? ??????. ??? ??? ????? ??? ??? ?? ?????? ??? ????. ??? ?? ?? ??? Git ?? ??? ??? ?????.
