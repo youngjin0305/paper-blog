@@ -1,6 +1,6 @@
 {
   "title": "Paper Blog",
-  "model": "gemini-3.8-flash-high",
+  "model": "claude/opus",
   "schedule_enabled": false,
   "topics": [
     {
@@ -63,13 +63,13 @@
     "log_dir": "logs",
     "agy_path": "C:/Users/jiyeon/AppData/Local/agy/bin/agy.exe",
     "agy_work_dir": "~/.paper-blog/agy-work",
-    "model": "gemini-3.8-flash-high",
+    "model": "",
     "timeout": 300,
     "http_timeout": 60,
     "max_pdf_bytes": 52428800,
     "rule_weight": 0.3,
     "llm_weight": 0.7,
-    "abstract_mode": "original",
+    "abstract_mode": "korean",
     "max_quote_words": 25,
     "arxiv_api": "https://export.arxiv.org/api/query",
     "eprint_rss": "https://eprint.iacr.org/rss/rss.xml",

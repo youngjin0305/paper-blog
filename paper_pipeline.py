@@ -13,10 +13,11 @@ import sys
 from filelock import FileLock
 from jsonschema import ValidationError
 
-from garden import ROOT, UTC, atomic_write, now, validate_config
+from garden import ROOT, UTC, atomic_write, now, validate_config, summary_metadata
 from paper_config import validate_pipeline
 from paper_git import Publisher
-from paper_llm import AgyBackend, QuotaExceeded, configure_workspace, workspace_root
+from paper_llm import create_backend, QuotaExceeded, configure_workspace, workspace_root
+from model_config import DEFAULT_MODEL
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, rule_score
 from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
@@ -31,7 +32,10 @@ COMMON = """한국어 논문 요약을 작성한다. 논문 원문에 근거한 
 본문 인용 번호는 원문 번호를 유지한다. 내용이 부족해도 반복이나 추측으로 글자 수를 채우지 않는다.
 """
 DETAIL = {
-    "A": "필요성, 연구 분야 흐름, 관련 연구, 배경 지식, 문제 정의, 주요 기여를 원문 근거로 설명한다.",
+    "A": "한눈에 보기는 논문이 다루는 대상·문제와 핵심 접근 또는 결과를 한국어 1~2문장, 400자 이내로 요약한다. "
+         "'논문 요약', '방법론과 실험을 정리' 같은 일반적인 소개 문구를 쓰지 않는다. "
+         "초록은 메타데이터 abstract 전체를 생략·요약 없이 한국어로 충실히 번역한다. 수치·조건·한계와 고유명사는 보존한다. "
+         "필요성, 연구 분야 흐름, 관련 연구, 배경 지식, 문제 정의, 주요 기여를 원문 근거로 설명한다.",
     "B": "제시한 방법론을 최대한 상세하게: 구성 요소, 수식, 알고리즘 절차, 하이퍼파라미터, 설계 선택의 이유. 수식을 Markdown/LaTeX로 보존한다.",
     "C": "실험 및 평가를 최대한 상세하게: 데이터셋, 베이스라인, 평가 지표, 실험 설정, 주요 결과 수치, ablation. 원문 표는 필요한 수치만 한국어로 설명한다.",
     "D": "고찰에는 한계와 원문이 제시한 논의를 포함하고 결론을 정리한다.",
@@ -55,7 +59,7 @@ def literal(text):
     return re.sub(r"([\\`*_{}\[\]<>#!|])", r"\\\1", text)
 
 
-def assemble(paper, groups, references, selected, config):
+def assemble(paper, groups, references, selected, config, summary_model=None):
     if paper.get("topic_id") in config.get("topic_filters", {}):
         config = {**config, "category": paper["topic_id"],
                   "post_dir": (Path(config["post_dir"]).parent / paper["topic_id"]).as_posix()}
@@ -64,9 +68,15 @@ def assemble(paper, groups, references, selected, config):
     metadata = {"title": paper["title"], "date": paper["published"], "collected_at": now(),
                 "category": config["category"], "arxiv_id": paper["id"].removeprefix("arxiv:") if paper["source"] == "arxiv" else "",
                 "source": paper["url"], "basis": "fulltext", "demo": False}
+    metadata.update(summary_metadata(summary_model or config["model"]))
     body = f"# {literal(paper['title'])}\n\n[원문]({paper['url']}) · [PDF]({paper['pdfUrl']})\n\n"
-    body += "## 초록\n\n" + literal(paper["abstract"]) + "\n\n"
-    body += "\n\n".join(groups.get(group, "") for group in GROUPS)
+    if config["abstract_mode"] == "original":
+        body += "## 초록\n\n" + literal(paper["abstract"]) + "\n\n"
+    for group in GROUPS:
+        text = groups.get(group, "")
+        if group == "A" and config["abstract_mode"] == "original":
+            text = re.sub(r"(?ms)^## 초록\n.*?(?=^## |\Z)", "", text)
+        body += text + "\n\n"
     if selected:
         body += "\n\n## 참고문헌\n\n" + "\n\n".join(f"[{i}] {references[i]}" for i in selected)
     return path.as_posix(), "---\n" + json.dumps(metadata, ensure_ascii=False, indent=2) + "\n---\n\n" + body.strip() + "\n"
@@ -78,13 +88,14 @@ class Pipeline:
         raw = json.loads((self.root / "config.json").read_text(encoding="utf-8-sig"))
         validate_config(raw)
         self.config = validate_pipeline(raw.get("pipeline", {}))
+        self.config["model"] = self.config["model"].strip() or raw.get("model", "").strip() or DEFAULT_MODEL
         if self.config["category"] not in {t["id"] for t in raw["topics"]}:
             raise ValueError("pipeline.category must match an existing topic ID")
         if set(self.config["topic_filters"]) - {t["id"] for t in raw["topics"]}:
             raise ValueError("topic_filters must match existing topic IDs")
         self.dry_run = dry_run
         self.fixture = fixture
-        self.backend = backend or (FixtureBackend(fixture) if fixture else AgyBackend(self.config))
+        self.backend = backend or (FixtureBackend(fixture) if fixture else create_backend(self.config))
         self.source = source or Sources(self.config)
         self.queue_path = self.root / self.config["queue_path"]
         self.queue = json.loads(self.queue_path.read_text(encoding="utf-8")) if self.queue_path.exists() else empty_queue()
@@ -284,6 +295,7 @@ class Pipeline:
             evidence = source_text + "\n" + markdown
             references = parse_references(markdown) or parse_references(source_text)
             reusable = {}
+            reused_model = None
             if resume_draft:
                 draft_path, _ = assemble(paper, {}, {}, [], self.config)
                 draft = self.root / self.config["draft_dir"] / Path(draft_path).name
@@ -298,6 +310,7 @@ class Pipeline:
                             reusable[group] = text
             for group in GROUPS:
                 if group in reusable and sum(quote_words(text) for text in [*groups.values(), reusable[group]]) <= self.config["max_quote_words"]:
+                    reused_model = metadata.get("summary_model", "기존 초안(모델 미기록)")
                     groups[group] = reusable[group]
                     self.log("Reusing draft group after source validation: " + group)
                     continue
@@ -331,7 +344,10 @@ class Pipeline:
                             errors.append("Reference selection failed twice")
                             selected = []
                         prompt += "\n검증 실패: 허용 번호의 JSON 정수 배열만 출력하라."
-            path, document = assemble(paper, groups, references, selected, self.config)
+            model = self.config["model"]
+            if reused_model and reused_model != model:
+                model = f"{reused_model} + {model}"
+            path, document = assemble(paper, groups, references, selected, self.config, summary_model=model)
             errors.extend(validate_document(document, paper, evidence, self.config))
         except QuotaExceeded:
             self.log("Quota exhausted: stopped immediately; queue status unchanged")

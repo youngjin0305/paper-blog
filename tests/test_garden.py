@@ -25,7 +25,7 @@ class FakeSummary:
     calls = 0
     def summarize(self, topic, paper, model):
         self.calls += 1
-        return "## 한눈에 보기\n\n테스트 요약입니다.\n\n## 한계와 확인할 점\n\n초록에서 확인 불가."
+        return "## 한눈에 보기\n\n테스트 요약입니다.\n\n## 초록\n\n실제 연구 결과가 아닌 테스트용 초록입니다.\n\n## 한계와 확인할 점\n\n초록에서 확인 불가."
 
 
 class GardenTests(unittest.TestCase):
@@ -57,7 +57,37 @@ class GardenTests(unittest.TestCase):
         md = self.garden.markdown(self.garden.posts()[0])
         self.assertIn('"basis": "abstract"', md)
         self.assertIn(PAPER["url"], md)
-        self.assertIn("## 원문 초록", md)
+        self.assertIn("## 초록", md)
+        self.assertNotIn(PAPER["abstract"], md)
+        self.assertIn("실제 연구 결과가 아닌 테스트용 초록", md)
+
+    def test_cards_use_topic_summary_in_live_and_exported_pages(self):
+        self.garden.research()
+        self.assertEqual(self.garden.posts()[0]["summary"], "테스트 요약입니다.")
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertIn('<p class="card-description">테스트 요약입니다.</p>', html)
+        site = export_site(self.app, self.garden)
+        self.assertIn('<p class="card-description">테스트 요약입니다.</p>', (site / "index.html").read_text(encoding="utf-8"))
+
+    def test_new_posts_record_model_and_korean_summary_date(self):
+        self.garden.research()
+        post = self.garden.posts()[0]
+        self.assertEqual(post["summary_model"], self.garden.config()["model"])
+        self.assertTrue(post["summarized_at"].endswith("+09:00"))
+        self.assertEqual(post["summary_date"], post["summarized_at"][:10])
+        html = self.client.get(f'/posts/{post["id"]}').get_data(as_text=True)
+        self.assertIn("정리 모델: " + post["summary_model"], html)
+        self.assertIn("정리 날짜: " + post["summary_date"], html)
+        site = export_site(self.app, self.garden)
+        self.assertIn("정리 모델: " + post["summary_model"], (site / f'posts/{post["id"]}.html').read_text(encoding="utf-8"))
+
+    def test_legacy_and_demo_posts_do_not_invent_model_provenance(self):
+        self.garden.store_post(self.garden.config()["topics"][0], PAPER, FakeSummary().summarize(None, None, None))
+        post = self.garden.posts()[0]
+        self.assertNotIn("summary_model", post)
+        self.assertNotIn("정리 모델:", self.client.get(f'/posts/{post["id"]}').get_data(as_text=True))
+        self.garden.seed_demo()
+        self.assertTrue(all("summary_model" not in p for p in self.garden.posts()))
 
     def test_failure_remains_retryable(self):
         with patch.object(self.summary, "summarize", side_effect=RuntimeError("quota")):

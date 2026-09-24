@@ -3,5 +3,6 @@
 {% block content %}
 <div class="article-top"><a href="{{ root_url }}" class="quiet-link">← 논문 목록</a><div>{% if not static_mode %}<a class="secondary small" href="/posts/{{ post.id }}/markdown">↓ Markdown</a>{% endif %}<a class="primary small" href="{{ source.url }}" target="_blank" rel="noopener noreferrer">원문 읽기 ↗</a></div></div>
 <div class="article-meta"><span class="badge">{{ 'DEMO · 최신 조사 아님' if post.demo else ('FULL PAPER REVIEW' if post.basis == 'fulltext' else 'ABSTRACT REVIEW') }}</span><time>{{ post.published[:10] }} 제출</time><span>{{ '원문' if post.basis == 'fulltext' else 'arXiv' }} · {{ post.paper_id }}</span></div>
+{% if post.summary_model and post.summary_date %}<div class="article-meta"><span>정리 모델: {{ post.summary_model }}</span><time datetime="{{ post.summarized_at }}">정리 날짜: {{ post.summary_date }} (한국 시간)</time></div>{% endif %}
 <article class="prose">{{ body }}</article>
 {% endblock %}

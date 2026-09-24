@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import io
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -95,6 +96,41 @@ class ValidationTests(unittest.TestCase):
         errors = validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG)
         self.assertTrue(any("문제 정의" in e for e in errors))
         self.assertTrue(any("characters" in e for e in errors))
+
+    def test_korean_abstract_and_topic_summary(self):
+        document = self.document()
+        self.assertIn("이 합성 테스트 자료는 검색 실험을 설명한다.", document)
+        self.assertNotIn(PAPER["abstract"], document)
+        for bad in ("English only", "한국어 문장. " * 3, "가" * 401):
+            groups = deepcopy(FIXTURE["groups"])
+            groups["A"] = re.sub(r"(?ms)^## 한눈에 보기\n.*?(?=^## )", "## 한눈에 보기\n" + bad + "\n\n", groups["A"])
+            self.assertTrue(validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG))
+        groups = deepcopy(FIXTURE["groups"])
+        groups["A"] = groups["A"].replace("이 합성 테스트 자료는 검색 실험을 설명한다. 실제 연구 결과가 아니다.", PAPER["abstract"])
+        self.assertTrue(validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG))
+
+    def test_original_abstract_compatibility(self):
+        config = {**CONFIG, "abstract_mode": "original"}
+        _, document = assemble(PAPER, FIXTURE["groups"], {}, [], config)
+        self.assertIn(PAPER["abstract"], document)
+        self.assertEqual(document.count("## 초록\n"), 1)
+        self.assertEqual(validate_document(document, PAPER, FIXTURE["markdown"], config), [])
+
+    def test_summary_provenance_and_legacy_frontmatter(self):
+        from paper_validation import split_document
+        config = {**CONFIG, "model": "claude/opus"}
+        _, document = assemble(PAPER, FIXTURE["groups"], {}, [], config)
+        metadata, body = split_document(document)
+        self.assertEqual(metadata["summary_model"], "claude/opus")
+        self.assertTrue(metadata["summarized_at"].endswith("+09:00"))
+        self.assertEqual(validate_document(document, PAPER, FIXTURE["markdown"], config), [])
+        for field in ("summary_model", "summarized_at"):
+            metadata.pop(field)
+        legacy = "---\n" + json.dumps(metadata) + "\n---\n" + body
+        self.assertEqual(validate_document(legacy, PAPER, FIXTURE["markdown"], config), [])
+        metadata["summary_model"] = "claude/opus"
+        malformed = "---\n" + json.dumps(metadata) + "\n---\n" + body
+        self.assertTrue(validate_document(malformed, PAPER, FIXTURE["markdown"], config))
 
     def test_numeric_normalization_and_hallucination_report(self):
         self.assertEqual(numbers("1,000 82.50 % -0.50"), numbers("1000 82.5% -0.5"))

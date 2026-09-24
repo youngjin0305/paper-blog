@@ -2,6 +2,7 @@
 from copy import deepcopy
 from pathlib import Path
 import re
+from model_config import resolve_model
 
 
 DEFAULTS = {
@@ -14,9 +15,10 @@ DEFAULTS = {
     "method_min_chars": 1200, "experiment_min_chars": 1000,
     "post_dir": "content/ai", "category": "ai", "queue_path": "data/paper-queue.json",
     "draft_dir": "drafts", "archive_dir": "data/papers", "log_dir": "logs",
-    "agy_path": "agy", "agy_work_dir": "~/.paper-blog/agy-work", "model": "", "timeout": 300, "http_timeout": 60,
+    "agy_path": "agy", "codex_path": "codex", "claude_path": "claude",
+    "agy_work_dir": "~/.paper-blog/agy-work", "model": "", "timeout": 300, "http_timeout": 60,
     "max_pdf_bytes": 52428800, "rule_weight": 0.3, "llm_weight": 0.7,
-    "abstract_mode": "original", "max_quote_words": 25,
+    "abstract_mode": "korean", "max_quote_words": 25,
     "arxiv_api": "https://export.arxiv.org/api/query",
     "eprint_rss": "https://eprint.iacr.org/rss/rss.xml", "fetch_limit": 200,
 }
@@ -43,6 +45,7 @@ def validate_pipeline(value):
             valid = isinstance(item, str) and (bool(item.strip()) or key == "model")
         if not valid:
             raise ValueError(f"Invalid pipeline.{key}")
+    resolve_model(config["model"])
     for topic, groups in config["topic_filters"].items():
         if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,39}", topic):
             raise ValueError("Invalid topic_filters topic ID")
@@ -51,8 +54,8 @@ def validate_pipeline(value):
             for group in groups
         ):
             raise ValueError("topic_filters requires nonempty keyword groups (AND between groups; OR within each group)")
-    if config["abstract_mode"] != "original":
-        raise ValueError("abstract_mode currently supports original only (metadata verbatim)")
+    if config["abstract_mode"] not in ("korean", "original"):
+        raise ValueError("abstract_mode must be korean or original")
     if config["min_relevance_score"] > 5:
         raise ValueError("min_relevance_score must be between 1 and 5")
     if config["rule_weight"] + config["llm_weight"] <= 0:

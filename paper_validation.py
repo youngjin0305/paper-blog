@@ -6,11 +6,12 @@ import unicodedata
 
 
 GROUPS = {
-    "A": ["필요성", "연구 분야 흐름", "관련 연구", "배경 지식", "문제 정의", "주요 기여"],
+    "A": ["한눈에 보기", "초록", "필요성", "연구 분야 흐름", "관련 연구", "배경 지식", "문제 정의", "주요 기여"],
     "B": ["제시한 방법론"], "C": ["실험 및 평가"], "D": ["고찰", "결론"],
 }
 REQUIRED = ["초록", "문제 정의", "주요 기여", "제시한 방법론", "실험 및 평가", "결론"]
 FIELDS = {"title", "date", "collected_at", "category", "arxiv_id", "source", "basis", "demo"}
+SUMMARY_FIELDS = {"summary_model", "summarized_at"}
 RUBRIC = ["relevance", "novelty", "methodology", "reproducibility"]
 RANK_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": RUBRIC + ["rationale"],
@@ -102,8 +103,18 @@ def validate_group(group, text, source, config):
     for name in set(present) - set(expected):
         errors.append(f"Unexpected section: {name}")
     for name in set(REQUIRED) & set(expected):
+        if name == "초록" and config["abstract_mode"] == "original":
+            continue
         if not present.get(name):
             errors.append(f"Missing required section: {name}")
+    if group == "A":
+        summary = present.get("한눈에 보기", "")
+        if not re.search(r"[가-힣]", summary) or len(summary) > 400:
+            errors.append("한눈에 보기 requires a short Korean topic summary (up to 400 characters)")
+        if len(re.split(r"(?<=[.!?。])\s+", summary.strip())) > 2:
+            errors.append("한눈에 보기 must contain only 1 or 2 sentences")
+        if config["abstract_mode"] == "korean" and not re.search(r"[가-힣]", present.get("초록", "")):
+            errors.append("초록 must be translated into Korean")
     if re.search(r"(?m)^# |^---\s*$", text):
         errors.append("Group must not contain a title or frontmatter")
     headers = re.findall(r"(?m)^## (.+)$", text)
@@ -136,14 +147,16 @@ def validate_document(document, paper, source, config):
     errors = []
     try:
         metadata, body = split_document(document)
-        if set(metadata) != FIELDS:
+        if set(metadata) not in (FIELDS, FIELDS | SUMMARY_FIELDS):
             errors.append("Frontmatter fields do not match existing posts")
+        if "summary_model" in metadata and (not isinstance(metadata["summary_model"], str) or not metadata["summary_model"].strip()):
+            errors.append("Summary model must be a nonempty string")
         if metadata.get("source") != paper["url"]:
             errors.append("Frontmatter source link mismatch")
         if metadata.get("title") != paper["title"]:
             errors.append("Title must come from metadata")
         from datetime import datetime
-        for name in ("date", "collected_at"):
+        for name in ("date", "collected_at", *(["summarized_at"] if "summarized_at" in metadata else [])):
             if datetime.fromisoformat(metadata[name].replace("Z", "+00:00")).tzinfo is None:
                 errors.append(f"Frontmatter {name} must include timezone")
         if metadata.get("basis") != "fulltext" or metadata.get("demo") is not False:
@@ -153,15 +166,19 @@ def validate_document(document, paper, source, config):
     if not re.search(r"(?m)^# \S", body):
         errors.append("Missing title header")
     present = sections(body)
+    if config["abstract_mode"] == "korean" and numbers(present.get("초록", "")) != numbers(paper["abstract"]):
+        errors.append("Translated abstract must preserve the original numeric values")
     for name in REQUIRED:
         if not present.get(name):
             errors.append("Missing required section: " + name)
     if paper["url"] not in body or paper["pdfUrl"] not in body:
         errors.append("Missing original/PDF link in body")
     for group, names in GROUPS.items():
-        text = "\n\n".join("## " + name + "\n" + present[name] for name in names if name in present)
+        text = "\n\n".join("## " + name + "\n" + present[name] for name in names if name in present
+                           and not (name == "초록" and config["abstract_mode"] == "original"))
         errors.extend(validate_group(group, text, source, config))
-    generated = "\n".join(present.get(name, "") for names in GROUPS.values() for name in names)
+    generated = "\n".join(present.get(name, "") for names in GROUPS.values() for name in names
+                          if not (name == "초록" and config["abstract_mode"] == "original"))
     if quote_words(generated) > config["max_quote_words"]:
         errors.append("Total direct quotations exceed the configured word limit")
     return errors

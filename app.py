@@ -187,7 +187,7 @@ def main():
     elif args.command == "check":
         garden.config()
         print(json.dumps(garden.status(), ensure_ascii=False, indent=2))
-        print("Login is not tested. Run login-gemini.cmd and choose Sign in with Google.")
+        print("Login is not tested. Gemini: login-gemini.cmd; Codex: codex login; Claude: claude.")
     elif args.command == "export":
         print(export_site(create_app(garden), garden))
     elif args.command == "serve":
