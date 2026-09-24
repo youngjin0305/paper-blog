@@ -3,6 +3,7 @@ from decimal import Decimal
 import json
 import re
 import unicodedata
+from paper_publication import PUBLICATION_FIELDS
 
 
 GROUPS = {
@@ -147,8 +148,11 @@ def validate_document(document, paper, source, config):
     errors = []
     try:
         metadata, body = split_document(document)
-        if set(metadata) not in (FIELDS, FIELDS | SUMMARY_FIELDS):
+        if set(metadata) - PUBLICATION_FIELDS not in (FIELDS, FIELDS | SUMMARY_FIELDS):
             errors.append("Frontmatter fields do not match existing posts")
+        for key in PUBLICATION_FIELDS & set(metadata):
+            if not isinstance(metadata[key], str):
+                errors.append(f"Frontmatter {key} must be a string")
         if "summary_model" in metadata and (not isinstance(metadata["summary_model"], str) or not metadata["summary_model"].strip()):
             errors.append("Summary model must be a nonempty string")
         if metadata.get("source") != paper["url"]:

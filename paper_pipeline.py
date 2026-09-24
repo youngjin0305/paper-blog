@@ -18,6 +18,7 @@ from paper_config import validate_pipeline
 from paper_git import Publisher
 from paper_llm import create_backend, QuotaExceeded, configure_workspace, workspace_root
 from model_config import DEFAULT_MODEL
+from paper_publication import publication_metadata
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, rule_score
 from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
@@ -69,6 +70,7 @@ def assemble(paper, groups, references, selected, config, summary_model=None):
                 "category": config["category"], "arxiv_id": paper["id"].removeprefix("arxiv:") if paper["source"] == "arxiv" else "",
                 "source": paper["url"], "basis": "fulltext", "demo": False}
     metadata.update(summary_metadata(summary_model or config["model"]))
+    metadata.update(publication_metadata(paper))
     body = f"# {literal(paper['title'])}\n\n[원문]({paper['url']}) · [PDF]({paper['pdfUrl']})\n\n"
     if config["abstract_mode"] == "original":
         body += "## 초록\n\n" + literal(paper["abstract"]) + "\n\n"
@@ -285,6 +287,12 @@ class Pipeline:
                     raise ValueError("Selected paper is not present in fixture")
                 markdown, source_text = self.fixture["markdown"], self.fixture["source_text"]
             else:
+                if paper["source"] in ("arxiv", "eprint"):
+                    self.log("Refreshing publication metadata from the original source")
+                    fresh = self.source.metadata(paper["url"])
+                    for key in ("journal_ref", "publication_note", "doi"):
+                        paper.pop(key, None)
+                    paper.update(publication_metadata(fresh))
                 self.log("Downloading PDF and extracting text (no images)")
                 markdown, source_text = self.source.fulltext(paper)
             archive_id = hashlib.sha256(paper["id"].encode()).hexdigest()[:20]

@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, timezone
 import requests
 from filelock import FileLock, Timeout
 from model_config import DEFAULT_MODEL, resolve_model
+from paper_publication import publication_metadata, publication_display
 
 ROOT = Path(__file__).resolve().parent
 UTC = timezone.utc
@@ -149,6 +150,9 @@ class Arxiv:
             if datetime.fromisoformat(published.replace("Z", "+00:00")) < cutoff:
                 continue
             papers.append({"id": identifier, "title": value("title"), "abstract": value("summary"),
+                           "journal_ref": " ".join(entry.findtext("{http://arxiv.org/schemas/atom}journal_ref", "").split()),
+                           "publication_note": " ".join(entry.findtext("{http://arxiv.org/schemas/atom}comment", "").split()),
+                           "doi": entry.findtext("{http://arxiv.org/schemas/atom}doi", "").strip(),
                            "published": published, "updated": value("updated"),
                            "authors": [a.findtext("a:name", default="", namespaces=ATOM) for a in entry.findall("a:author", ATOM)],
                            "url": "https://arxiv.org/abs/" + identifier,
@@ -316,12 +320,14 @@ class Garden:
             rows = db.execute("SELECT * FROM posts ORDER BY demo ASC, published DESC, created DESC").fetchall()
         posts = {row["id"]: dict(row) for row in rows}
         for post in posts.values():
+            post.update(publication_display(json.loads(post["source"])))
             try:
                 document = self.markdown(post)
                 post["summary"] = card_summary(document)
                 from paper_validation import split_document
                 metadata, _ = split_document(document)
                 post.update(summary_display(metadata))
+                post.update(publication_display(metadata))
             except (OSError, ValueError):
                 post["summary"] = ""
         # Full-paper posts are Git-tracked Markdown; a fresh Pages checkout has no local DB.
@@ -334,6 +340,7 @@ class Garden:
                 identifier = path.stem.rsplit("-", 1)[-1]
                 posts[identifier] = {"id": identifier, "topic_id": metadata["category"],
                     **summary_display(metadata),
+                    **publication_display(metadata),
                     "paper_id": metadata["arxiv_id"], "title": metadata["title"],
                     "published": metadata["date"], "created": metadata["collected_at"],
                     "path": path.relative_to(self.root).as_posix(), "demo": False, "basis": "fulltext",
@@ -364,6 +371,7 @@ class Garden:
                     "basis": "abstract", "demo": demo}
         if not demo and model is not None:
             metadata.update(summary_metadata(model))
+        metadata.update(publication_metadata(paper))
         # JSON is valid YAML; one object is a portable frontmatter mapping.
         front = "---\n" + json.dumps(metadata, ensure_ascii=False, indent=2) + "\n---\n\n"
         def literal(text):

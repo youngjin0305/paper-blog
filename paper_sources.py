@@ -119,6 +119,8 @@ class Sources:
             parsed_date = datetime.fromisoformat(published.replace("Z", "+00:00"))
             date = (parsed_date if parsed_date.tzinfo else parsed_date.replace(tzinfo=UTC)).isoformat()
             return {"id": identifier, "source": source, "title": title,
+                    "journal_ref": first("citation_journal_title", "citation_conference_title"),
+                    "doi": first("citation_doi"),
                     "authors": values.get("citation_author", []), "abstract": abstract,
                     "url": url, "pdfUrl": url + ".pdf", "published": date, "categories": []}
         import pymupdf
