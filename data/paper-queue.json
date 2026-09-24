@@ -98,7 +98,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-22T11:21:05+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.775,
       "scoreDetail": {
         "rule": {
@@ -145,7 +145,7 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-22T11:21:05+00:00",
       "failCount": 0,
-      "postPath": null,
+      "postPath": "content/ai-digital-forensics/2026-09-21-62800f915f5cce31e7a7.md",
       "topic_id": "ai-digital-forensics"
     },
     {
