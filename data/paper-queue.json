@@ -1,6 +1,611 @@
 {
   "version": 1,
-  "papers": [],
-  "seen": [],
-  "lastWeeklyAt": null
+  "papers": [
+    {
+      "id": "arxiv:2609.21344",
+      "title": "CESBench: Benchmarking Large Language Models on Cryptographic Engineering Security for IoT Devices",
+      "abstract": "For Internet of Things (IoT) devices, a secure algorithm alone is not enough: an attacker with physical access can attack the implementation directly, and its flaws are hard to fix once deployed. Large language models (LLMs) are now used to build and analyze such implementations. LLM benchmarks exist for cryptography and general cybersecurity, but none covers cryptographic engineering. In this paper, we present CESBench, 380 expert-written items across six sub-domains of cryptographic engineering security for IoT devices: side-channel, fault injection, implementation, countermeasures, evaluation, and integration. Four task types target different competences: 209 multiple-choice items test recall, 67 judgment items require a security verdict and its justification, 63 scenario items require an engineering diagnosis, and 41 code tasks are graded by 572 test cases. To validate the benchmark, 11 open-weight and proprietary LLMs answer every item. Multiple-choice and code responses are scored automatically, and judgment and scenario responses by an LLM judge, whose scores are checked against a second judge from another model family and human re-scoring. Composite scores range from 54.4% to 83.6%. The top score on each task type is 98.6% for multiple choice, 95.1% for code, and 88.4% for scenario diagnosis, but only 58.8% for judgment. Across models, 88.5% of verdicts are correct, yet their justifications earn only 53.4% of the rubric marks. Multiple choice is near its ceiling for the strongest models and most code tasks are solved, whereas justifying a security verdict remains the weakest competence. The benchmark, prompts, and per-item results are public.",
+      "published": "2026-09-18T05:59:52Z",
+      "updated": "2026-09-18T05:59:52Z",
+      "authors": [
+        "Wenquan Zhou",
+        "An Wang",
+        "Jing Liang",
+        "Peien Feng",
+        "Jingqi Zhang",
+        "Yaoling Ding",
+        "Liehuang Zhu"
+      ],
+      "url": "https://arxiv.org/abs/2609.21344v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.21344v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "done",
+      "score": 4.475,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "LLM",
+            "side channel"
+          ],
+          "categories": [
+            "cs.AI",
+            "cs.CR"
+          ],
+          "score": 5.0,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "large language model",
+              "LLM",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "관심사 중 'AI CryptAnalysis'와 밀접하게 관련되어 있습니다. 암호 알고리즘 자체뿐만 아니라 구현 단계에서의 부채널 분석(side-channel), 오류 주입(fault injection) 등 IoT 암호공학적 보안 취약점을 LLM이 분석하고 진단하는 역량을 평가하는 연구입니다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "일반 암호학이나 사이버보안 벤치마크와 달리 부채널, 오류 주입, 대응책 등을 포괄하는 암호공학 보안(CES) 전용 LLM 벤치마크를 최초로 제시했다고 주장합니다. 다만 초록의 자체 주장 외에 외부 문헌과의 전수 비교 확인이 어려워 새로움에 대한 일부 불확실성이 존재합니다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "6개 세부 영역에 걸쳐 전문가가 작성한 380개 문항(객관식 209개, 판정 67개, 시나리오 63개, 572개 테스트 케이스가 포함된 코드 41개)과 11개 모델 평가, 교차 LLM 판사 및 인간 재채점 등 정량적 구성과 검증 절차가 매우 구체적으로 기술되어 있습니다."
+          },
+          "reproducibility": {
+            "score": 4,
+            "reason": "초록에서 벤치마크, 프롬프트, 문항별 결과를 공개(public)한다고 명시하여 재현 가능성이 높게 기대됩니다. 다만 메타데이터에 구체적인 오픈소스 저장소(GitHub 등) URL이나 배포 링크가 명시되어 있지 않아 실제 즉각적인 접근성에는 불확실성이 있습니다."
+          },
+          "rationale": "본 논문은 AI CryptAnalysis 관심사와 관련하여 LLM의 부채널 공격 및 암호 구현 취약점 분석 역량을 정밀하게 측정하는 전문 벤치마크(CESBench)를 제안합니다. 평가 항목과 검증 방법론이 정량적으로 매우 구체적이며 데이터 공개를 명시하고 있어 신뢰성이 높습니다."
+        }
+      },
+      "rationale": "본 논문은 AI CryptAnalysis 관심사와 관련하여 LLM의 부채널 공격 및 암호 구현 취약점 분석 역량을 정밀하게 측정하는 전문 벤치마크(CESBench)를 제안합니다. 평가 항목과 검증 방법론이 정량적으로 매우 구체적이며 데이터 공개를 명시하고 있어 신뢰성이 높습니다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 1,
+      "postPath": "content/ai-cryptanalysis/2026-09-18-ff131682caeba74f65b3.md",
+      "topic_id": "ai-cryptanalysis",
+      "note": "Retry after scoped file permission fix"
+    },
+    {
+      "id": "arxiv:2609.24359",
+      "title": "Dissecting Agentic Forensics: The Role of Triage, Prompting, and Evidence Arbitration in Open-World Fake Image Detection",
+      "abstract": "Image forensics is increasingly an open-world problem: manipulations range from fully synthetic images to localized edits, splicing and swapping, while most forensic detectors remain specialized to a single manipulation family. Agentic AI has recently emerged as a promising solution. In principle, such systems can assess the reliability of individual detectors, identify out-of-scope evidence, and arbitrate conflicting reports. However, it remains unclear which components actually drive performance and whether their benefits persist under distribution shift. To answer these questions, we study a training-free agentic framework built around specialist detectors, per-detector triage, and conflict-aware evidence arbitration. Using six configurations and three multimodal large language model backbones, we dissect the role of triage, prompting, and reasoning quality on both in-distribution and out-of-distribution data. Our results show that naive detector fusion suffers from severe false-positive rates on authentic images. Triage and prompting consistently improve performance by filtering unreliable evidence and exposing detector limitations. However, the dominant factor is represented by reasoning itself: A stronger judge substantially outperforms a weaker one, particularly under distribution shift. Most notably, manipulation recall is nearly saturated across all configurations, indicating that the main challenge of open-world image forensics is not detecting manipulations, but calibrating trust in specialized forensic tools and arbitrating conflicting evidence.",
+      "published": "2026-09-21T09:48:34Z",
+      "updated": "2026-09-21T09:48:34Z",
+      "authors": [
+        "Xianlong Li",
+        "Pietro Bongini",
+        "Niccoló Pancino",
+        "Marco Blanchini",
+        "Benedetta Tondi",
+        "Mauro Barni"
+      ],
+      "url": "https://arxiv.org/abs/2609.24359v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.24359v1",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.775,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "forensic",
+            "forensics"
+          ],
+          "categories": [
+            "cs.AI",
+            "cs.CR"
+          ],
+          "score": 5.0,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "large language model",
+              "forensic",
+              "forensics"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "오픈월드 가짜 이미지 탐지(Open-World Fake Image Detection) 및 이미지 포렌식에 에이전트 AI 프레임워크를 적용하고 분석한 연구로, 관심 분야인 'AI Digital Forensics'에 직접적으로 부합합니다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "기존 전문 탐지기들을 결합하는 에이전트 기반 포렌식 시스템에서 트리아지, 프롬프팅, 증거 중재 등의 구성 요소 역할을 체계적으로 분해하고 분석한 실증적 연구로서 기여점이 있습니다. 다만 메타데이터만으로는 선행 에이전트 기반 포렌식 연구 대비 제안 프레임워크의 독창적 기법 수준을 완전히 파악하기 어려워 불확실성이 존재합니다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "전문 탐지기, 탐지기별 트리아지, 충돌 인지 증거 중재로 구성된 무학습(training-free) 에이전트 프레임워크를 정의하고 6가지 구성과 3가지 멀티모달 LLM 백본을 활용하여 ID 및 OOD 데이터를 평가하는 등 분석 방법론의 구조가 명확하게 기술되어 있습니다. 다만 구체적인 백본 모델명이나 벤치마크 데이터셋의 상세 정보는 메타데이터에 명시되지 않았습니다."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "제공된 메타데이터에는 소스 코드, 프롬프트 템플릿, 데이터셋 등의 공개 링크(예: GitHub 저장소)에 대한 정보가 전혀 포함되어 있지 않아 재현 가능성을 검증할 수 없습니다."
+          },
+          "rationale": "본 논문은 'AI Digital Forensics' 관심사와 매우 밀접한 오픈월드 가짜 이미지 포렌식 문제를 다루며, 에이전트 시스템의 구성 요소(트리아지, 프롬프팅, 추론 중재)를 체계적으로 분해 분석하는 구체적인 방법론을 제시합니다. 그러나 메타데이터 상에 코드 및 데이터 공개 여부가 전혀 명시되지 않아 재현성 확인이 불가능하며, 독창성 측면에서도 선행 에이전트 포렌식 연구 대비 기여도를 메타데이터만으로 단정하기 어렵습니다."
+        }
+      },
+      "rationale": "본 논문은 'AI Digital Forensics' 관심사와 매우 밀접한 오픈월드 가짜 이미지 포렌식 문제를 다루며, 에이전트 시스템의 구성 요소(트리아지, 프롬프팅, 추론 중재)를 체계적으로 분해 분석하는 구체적인 방법론을 제시합니다. 그러나 메타데이터 상에 코드 및 데이터 공개 여부가 전혀 명시되지 않아 재현성 확인이 불가능하며, 독창성 측면에서도 선행 에이전트 포렌식 연구 대비 기여도를 메타데이터만으로 단정하기 어렵습니다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.18751",
+      "title": "Normal Alignment: Improved Cryptanalytic Sign Recovery on Hard-Label Networks",
+      "abstract": "At EUROCRYPT 2025, Carlini et al. proposed a breakthrough in the cryptanalytic extraction on hard-label (S1) deep neural networks (DNNs), demonstrating polynomial-time signature and sign recovery. However, Carlini et al.'s sign-recovery method (which we call Future Toggle) suffers only a marginal advantage over random guessing, producing high-confidence wrong sign predictions in deeper layers. Such errors trigger expensive exponential-time enumeration. This work presents Normal Alignment, a novel statistical sign-recovery approach for S1 DNNs. Drawing on the expected length difference between projected normals of adjacent decision facets at dual points, our method infers neuron signs via normal-signature alignment. It delivers higher voting accuracy and pushes erroneous predictions to low-confidence ranks, which further enables a more efficient combined method, eSOE + Alignment, by combining Normal Alignment with the hard-label SOE extension. This combined strategy removes heavy enumeration overhead and realizes exact polynomial-time full sign recovery. Experiments demonstrate the effectiveness of our method, especially for deep layers. For example, with our method, the signs for CIFAR-10 (architecture 192-64$\\times$8-10) and MNIST (architecture 64-96$\\times$3-32-10) models can be fully recovered in polynomial time; in contrast, Carlini et al.'s sign-recovery method would require exponential-time enumerations involving $2^{52}$ or $2^{82}$ guesses of the signs, respectively.",
+      "published": "2026-09-16T14:42:58Z",
+      "updated": "2026-09-16T14:42:58Z",
+      "authors": [
+        "Shi Tang",
+        "Zirui Chen",
+        "Yongjia Su",
+        "Zhengchao Gao",
+        "Lingyue Qin",
+        "Xiaoyang Dong"
+      ],
+      "url": "https://arxiv.org/abs/2609.18751v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.18751v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.525,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "하드라벨 심층신경망 모델에 대한 암호분석적 부호 복원을 다루어 AI CryptAnalysis 관심사에 직접 부합함."
+          },
+          "novelty": {
+            "score": 5,
+            "reason": "정사영 법선 벡터 차이를 활용한 Normal Alignment로 기존 지수 시간 전수조사를 다항 시간으로 단축함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "법선 서명 정렬 원리와 eSOE 결합 기법, CIFAR-10 및 MNIST 모델 대상 복원 복잡도 비교 실험을 구체적으로 제시함."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "초록 및 메타데이터에 소스 코드나 데이터셋 공개 링크가 제공되지 않음."
+          },
+          "rationale": "하드라벨 신경망 암호분석의 핵심 난제인 부호 복원을 다항 시간으로 해결한 높은 기여가 있으나 코드 공개 링크는 제공되지 않음."
+        }
+      },
+      "rationale": "하드라벨 신경망 암호분석의 핵심 난제인 부호 복원을 다항 시간으로 해결한 높은 기여가 있으나 코드 공개 링크는 제공되지 않음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.21941",
+      "title": "End-to-End Hard-Label Cryptanalytic Model Extraction Using Efficient Sign Recovery",
+      "abstract": "The importance of deep neural networks (DNNs) is widely recognized, and the parameters obtained through training are regarded as valuable assets. Recently, attacks that extract these parameters using only oracle queries to a DNN have been actively studied at IACR conferences. The hard-label setting is the most challenging setting for model extraction, where an adversary can observe only the final output label, such as \"dog\" or \"cat.\" At Eurocrypt 2025, Carlini et al. proposed polynomial-time hard-label extraction of ReLU-based MLPs. However, one step of this attack process, i.e., sign recovery, requires a large number of queries and substantial computation. Implementing this step in a black-box setting remains difficult. Consequently, a fully black-box end-to-end demonstration on trained deep ReLU MLPs has remained a challenge. In this paper, we propose a new sign-recovery algorithm based on a completely different principle from the existing method. Our method requires no dedicated queries for sign recovery. In our experiments, it achieves higher sign-recovery accuracy than the existing method. Consequently, it enables efficient sign recovery even for trained models. With our sign-recovery algorithm, all steps of hard-label model extraction can be implemented in a black-box setting. By combining these implementations, we demonstrate end-to-end model extraction from models trained on MNIST and Fashion-MNIST, with width 16 and 4 or 6 hidden layers, achieving over 98% label agreement.",
+      "published": "2026-09-18T15:56:29Z",
+      "updated": "2026-09-18T15:56:29Z",
+      "authors": [
+        "Akira Ito",
+        "Takayuki Miura",
+        "Yosuke Todo"
+      ],
+      "url": "https://arxiv.org/abs/2609.21941v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.21941v1",
+      "categories": [
+        "cs.CR",
+        "cs.LG"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.35,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "블랙박스 하드라벨 심층신경망 파라미터를 추출하는 암호분석 연구로 AI CryptAnalysis 관심사에 직접 부합함."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 연구와 달리 전용 쿼리가 불필요한 새로운 원리의 부호 복원 알고리즘을 제안함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "블랙박스 모델 추출 파이프라인 및 MNIST/Fashion-MNIST 대상 구체적 아키텍처와 라벨 일치율 실험을 제시함."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "초록 및 메타데이터에 코드나 데이터셋 공개 링크가 명시되어 있지 않음."
+          },
+          "rationale": "AI 암호분석 주제에 정확히 부합하며 효율적인 부호 복원 방식을 구체적 실험으로 입증했으나 코드 공개 여부는 확인되지 않음."
+        }
+      },
+      "rationale": "AI 암호분석 주제에 정확히 부합하며 효율적인 부호 복원 방식을 구체적 실험으로 입증했으나 코드 공개 여부는 확인되지 않음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2095",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2095",
+      "pdfUrl": "https://eprint.iacr.org/2026/2095.pdf",
+      "title": "Cryptanalytic Extraction of Neural Networks Without Known Architecture Assumption",
+      "authors": [
+        "Yantian Shen",
+        "Yi Chen",
+        "Anyu Wang",
+        "Hongbo Yu",
+        "Xiaoyun Wang"
+      ],
+      "abstract": "Cryptanalytic model extraction aims to reconstruct a functionally equivalent model through black-box interactions with the victim model. Under the fundamental assumption that the network architecture is completely known, existing attacks achieve the goal by recovering the model parameters.  In this paper, we explore whether this assumption can be removed practically. Focusing on ReLU fully connected networks, which are widely studied in this field, we propose a guess-and-determine framework that jointly recovers the network architecture (including network depth and hidden-layer dimensions) and the model parameters. This framework is based on a simple yet effective high-level idea: after designing a parameter recovery attack under the known-architecture assumption, we can analyze the architecture-sensitive traces observed during parameter recovery to recover the network architecture. We identify two such traces in differential extraction attacks: (i) a zero suffix in the merged weight vectors produced by signature recovery, whose length reveals the hidden layer dimension; and (ii) an equality pattern in the preimage-based sign recovery, which occurs only under the true hidden layer dimension. These two signals give rise to two routes for network architecture recovery.  For the second-to-last layer, we further propose two methods, one for identifying it, and one for recovering its dimension. Practical end-to-end attacks are implemented on a wide range of ReLU neural networks, including both expansive and non-expansive networks. To the best of our knowledge, this is the first time the feasibility of achieving functionally equivalent extraction on deep neural networks, after removing the known-architecture assumption, has been demonstrated in practice.",
+      "published": "2026-09-18T14:08:18+00:00",
+      "categories": [],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.225,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "신경망 아키텍처 사전 지식이 없는 환경에서의 암호분석적 모델 추출을 다루어 AI CryptAnalysis 관심사에 부합함."
+          },
+          "novelty": {
+            "score": 5,
+            "reason": "네트워크 아키텍처 사전 지식 가정을 배제하고 구조와 파라미터를 공동 복구하는 guess-and-determine 프레임워크를 최초로 제안함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "차분 추출 중 나타나는 2가지 아키텍처 민감 흔적과 계층 차원 복구 메커니즘을 상세히 명시하고 다양한 ReLU 신경망에 구현함."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "메타데이터상 소스코드나 재현 데이터의 공개 링크가 포함되어 있지 않음."
+          },
+          "rationale": "기존 가정을 완화한 혁신적인 AI 암호분석 논문으로 방법론이 체계적이나 메타데이터에 코드 공개 언급은 없음."
+        }
+      },
+      "rationale": "기존 가정을 완화한 혁신적인 AI 암호분석 논문으로 방법론이 체계적이나 메타데이터에 코드 공개 언급은 없음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.18783",
+      "title": "s-MDM: Generative Virtualization of Multi-Device Hardware Variations for Portable DL-SCA",
+      "abstract": "Deep Learning-based Side-Channel Analysis (DL-SCA) frequently suffers from catastrophic performance degradation across unseen hardware due to printed circuit board routing differences, silicon process variations, and measurement noise shifts. This poster presents the Synthetic Multiple Device Model (s-MDM), a zero-target-trace generative framework designed to improve cross-device portability. s-MDM combines a structured cVAE generator, a Walsh-Hadamard leakage anchor, continuous style modulation, and decoupled leakage-style--domain critics to synthesize virtual source-device profiles offline. Benchmarked on 32-bit side-channel traces (AES_PTv2), s-MDM maps a precise operational boundary: while physical MDM remains superior on identical electrical clones (D4), s-MDM achieves consistently low key rank on the layout/acquisition-shifted Pinata target, where physical baselines are unstable or misaligned.",
+      "published": "2026-09-16T15:04:02Z",
+      "updated": "2026-09-16T15:04:02Z",
+      "authors": [
+        "Niloufar Sayadi",
+        "Marten van Dijk",
+        "Chenglu Jin"
+      ],
+      "url": "https://arxiv.org/abs/2609.18783v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.18783v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.175,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "deep learning",
+            "side channel"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "deep learning",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "딥러닝 기반 부채널 분석(DL-SCA)의 장치 간 이식성 문제를 다루어 AI CryptAnalysis 관심사에 직접 부합함."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "cVAE와 Walsh-Hadamard 앵커 등을 결합한 zero-target-trace 가상 프로파일 생성 프레임워크 s-MDM을 제안함."
+          },
+          "methodology": {
+            "score": 3,
+            "reason": "AES_PTv2 및 Pinata 타깃 벤치마크를 수행했으나 포스터 논문 특성상 초록 수준의 요약된 방법론만 서술됨."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "초록 및 메타데이터에 소스 코드나 데이터 저장소 링크가 명시되어 있지 않음."
+          },
+          "rationale": "딥러닝 부채널 분석이라는 핵심 관심사를 다루고 독창적 생성 기법을 제안했으나 포스터 발표물이며 코드 공개가 명시되지 않음."
+        }
+      },
+      "rationale": "딥러닝 부채널 분석이라는 핵심 관심사를 다루고 독창적 생성 기법을 제안했으나 포스터 발표물이며 코드 공개가 명시되지 않음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2127",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2127",
+      "pdfUrl": "https://eprint.iacr.org/2026/2127.pdf",
+      "title": "Polynomial Time Cryptanalytic Extraction of Deep Neural Networks in the Limited Architecture Knowledge Setting",
+      "authors": [
+        "Yiqing Li",
+        "Gaoli Wang"
+      ],
+      "abstract": "Deep Neural Networks (DNNs) have emerged as a cornerstone of modern AI systems, rendering their internal parameters highly valuable intellectual property. Consequently, the security of DNNs against model extraction attacks has garnered significant research attention. Recent cryptanalytic extraction methods have demonstrated that recovering DNN parameters is feasible in polynomial time, both when attackers have exact logit access and in the more restrictive hard-label setting. However, a critical limitation of these state-of-the-art frameworks is the assumption that the attacker possesses a complete architecture knowledge of the target network, including the exact depth and width of the hidden layers. To date, the efficacy of parameter extraction algorithms under limited architecture knowledge remains unexplored.\n\nThis paper demonstrates that in the limited architecture knowledge scenario, existing cryptanalytic attacks suffer from neuron omission, which causes subsequent parameter recovery to fail entirely. To address this, we propose a general adaptive extraction workflow integrated with a novel error detection algorithm capable of identifying missing neuron anomalies and successfully recovering the correct parameters. Through experiment, we achieve the first successful extraction of a four-hidden-layer ReLU network (comprising over 1.1 million parameters) trained on CIFAR-10 under the limited architecture knowledge setting, while maintaining a 100% error detection recall.",
+      "published": "2026-09-20T18:13:21+00:00",
+      "categories": [],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.05,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "제한된 네트워크 아키텍처 지식 환경에서의 심층신경망 암호분석적 모델 추출을 다루어 AI CryptAnalysis 관심사에 직접 부합함."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 암호분석 공격의 뉴런 누락 한계를 규명하고, 이상 징후 탐지 기반의 적응형 추출 기법을 제안함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "적응형 추출 워크플로와 오류 탐지 알고리즘을 기술하고 CIFAR-10 대상 4계층 ReLU 망 실험 결과를 제시함."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "메타데이터에 소스코드나 데이터셋 저장소 링크 및 공개 여부가 언급되어 있지 않음."
+          },
+          "rationale": "AI CryptAnalysis 핵심 주제인 모델 추출 공격을 다루며 방법론과 실험 대상이 명확히 기술되었으나 코드 공개 정보는 없음."
+        }
+      },
+      "rationale": "AI CryptAnalysis 핵심 주제인 모델 추출 공격을 다루며 방법론과 실험 대상이 명확히 기술되었으나 코드 공개 정보는 없음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2097",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2097",
+      "pdfUrl": "https://eprint.iacr.org/2026/2097.pdf",
+      "title": "End-to-End Hard-Label Cryptanalytic Model Extraction Using Efficient Sign Recovery",
+      "authors": [
+        "Akira Ito",
+        "Takayuki Miura",
+        "Yosuke Todo"
+      ],
+      "abstract": "The importance of deep neural networks (DNNs) is widely recognized, and the parameters obtained through training are regarded as valuable assets. Recently, attacks that extract these parameters using only oracle queries to a DNN have been actively studied at IACR conferences. The hard-label setting is the most challenging setting for model extraction, where an adversary can observe only the final output label, such as “dog” or “cat.” At Eurocrypt 2025, Carlini et al. proposed polynomial-time hard-label extraction of ReLU-based MLPs. However, one step of this attack process, i.e., sign recovery, requires a large number of queries and substantial computation. Implementing this step in a black-box setting remains difficult. Consequently, a fully black-box end-to-end demonstration on trained deep ReLU MLPs has remained a challenge. In this paper, we propose a new sign-recovery algorithm based on a completely different principle from the existing method. Our method requires no dedicated queries for sign recovery. In our experiments, it achieves higher sign-recovery accuracy than the existing method. Consequently, it enables efficient sign recovery even for trained models. With our sign-recovery algorithm, all steps of hard-label model extraction can be implemented in a black-box setting. By combining these implementations, we demonstrate end-to-end model extraction from models trained on MNIST and Fashion-MNIST, with width 16 and 4 or 6 hidden layers, achieving over 98% label agreement.",
+      "published": "2026-09-18T15:44:23+00:00",
+      "categories": [],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 3.05,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "하드라벨 환경에서 심층신경망의 효율적 암호분석적 모델 추출을 연구하여 AI CryptAnalysis 관심사에 부합함."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "전용 쿼리 없이 동작하는 새로운 부호 복구(sign recovery) 알고리즘을 제안하여 기존 공격의 병목을 해결함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "부호 복구 알고리즘 원리를 설명하고 MNIST 및 Fashion-MNIST 기반 4/6 은닉층 모델에서 98% 이상 레이블 일치도를 보임."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "메타데이터에 코드나 데이터셋 공개에 대한 구체적인 정보가 제공되지 않음."
+          },
+          "rationale": "하드라벨 블랙박스 모델 추출의 핵심 난제를 해결하는 우수한 관련 연구이나 메타데이터상 코드 공개 여부는 확인되지 않음."
+        }
+      },
+      "rationale": "하드라벨 블랙박스 모델 추출의 핵심 난제를 해결하는 우수한 관련 연구이나 메타데이터상 코드 공개 여부는 확인되지 않음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.23319",
+      "title": "Secrets in Radio Waves: Towards Practical and Protocol-Agnostic PHY Information Hiding",
+      "abstract": "Physical layer (PHY) information hiding supports critical applications, such as digital fingerprinting for transmitter identification and undetectable side channels for covert communication, and has attracted considerable attention from the research community. One category of prior studies focuses on theoretical analysis, proposing techniques such as artificial noise or reconfigurable intelligent surfaces to enable undetectable covert transmission. However, hardware prototypes are rarely presented due to their algorithmic complexity or hard-to-satisfy assumptions. Another category of studies focuses on system-level solutions, achieving PHY information hiding by customizing existing modulation schemes. However, these methods are typically designed for specific wireless protocols, limiting their generalizability. In this work, we introduce a new PHY information hiding paradigm that differs fundamentally from the previous two categories of approaches. Inspired by recent advancements in other domains such as image information hiding, we migrate encoder-decoder neural networks to the PHY information hiding field, embedding secrets by introducing imperceptible distortions within the preamble waveform. Sim-to-real fine-tuning is additionally proposed to tackle unique challenges, e.g., fading and hardware imperfections. The designed methodology is practical and protocol-agnostic. We provide case hardware prototypes of two commercially popular wireless technologies, i.e., LoRa and Bluetooth Low Energy (BLE), using commodity software-defined radio (SDR) transceivers, demonstrating excellent feasibility and generalizability.",
+      "published": "2026-09-20T03:13:54Z",
+      "updated": "2026-09-20T03:13:54Z",
+      "authors": [
+        "Guanxiong Shen",
+        "Hailang Jia",
+        "Junqing Zhang",
+        "Linning Peng",
+        "Liquan Chen",
+        "Aiqun Hu",
+        "Jun Luo"
+      ],
+      "url": "https://arxiv.org/abs/2609.23319v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.23319v1",
+      "categories": [
+        "eess.SP"
+      ],
+      "addedAt": "2026-09-22T11:21:05+00:00",
+      "status": "candidate",
+      "score": 2.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "side channel"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "신경망을 활용한 물리 계층 정보 은닉 및 은닉 채널 연구로 보안/은닉 통신과 접점이 있으나 무선 통신 기술에 집중됨."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "무선 프리앰블 왜곡에 인코더-디코더 신경망과 sim-to-real 미세조정을 적용하여 프로토콜 비종속적 은닉 방식을 제안함."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "LoRa 및 BLE 대상 SDR 트랜시버를 활용한 실제 하드웨어 프로토타입 구현 및 평가 과정을 구체적으로 기술함."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "초록 및 메타데이터에 소스 코드나 하드웨어 설계 파일 공개 링크가 없음."
+          },
+          "rationale": "신경망 기반 물리계층 은닉 채널 구축 및 실물 SDR 검증이 구체적이나 관심사 핵심과의 직접성은 다소 낮고 코드 공개가 없음."
+        }
+      },
+      "rationale": "신경망 기반 물리계층 은닉 채널 구축 및 실물 SDR 검증이 구체적이나 관심사 핵심과의 직접성은 다소 낮고 코드 공개가 없음.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    }
+  ],
+  "seen": [
+    "arxiv:2609.18751",
+    "arxiv:2609.18783",
+    "arxiv:2609.21344",
+    "arxiv:2609.21941",
+    "arxiv:2609.23319",
+    "arxiv:2609.24359",
+    "eprint:2026/2095",
+    "eprint:2026/2097",
+    "eprint:2026/2127"
+  ],
+  "lastWeeklyAt": "2026-09-22T11:21:05+00:00"
 }
