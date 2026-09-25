@@ -51,7 +51,10 @@ def sections(body):
 
 def numbers(text):
     text = unicodedata.normalize("NFKC", text).replace("−", "-")
-    text = re.sub(r"(?<=\d)[ \t]*,[ \t]*(?=\d{3}(?:\D|$))", "", text)
+    # A comma followed by whitespace separates values, not thousands. In a
+    # network list such as "784-16(4)-10, 784-16(6)-10", joining "10, 784"
+    # invents -10784. Also keep unspaced commas before hyphenated structures.
+    text = re.sub(r"(?<=\d),(?=\d{3}(?!\d|-\d))", "", text)
     text = re.sub(r"(?<=\d)[ \t]+(?=\d{3}(?:\D|$))", "", text)
     text = re.sub(r"(?<=\d)[ \t]*\.[ \t]*(?=\d)", ".", text)
     # Percent signs and surrounding space do not change the numeric token.

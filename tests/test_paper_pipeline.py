@@ -141,6 +141,23 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(numbers("Batch size 16."), {"16"})
         self.assertEqual(numbers("정확도99.99%, GPT-4, 82 . 5"), {"99.99", "-4", "82.5"})
 
+    def test_numeric_lists_do_not_become_thousands(self):
+        source = "784-16(4)-10\n784-16(6)-10"
+        for text in ("784-16⁽⁴⁾-10, 784-16⁽⁶⁾-10", "784-16(4)-10,784-16(6)-10"):
+            self.assertEqual(numbers(text), numbers(source))
+            self.assertNotIn("-10784", numbers(text))
+        self.assertEqual(numbers("10, 784"), numbers("10; 784"))
+        self.assertEqual(numbers("-10, 784"), numbers("-10; 784"))
+        self.assertEqual(numbers("12,800; 100,000; -10,784"), numbers("12800; 100000; -10784"))
+        self.assertNotEqual(numbers("-10784"), numbers(source))
+
+    def test_experiment_validation_preserves_numeric_list_boundaries(self):
+        source = "784-16(4)-10\n784-16(6)-10"
+        config = {**CONFIG, "experiment_min_chars": 1}
+        text = "## 실험 및 평가\n두 모델 784-16⁽⁴⁾-10, 784-16⁽⁶⁾-10을 비교했다."
+        self.assertEqual(validate_group("C", text, source, config), [])
+        self.assertTrue(validate_group("C", "## 실험 및 평가\n결과는 -10784였다.", source, config))
+
     def test_long_verbatim_source_copy_rejected(self):
         source = " ".join("word" + str(i) for i in range(30))
         errors = validate_group("A", "## 문제 정의\n" + source + "\n## 주요 기여\n기여", source, CONFIG)
