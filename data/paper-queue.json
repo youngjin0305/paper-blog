@@ -169,7 +169,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-22T11:21:05+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 3.525,
       "scoreDetail": {
         "rule": {
@@ -212,7 +212,7 @@
       "rationale": "하드라벨 신경망 암호분석의 핵심 난제인 부호 복원을 다항 시간으로 해결한 높은 기여가 있으나 코드 공개 링크는 제공되지 않음.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-22T11:21:05+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
     },
@@ -235,7 +235,7 @@
         "cs.LG"
       ],
       "addedAt": "2026-09-22T11:21:05+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.35,
       "scoreDetail": {
         "rule": {
@@ -278,9 +278,10 @@
       "rationale": "AI 암호분석 주제에 정확히 부합하며 효율적인 부호 복원 방식을 구체적 실험으로 입증했으나 코드 공개 여부는 확인되지 않음.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-22T11:21:05+00:00",
-      "failCount": 0,
-      "postPath": null,
-      "topic_id": "ai-cryptanalysis"
+      "failCount": 1,
+      "postPath": "content/ai-cryptanalysis/2026-09-18-f0397bb4b210cd174389.md",
+      "topic_id": "ai-cryptanalysis",
+      "note": ""
     },
     {
       "id": "eprint:2026/2095",
