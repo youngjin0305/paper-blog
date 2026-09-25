@@ -19,7 +19,18 @@
   <div class="filter-row"><a class="chip {{ 'selected' if not selected else '' }}" href="{{ root_url }}">전체 분야</a>{% for topic in topics %}<a class="chip {{ 'selected' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}">{{ topic.name }}</a>{% endfor %}</div>
   {% if posts %}<div class="post-grid">
     {% for post in posts %}
-    <article class="post-card"><div class="card-top"><span class="category-label">{% set ns = namespace(name=post.topic_id) %}{% for topic in topics %}{% if topic.id == post.topic_id %}{% set ns.name=topic.name %}{% endif %}{% endfor %}{{ ns.name }}</span><span class="card-arrow">↗</span></div><a class="card-title" href="{{ post_href(post.id) }}"><h3>{{ post.title }}</h3></a><p class="card-description">{{ '블로그 화면을 확인하는 데모 글입니다. 최신 조사 결과가 아닙니다.' if post.demo else post.summary }}</p><dl class="card-metadata"><div><dt>게재처·출처</dt><dd title="{{ post.publication_note }}">{{ post.publication_label }}{% if post.archive_label != '원문' and post.archive_label not in post.publication_label %} · {{ post.archive_label }}{% endif %}</dd></div>{% if not post.demo %}<div><dt>정리 모델</dt><dd>{{ post.summary_model|default('미기록', true) }}</dd></div><div><dt>정리 날짜</dt><dd>{% if post.summary_date %}<time datetime="{{ post.summarized_at }}">{{ post.summary_date }}</time> (한국 시간){% else %}미기록{% endif %}</dd></div>{% endif %}</dl><div class="card-bottom"><time>{{ post.published[:10] }}</time><span class="badge {{ 'demo' if post.demo else '' }}">{{ 'DEMO' if post.demo else ('원문 기반 요약' if post.basis == 'fulltext' else '초록 기반 요약') }}</span></div></article>
+    <article class="post-card">
+      <div class="card-top"><span class="category-label">{% set ns = namespace(name=post.topic_id) %}{% for topic in topics %}{% if topic.id == post.topic_id %}{% set ns.name=topic.name %}{% endif %}{% endfor %}{{ ns.name }}</span><span class="card-arrow">↗</span></div>
+      <a class="card-title" href="{{ post_href(post.id) }}" title="{{ post.title }}"><h3>{{ post.title }}</h3></a>
+      <p class="card-description" title="{{ post.summary }}">{{ '블로그 화면을 확인하는 데모 글입니다. 최신 조사 결과가 아닙니다.' if post.demo else post.summary }}</p>
+      <div class="card-facts">
+        <span class="venue-tag" title="{{ post.publication_label }} · {{ post.archive_label }}">{{ post.publication_short }}</span>
+        {% if post.demo %}<span class="demo-label">DEMO</span>{% else %}
+        <span class="model-tag" title="정리 모델: {{ post.summary_model|default('미기록', true) }}">{{ post.summary_model_label|default('모델 미기록', true) }}</span>
+        {% if post.summary_date %}<time datetime="{{ post.summarized_at }}" title="정리 날짜">{{ post.summary_date }}</time>{% else %}<span>날짜 미기록</span>{% endif %}
+        {% endif %}
+      </div>
+    </article>
     {% endfor %}
   </div>{% else %}
   <div class="empty-state"><div class="empty-mark">✳</div><h3>{{ '검색 결과가 없습니다.' if query else '첫 번째 발견을 기다리고 있어요.' }}</h3><p>{{ '다른 검색어로 찾아보세요.' if query else '분야를 설정하고 조사를 시작하면 이곳에 논문이 쌓입니다.' }}</p>{% if not static_mode and not query %}<button class="secondary" id="demo-button">데모 글로 둘러보기 →</button>{% endif %}</div>

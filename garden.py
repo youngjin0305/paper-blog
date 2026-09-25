@@ -18,7 +18,7 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 from filelock import FileLock, Timeout
-from model_config import DEFAULT_MODEL, resolve_model
+from model_config import DEFAULT_MODEL, resolve_model, response_models, recorded_model, model_display
 from paper_publication import publication_metadata, publication_display
 
 ROOT = Path(__file__).resolve().parent
@@ -47,6 +47,7 @@ def summary_display(metadata):
         if date.tzinfo is None:
             return {}
         return {"summary_model": model, "summarized_at": stamp,
+                "summary_model_label": model_display(model),
                 "summary_date": date.astimezone(KST).strftime("%Y-%m-%d")}
     except ValueError:
         return {}
@@ -189,6 +190,7 @@ class GeminiCLI:
         return [node, str(cli)]
 
     def summarize(self, topic, paper, model=""):
+        self.used_models = set()
         command = self.command() + ["--prompt", "제공된 논문을 지침에 맞게 요약하세요.", "--output-format", "json",
                                     "--policy", str(self.root / "policies/no-tools.toml"), "--extensions", "none"]
         if model:
@@ -216,6 +218,7 @@ class GeminiCLI:
             raise RuntimeError("Gemini 응답 형식을 해석하지 못했습니다. CLI 버전과 로그인을 확인하세요.") from None
         if payload.get("error") or len(body) < 100 or len(body) > 50000 or "## " not in body:
             raise RuntimeError("Gemini가 유효한 논문 요약을 반환하지 않았습니다. 글은 저장하지 않았습니다.")
+        self.used_models.update(response_models(payload))
         return body
 
 
@@ -233,12 +236,18 @@ class ModelCLI:
         return [executable]
 
     def summarize(self, topic, paper, model=""):
+        self.used_models = set()
         provider, name = resolve_model(model)
         if provider == "gemini":
-            return GeminiCLI(self.root).summarize(topic, paper, name)
+            backend = GeminiCLI(self.root)
+            body = backend.summarize(topic, paper, name)
+            self.used_models = getattr(backend, "used_models", set())
+            return body
         from paper_llm import TextCLIBackend
-        body = TextCLIBackend({"model": model, "timeout": 240,
-                               "agy_work_dir": str(self.root / "data/cli-work")}).generate(make_prompt(topic, paper))
+        backend = TextCLIBackend({"model": model, "timeout": 240,
+                                  "agy_work_dir": str(self.root / "data/cli-work")})
+        body = backend.generate(make_prompt(topic, paper))
+        self.used_models = backend.used_models
         if not 100 <= len(body) <= 50000 or "## " not in body:
             raise RuntimeError(f"{provider}가 유효한 논문 요약을 반환하지 않았습니다. 글은 저장하지 않았습니다.")
         return body
@@ -413,7 +422,7 @@ class Garden:
             for paper in selected:
                 try:
                     body = self.summarizer.summarize(topic, paper, config["model"])
-                    added += int(self.store_post(topic, paper, body, model=config["model"]))
+                    added += int(self.store_post(topic, paper, body, model=recorded_model(self.summarizer, config["model"])))
                 except Exception as exc:
                     errors.append(str(exc)[:500])
                     # Stop after the first model failure (including quota exhaustion).

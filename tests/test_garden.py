@@ -65,9 +65,9 @@ class GardenTests(unittest.TestCase):
         self.garden.research()
         self.assertEqual(self.garden.posts()[0]["summary"], "테스트 요약입니다.")
         html = self.client.get("/").get_data(as_text=True)
-        self.assertIn('<p class="card-description">테스트 요약입니다.</p>', html)
+        self.assertIn('테스트 요약입니다.</p>', html)
         site = export_site(self.app, self.garden)
-        self.assertIn('<p class="card-description">테스트 요약입니다.</p>', (site / "index.html").read_text(encoding="utf-8"))
+        self.assertIn('테스트 요약입니다.</p>', (site / "index.html").read_text(encoding="utf-8"))
 
     def test_new_posts_record_model_and_korean_summary_date(self):
         self.garden.research()
@@ -76,10 +76,10 @@ class GardenTests(unittest.TestCase):
         self.assertTrue(post["summarized_at"].endswith("+09:00"))
         self.assertEqual(post["summary_date"], post["summarized_at"][:10])
         html = self.client.get(f'/posts/{post["id"]}').get_data(as_text=True)
-        self.assertIn("정리 모델: " + post["summary_model"], html)
+        self.assertIn("정리 모델: " + post["summary_model_label"], html)
         self.assertIn("정리 날짜: " + post["summary_date"], html)
         site = export_site(self.app, self.garden)
-        self.assertIn("정리 모델: " + post["summary_model"], (site / f'posts/{post["id"]}.html').read_text(encoding="utf-8"))
+        self.assertIn("정리 모델: " + post["summary_model_label"], (site / f'posts/{post["id"]}.html').read_text(encoding="utf-8"))
 
     def test_legacy_and_demo_posts_do_not_invent_model_provenance(self):
         self.garden.store_post(self.garden.config()["topics"][0], PAPER, FakeSummary().summarize(None, None, None))

@@ -13,7 +13,7 @@ from typing import Protocol
 
 from filelock import FileLock
 from garden import ROOT, atomic_write
-from model_config import resolve_model
+from model_config import resolve_model, response_models
 
 
 class QuotaExceeded(RuntimeError):
@@ -109,6 +109,7 @@ class TextCLIBackend:
     """Pass evidence through stdin; only accept the CLI's final answer."""
     def __init__(self, config):
         self.config = config
+        self.used_models = set()
         self.provider, self.model = resolve_model(config.get("model", ""))
         if self.provider not in ("codex", "claude"):
             raise ValueError("TextCLIBackend requires a Codex or Claude model")
@@ -125,7 +126,7 @@ class TextCLIBackend:
                        "-c", "features.shell_tool=false", "--color", "never",
                        "--output-last-message", str(output)]
         else:
-            command = [executable, "--print", "--output-format", "json", "--tools", "",
+            command = [executable, "--print", "--output-format", "stream-json", "--verbose", "--tools", "",
                        "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
                        "--settings", '{"disableAllHooks":true}', "--setting-sources", "",
                        "--disable-slash-commands", "--no-session-persistence"]
@@ -177,12 +178,13 @@ class TextCLIBackend:
                     if QUOTA.search(stderr):
                         raise self.failure(stderr)
                     if self.provider == "codex":
+                        self.used_models.update(re.findall(r"(?m)^model:\s*([a-zA-Z0-9._-]+)\s*$", stderr))
                         if not output.is_file() or output.is_symlink():
                             raise RuntimeError("codex did not create its final answer file")
                         answer = output.read_text(encoding="utf-8-sig").strip()
                     else:
                         try:
-                            payload = json.loads(stdout)
+                            payload, models = claude_result(stdout)
                         except ValueError:
                             raise RuntimeError("claude returned invalid JSON") from None
                         if not isinstance(payload, dict):
@@ -193,6 +195,7 @@ class TextCLIBackend:
                         if not isinstance(answer, str):
                             raise RuntimeError("claude returned an invalid answer")
                         answer = answer.strip()
+                        self.used_models.update(models)
                     if not answer:
                         raise RuntimeError(f"{self.provider} returned an empty answer")
                     return answer
@@ -201,9 +204,33 @@ class TextCLIBackend:
                         stop_process(process)
 
 
+def claude_result(stdout):
+    """Use main assistant message IDs, excluding auxiliary modelUsage entries."""
+    try:
+        payload = json.loads(stdout)
+    except ValueError:
+        events = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+        models = set()
+        result = None
+        for event in events:
+            if not isinstance(event, dict):
+                raise ValueError("Invalid stream event")
+            if event.get("type") == "assistant" and not event.get("parent_tool_use_id"):
+                models.update(response_models(event.get("message")))
+            if event.get("type") == "result":
+                result = event
+        if result is None:
+            raise ValueError("Missing result event")
+        return result, models
+    # Older JSON envelopes remain supported; only unambiguous usage identifies a model.
+    models = response_models(payload)
+    return payload, models if len(models) == 1 else set()
+
+
 class AgyBackend:
     def __init__(self, config):
         self.config = config
+        self.used_models = set()
 
     def generate(self, prompt, options=None):
         executable = shutil.which(self.config["agy_path"])
@@ -287,6 +314,10 @@ class AgyBackend:
                     raise QuotaExceeded("agy quota exhausted; stopped without retry")
                 if not answer:
                     raise RuntimeError("agy output file is empty")
+                try:
+                    self.used_models.update(response_models(json.loads(diagnostic[0])))
+                except ValueError:
+                    pass
                 return answer
             finally:
                 if process.poll() is None:

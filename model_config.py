@@ -4,6 +4,38 @@ import re
 DEFAULT_MODEL = "gemini-3.8-flash-high"
 
 
+def response_models(payload):
+    """Read IDs from CLI metadata, never from generated prose."""
+    if not isinstance(payload, dict):
+        return set()
+    candidates = [payload.get("model"), payload.get("model_id")]
+    for usage in (payload.get("modelUsage"), (payload.get("stats") or {}).get("models")
+                  if isinstance(payload.get("stats"), dict) else None):
+        if isinstance(usage, dict):
+            candidates.extend(usage)
+    return {s for s in candidates if isinstance(s, str)
+            and re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._-]{0,119}", s)}
+
+
+def recorded_model(backend, requested):
+    models = getattr(backend, "used_models", None)
+    return " + ".join(sorted(models)) if isinstance(models, set) and models else requested
+
+
+def model_display(value):
+    if " + " in value:
+        return " + ".join(model_display(part) for part in value.split(" + "))
+    name = value.removeprefix("claude/")
+    if name in ("opus", "sonnet", "haiku"):
+        return "Claude " + name.title() + " (버전 미기록)"
+    if value in ("claude", "codex", "gemini"):
+        return value.title() + " (버전 미기록)"
+    match = re.fullmatch(r"claude-(opus|sonnet|haiku)-(\d+)(?:-(\d{1,2}))?(?:-\d{8})?", name)
+    if match:
+        return "Claude " + match[1].title() + " " + match[2] + ("." + match[3] if match[3] else "")
+    return value
+
+
 def resolve_model(value):
     if not isinstance(value, str):
         raise ValueError("모델 설정은 문자열이어야 합니다.")

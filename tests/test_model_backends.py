@@ -6,13 +6,35 @@ import unittest
 from unittest.mock import Mock, patch
 
 from garden import ROOT, Garden, ModelCLI, validate_config
-from model_config import DEFAULT_MODEL, resolve_model
+from model_config import DEFAULT_MODEL, resolve_model, model_display, recorded_model
 from paper_config import validate_pipeline
-from paper_llm import AgyBackend, TextCLIBackend, QuotaExceeded, create_backend
+from paper_llm import AgyBackend, TextCLIBackend, QuotaExceeded, create_backend, claude_result
 from paper_pipeline import Pipeline
 
 
 class RoutingTests(unittest.TestCase):
+    def test_exact_model_display_does_not_guess_alias_version(self):
+        self.assertEqual(model_display("claude-opus-5"), "Claude Opus 5")
+        self.assertEqual(model_display("claude-opus-4-6"), "Claude Opus 4.6")
+        self.assertIn("버전 미기록", model_display("claude/opus"))
+
+    def test_stream_provenance_ignores_auxiliary_models(self):
+        events = [
+            {"type": "system", "model": "claude-opus-5"},
+            {"type": "assistant", "message": {"model": "claude-opus-5"}, "parent_tool_use_id": None},
+            {"type": "assistant", "message": {"model": "claude-haiku-4-5"}, "parent_tool_use_id": "helper"},
+            {"type": "result", "subtype": "success", "result": "answer",
+             "modelUsage": {"claude-haiku-4-5": {}, "claude-opus-5": {}}},
+        ]
+        payload, models = claude_result("\n".join(json.dumps(e) for e in events))
+        self.assertEqual(payload["result"], "answer")
+        self.assertEqual(models, {"claude-opus-5"})
+        backend = TextCLIBackend({"model": "claude/opus"})
+        backend.used_models = models
+        self.assertEqual(recorded_model(backend, "claude/opus"), "claude-opus-5")
+        with self.assertRaises(ValueError):
+            claude_result("\n".join(json.dumps(e) for e in events[:-1]))
+
     def test_model_only_routing(self):
         for value, expected in [("", ("gemini", DEFAULT_MODEL)),
                                 ("gemini/custom", ("gemini", "custom")),
@@ -68,6 +90,13 @@ class RoutingTests(unittest.TestCase):
 
 
 class AdapterTests(unittest.TestCase):
+    def test_streamed_actual_model_is_retained_for_saved_posts(self):
+        self.stdout = b'{"type":"assistant","message":{"model":"claude-opus-5"}}\n{"type":"result","subtype":"success","result":"answer","modelUsage":{"claude-opus-5":{},"claude-haiku-4-5":{}}}\n'
+        backend = TextCLIBackend({**self.config, "model": "claude/opus"})
+        with patch("paper_llm.shutil.which", return_value="claude.exe"), patch("paper_llm.subprocess.Popen", side_effect=self.spawn):
+            self.assertEqual(backend.generate("evidence"), "answer")
+        self.assertEqual(backend.used_models, {"claude-opus-5"})
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

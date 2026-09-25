@@ -17,7 +17,7 @@ from garden import ROOT, UTC, atomic_write, now, validate_config, summary_metada
 from paper_config import validate_pipeline
 from paper_git import Publisher
 from paper_llm import create_backend, QuotaExceeded, configure_workspace, workspace_root
-from model_config import DEFAULT_MODEL
+from model_config import DEFAULT_MODEL, recorded_model
 from paper_publication import publication_metadata
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, rule_score
@@ -270,6 +270,8 @@ class Pipeline:
         return self.backend.generate(prompt, {"kind": group})
 
     def daily(self, resume_draft=False):
+        if isinstance(getattr(self.backend, "used_models", None), set):
+            self.backend.used_models.clear()
         self.apply_topic_gate()
         items = ordered(self.queue)
         if not items:
@@ -352,7 +354,7 @@ class Pipeline:
                             errors.append("Reference selection failed twice")
                             selected = []
                         prompt += "\n검증 실패: 허용 번호의 JSON 정수 배열만 출력하라."
-            model = self.config["model"]
+            model = recorded_model(self.backend, self.config["model"])
             if reused_model and reused_model != model:
                 model = f"{reused_model} + {model}"
             path, document = assemble(paper, groups, references, selected, self.config, summary_model=model)
