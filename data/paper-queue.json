@@ -300,7 +300,7 @@
       "published": "2026-09-18T14:08:18+00:00",
       "categories": [],
       "addedAt": "2026-09-22T11:21:05+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 3.225,
       "scoreDetail": {
         "rule": {
@@ -341,9 +341,10 @@
       "rationale": "기존 가정을 완화한 혁신적인 AI 암호분석 논문으로 방법론이 체계적이나 메타데이터에 코드 공개 언급은 없음.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-22T11:21:05+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
-      "topic_id": "ai-cryptanalysis"
+      "topic_id": "ai-cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "arxiv:2609.18783",
@@ -363,7 +364,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-22T11:21:05+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.175,
       "scoreDetail": {
         "rule": {
@@ -407,8 +408,9 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-22T11:21:05+00:00",
       "failCount": 0,
-      "postPath": null,
-      "topic_id": "ai-cryptanalysis"
+      "postPath": "content/ai-cryptanalysis/2026-09-16-948152698cb491494dcb.md",
+      "topic_id": "ai-cryptanalysis",
+      "doi": "10.1145/3830454.3846456"
     },
     {
       "id": "eprint:2026/2127",
