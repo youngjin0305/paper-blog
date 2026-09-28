@@ -151,7 +151,7 @@ def validate_document(document, paper, source, config):
     errors = []
     try:
         metadata, body = split_document(document)
-        if set(metadata) - PUBLICATION_FIELDS not in (FIELDS, FIELDS | SUMMARY_FIELDS):
+        if set(metadata) - PUBLICATION_FIELDS - SUMMARY_FIELDS != FIELDS:
             errors.append("Frontmatter fields do not match existing posts")
         for key in PUBLICATION_FIELDS & set(metadata):
             if not isinstance(metadata[key], str):
@@ -164,6 +164,8 @@ def validate_document(document, paper, source, config):
             errors.append("Title must come from metadata")
         from datetime import datetime
         for name in ("date", "collected_at", *(["summarized_at"] if "summarized_at" in metadata else [])):
+            if not isinstance(metadata[name], str):
+                raise ValueError(f"Frontmatter {name} must be an ISO timestamp string")
             if datetime.fromisoformat(metadata[name].replace("Z", "+00:00")).tzinfo is None:
                 errors.append(f"Frontmatter {name} must include timezone")
         if metadata.get("basis") != "fulltext" or metadata.get("demo") is not False:

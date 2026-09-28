@@ -129,8 +129,16 @@ class ValidationTests(unittest.TestCase):
         legacy = "---\n" + json.dumps(metadata) + "\n---\n" + body
         self.assertEqual(validate_document(legacy, PAPER, FIXTURE["markdown"], config), [])
         metadata["summary_model"] = "claude/opus"
-        malformed = "---\n" + json.dumps(metadata) + "\n---\n" + body
-        self.assertTrue(validate_document(malformed, PAPER, FIXTURE["markdown"], config))
+        model_only = "---\n" + json.dumps(metadata) + "\n---\n" + body
+        self.assertEqual(validate_document(model_only, PAPER, FIXTURE["markdown"], config), [])
+        metadata.pop("summary_model")
+        metadata["summarized_at"] = "2026-09-24T14:15:03+09:00"
+        date_only = "---\n" + json.dumps(metadata) + "\n---\n" + body
+        self.assertEqual(validate_document(date_only, PAPER, FIXTURE["markdown"], config), [])
+        for value in (None, 123, "bad date", "2026-09-24"):
+            metadata["summarized_at"] = value
+            malformed = "---\n" + json.dumps(metadata) + "\n---\n" + body
+            self.assertTrue(validate_document(malformed, PAPER, FIXTURE["markdown"], config))
 
     def test_numeric_normalization_and_hallucination_report(self):
         self.assertEqual(numbers("1,000 82.50 % -0.50"), numbers("1000 82.5% -0.5"))

@@ -37,30 +37,37 @@ def summary_metadata(model):
             "summarized_at": datetime.now(KST).isoformat(timespec="seconds")}
 
 
+def parse_timestamp(value, default_timezone=None):
+    """Parse stored ISO timestamps; callers choose whether legacy naive dates work."""
+    if not isinstance(value, str):
+        return None
+    try:
+        stamp = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if stamp.tzinfo is None:
+        return stamp.replace(tzinfo=default_timezone) if default_timezone else None
+    return stamp
+
+
 def summary_sort_time(post):
     for key in ("summarized_at", "created", "published"):
-        try:
-            stamp = datetime.fromisoformat(post.get(key, "").replace("Z", "+00:00"))
-            return (stamp if stamp.tzinfo else stamp.replace(tzinfo=UTC)).astimezone(UTC)
-        except (ValueError, TypeError, AttributeError):
-            continue
+        stamp = parse_timestamp(post.get(key), default_timezone=UTC)
+        if stamp is not None:
+            return stamp.astimezone(UTC)
     return datetime.min.replace(tzinfo=UTC)
 
 
 def summary_display(metadata):
     """Only display provenance explicitly stored with the document."""
-    model, stamp = metadata.get("summary_model"), metadata.get("summarized_at")
-    if not isinstance(model, str) or not model or not isinstance(stamp, str):
-        return {}
-    try:
-        date = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
-        if date.tzinfo is None:
-            return {}
-        return {"summary_model": model, "summarized_at": stamp,
-                "summary_model_label": model_display(model),
-                "summary_date": date.astimezone(KST).strftime("%Y-%m-%d")}
-    except ValueError:
-        return {}
+    result = {}
+    model = metadata.get("summary_model")
+    if isinstance(model, str) and model.strip():
+        result.update(summary_model=model.strip(), summary_model_label=model_display(model.strip()))
+    date = parse_timestamp(metadata.get("summarized_at"))
+    if date is not None:
+        result.update(summarized_at=date.isoformat(), summary_date=date.astimezone(KST).strftime("%Y-%m-%d"))
+    return result
 
 
 def atomic_write(path: Path, content: str):

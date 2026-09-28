@@ -8,7 +8,7 @@ from unittest.mock import patch
 from subprocess import CompletedProcess
 
 from app import create_app, export_site, rendered_markdown
-from garden import Arxiv, Garden, GeminiCLI, ROOT, validate_config, summary_sort_time
+from garden import Arxiv, Garden, GeminiCLI, ROOT, validate_config, summary_sort_time, summary_display
 
 
 PAPER = {"id": "2609.00001v1", "title": "A fixture paper", "abstract": "Test abstract, not a real research result.",
@@ -29,6 +29,41 @@ class FakeSummary:
 
 
 class GardenTests(unittest.TestCase):
+    def test_summary_metadata_fields_are_independent(self):
+        stamp = "2026-09-24T14:15:03+09:00"
+        display = summary_display({"summarized_at": stamp})
+        self.assertEqual(display["summary_date"], "2026-09-24")
+        self.assertNotIn("summary_model", display)
+        for bad in (None, "", "invalid", 123, "2026-09-24"):
+            display = summary_display({"summary_model": "claude-opus-5", "summarized_at": bad})
+            self.assertEqual(display["summary_model_label"], "Claude Opus 5")
+            self.assertNotIn("summary_date", display)
+        self.assertEqual(summary_display({"summary_model": 123, "summarized_at": stamp})["summary_date"], "2026-09-24")
+        self.assertEqual(summary_display({"summarized_at": "2026-09-24T23:30:00Z"})["summary_date"], "2026-09-25")
+
+    def test_date_only_post_in_live_static_and_sorting(self):
+        from paper_validation import split_document
+        self.garden.research()
+        post = self.garden.posts()[0]
+        path = self.root / post["path"]
+        metadata, body = split_document(path.read_text(encoding="utf-8"))
+        metadata.pop("summary_model")
+        metadata["summarized_at"] = "2026-09-24T14:15:03+09:00"
+        for basis in ("abstract", "fulltext"):
+            with self.subTest(basis=basis):
+                metadata["basis"] = basis
+                path.write_text("---\n" + json.dumps(metadata) + "\n---\n" + body, encoding="utf-8")
+                actual = self.garden.post(post["id"])
+                self.assertEqual(actual["summary_date"], "2026-09-24")
+                self.assertEqual(summary_sort_time(actual), datetime(2026, 9, 24, 5, 15, 3, tzinfo=timezone.utc))
+                site = export_site(self.app, self.garden)
+                for html in (self.client.get("/").get_data(as_text=True),
+                             self.client.get('/posts/' + post["id"]).get_data(as_text=True),
+                             (site / "index.html").read_text(encoding="utf-8"),
+                             (site / "posts" / (post["id"] + ".html")).read_text(encoding="utf-8")):
+                    self.assertIn("2026-09-24", html)
+                    self.assertNotIn("날짜 미기록", html)
+
     def test_summary_sort_normalizes_timezones_and_legacy_dates(self):
         older = {"summarized_at": "2026-09-28T09:00:00+09:00", "published": "2026-09-28"}
         newer = {"summarized_at": "2026-09-28T01:00:00Z", "published": "2020-01-01"}
