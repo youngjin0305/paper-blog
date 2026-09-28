@@ -159,6 +159,25 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(numbers("12,800; 100,000; -10,784"), numbers("12800; 100000; -10784"))
         self.assertNotEqual(numbers("-10784"), numbers(source))
 
+    def test_pdf_table_cells_and_formatted_thousands(self):
+        source = "T5 188 175 180\nEff-CNN 191 244 270\nASCAD CNN_best 400 4 _,_ 000"
+        self.assertTrue({"188", "175", "1.8E+2", "191", "244", "2.7E+2", "4E+3"} <= numbers(source))
+        self.assertEqual(numbers("1 000"), numbers("1,000"))
+        self.assertNotIn("1.8817518E+8", numbers(source))
+
+    def test_abstract_accepts_digit_translated_from_english_word(self):
+        paper = {**PAPER, "abstract": "We evaluate seven models on 12 samples."}
+        groups = deepcopy(FIXTURE["groups"])
+        groups["A"] = groups["A"].replace(
+            "이 합성 테스트 자료는 검색 실험을 설명한다. 실제 연구 결과가 아니다.",
+            "모델 7종을 표본 12개로 평가한다.")
+        document = assemble(paper, groups, {}, [], CONFIG)[1]
+        self.assertEqual(validate_document(document, paper, FIXTURE["markdown"], CONFIG), [])
+        self.assertIn("Translated abstract", " ".join(validate_document(
+            document.replace("모델 7종", "모델 8종"), paper, FIXTURE["markdown"], CONFIG)))
+        self.assertIn("Translated abstract", " ".join(validate_document(
+            document.replace("표본 12개", "표본 여러 개"), paper, FIXTURE["markdown"], CONFIG)))
+
     def test_experiment_validation_preserves_numeric_list_boundaries(self):
         source = "784-16(4)-10\n784-16(6)-10"
         config = {**CONFIG, "experiment_min_chars": 1}

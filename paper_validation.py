@@ -55,7 +55,11 @@ def numbers(text):
     # network list such as "784-16(4)-10, 784-16(6)-10", joining "10, 784"
     # invents -10784. Also keep unspaced commas before hyphenated structures.
     text = re.sub(r"(?<=\d),(?=\d{3}(?!\d|-\d))", "", text)
-    text = re.sub(r"(?<=\d)[ \t]+(?=\d{3}(?:\D|$))", "", text)
+    # PyMuPDF's Markdown output may italicize a thousands comma as "4 _,_ 000".
+    text = re.sub(r"(?<=\d)[ \t]*_[ \t]*,[ \t]*_[ \t]*(?=\d{3}(?!\d))", "", text)
+    # A three-digit table cell followed by another is not a spaced thousands
+    # group ("188 175 180"). Nor is the digit in a model name ("T5 188").
+    text = re.sub(r"(?<![\w.-])(\d{1,2})[ \t]+(?=\d{3}(?:\D|$))", r"\1", text)
     text = re.sub(r"(?<=\d)[ \t]*\.[ \t]*(?=\d)", ".", text)
     # Percent signs and surrounding space do not change the numeric token.
     pattern = r"(?<![\d.])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\d|\.\d)"
@@ -96,6 +100,17 @@ def parse_references(source):
 def quote_words(text):
     quoted = re.findall(r'(?m)^>\s*(.+)$|[“"]([^”"\n]+)[”"]', text)
     return sum(len((a or b).split()) for a, b in quoted)
+
+
+def spelled_out_numbers(text):
+    """English cardinal numbers that a faithful Korean abstract may render as digits."""
+    words = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4,
+             "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+             "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+             "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+             "eighteen": 18, "nineteen": 19, "twenty": 20}
+    return {str(words[match.group().lower()]) for match in
+            re.finditer(r"\b(?:" + "|".join(words) + r")\b", text, re.I)}
 
 
 def validate_group(group, text, source, config):
@@ -175,8 +190,11 @@ def validate_document(document, paper, source, config):
     if not re.search(r"(?m)^# \S", body):
         errors.append("Missing title header")
     present = sections(body)
-    if config["abstract_mode"] == "korean" and numbers(present.get("초록", "")) != numbers(paper["abstract"]):
-        errors.append("Translated abstract must preserve the original numeric values")
+    if config["abstract_mode"] == "korean":
+        translated = numbers(present.get("초록", ""))
+        original = numbers(paper["abstract"])
+        if original - translated or translated - original - spelled_out_numbers(paper["abstract"]):
+            errors.append("Translated abstract must preserve the original numeric values")
     for name in REQUIRED:
         if not present.get(name):
             errors.append("Missing required section: " + name)

@@ -465,8 +465,8 @@
         }
       },
       "rationale": "AI CryptAnalysis 핵심 주제인 모델 추출 공격을 다루며 방법론과 실험 대상이 명확히 기술되었으나 코드 공개 정보는 없음.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
@@ -525,8 +525,8 @@
         }
       },
       "rationale": "하드라벨 블랙박스 모델 추출의 핵심 난제를 해결하는 우수한 관련 연구이나 메타데이터상 코드 공개 여부는 확인되지 않음.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
@@ -592,11 +592,648 @@
         }
       },
       "rationale": "신경망 기반 물리계층 은닉 채널 구축 및 실물 SDR 검증이 구체적이나 관심사 핵심과의 직접성은 다소 낮고 코드 공개가 없음.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-22T11:21:05+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2224",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2224",
+      "pdfUrl": "https://eprint.iacr.org/2026/2224.pdf",
+      "title": "The Tower of Babel: Large Language Models for Side-channel Analysis",
+      "authors": [
+        "Iris Dania Jimenez",
+        "Stjepan Picek",
+        "Michael Hutter"
+      ],
+      "abstract": "Deep learning-based side-channel analysis (DLSCA) is dominated by CNNs and from-scratch Transformer architectures, while pretrained Large Language Models (LLMs) as side-channel distinguishers remain largely unexplored. We present the first systematic study of seven off-the-shelf pretrained LLMs (DeepSeek, Falcon, GPT-J, GPT-2, GPT-2m, Qwen2, T5) on three masked AES datasets, i.e., ASCADf, ASCADv, and eShard. With lightweight fine-tuning and no architectural redesign of the backbone, Falcon and GPT-2m reach GE=1 on ASCADf in only 12 to 16 traces (16, 12 and 12 traces for Falcon and 15, 14 and 13 for GPT-2m on desync0, desync50 and desync100) and uniquely sustain this trace count under desynchronization, an order of magnitude below the best prior desynchronized results. The strongest reported alternatives, EstraNet (13 traces) and Order-vs-Chaos (1 trace), are bespoke architectures trained from scratch and report only synchronized results, while other CNN- and Transformer-based baselines degrade substantially under desynchronization. The pretrained LLMs additionally extract exploitable leakage from all 16 first-round AES key bytes, the first such result outside of multi-task CNNs trained from scratch. We further provide the first per-share evaluation and the first interpretability analysis of LLM-based SCA using Effective Perceived Information (EPI), revealing a correlation between the models' leakage extraction capability and their attack performance. Strikingly, randomly initialized backbones perform on par with their pretrained counterparts, indicating that much of the advantage is architectural rather than derived from language pretraining. Our findings establish LLM architectures as unexpectedly powerful, robust, and reusable side-channel distinguishers whose inductive bias yields very low trace complexity and strong robustness to desynchronization.",
+      "published": "2026-09-26T09:16:26+00:00",
+      "categories": [],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "pinned",
+      "score": 4.65,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "deep learning",
+            "large language model",
+            "LLM",
+            "transformer",
+            "side channel"
+          ],
+          "categories": [],
+          "score": 5.0,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "deep learning",
+              "large language model",
+              "LLM",
+              "transformer",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "사전학습 LLM을 마스킹된 AES 부채널 분석 구별자로 사용하는 연구로 AI 암호해독 관심사에 정면으로 부합한다."
+          },
+          "novelty": {
+            "score": 5,
+            "reason": "초록이 사전학습 LLM 기반 SCA의 첫 체계적 연구, 첫 share별 평가, 첫 EPI 해석 분석을 주장하고 무작위 초기화 백본 비교로 반직관적 결론을 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "7개 LLM, 3개 데이터셋(ASCADf/ASCADv/eShard), desync0/50/100 조건, GE=1 도달 trace 수와 16개 키바이트 결과, EstraNet·Order-vs-Chaos 베이스라인 비교까지 구체적이다."
+          },
+          "reproducibility": {
+            "score": 3,
+            "reason": "공개 데이터셋과 공개 모델, 경량 파인튜닝이라는 설정은 재현에 유리하나 코드·가중치 공개 여부는 메타데이터에 언급이 없다."
+          },
+          "rationale": "AI 암호해독 관심사에 가장 잘 맞고 주장·실험 설계·비교 대상이 모두 구체적이다. 공개 벤치마크를 쓰는 점은 유리하지만 저장소 공개 여부는 확인되지 않는다."
+        }
+      },
+      "rationale": "AI 암호해독 관심사에 가장 잘 맞고 주장·실험 설계·비교 대상이 모두 구체적이다. 공개 벤치마크를 쓰는 점은 유리하지만 저장소 공개 여부는 확인되지 않는다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive",
+      "note": "검증기 수정 후 저장된 초안 재검증"
+    },
+    {
+      "id": "arxiv:2609.26893",
+      "title": "ACTS: A multi-tier benchmark evaluating LLM cipher identification under controlled blind conditions",
+      "abstract": "We introduce ACTS (Artifacts in Cipher Testing Suite), a reproducible benchmark that isolates cryptanalytic ability through tiered metadata deprivation (Tier-1: full metadata; Tier-2: filename only; Tier-3: completely blind) and tests forced reasoning (Tier-5: chain-of-thought, code-as-reasoning, self-correction) on ciphertext alone. A 10-configuration ablation study on 7,000 files, using a single 70/30 train-test split for feature-removal analysis, provides additional evidence at scale. Live API inference on a v2b corpus with fully randomised padding (PKCS7, ISO 10126, and ANSI X9.23 selected per file), unique CSPRNG keys, and unique plaintexts (127 files per model, 381 Tier-1 records, 380 Tier-3 records across three cloud systems, supplemented by 254 autonomous agentic evaluations in Tier-4) yields a combined Tier-3 accuracy of 30.8%, only modestly above the 14.3% random baseline for seven-way classification. The corresponding combined metadata-dependency gap is 40.9 percentage points (Tier-1: 71.7% vs. Tier-3: 30.8%). Against a classical Random Forest (69.2% on 7,000 files, trained on engineered byte-level features), the observed live gap is 38.4 percentage points. Because this comparison spans different input representations and training paradigms, the gap should be interpreted as an overall capability difference rather than a clean factorial decomposition. Six findings are reported: (1) Metadata dependency remains large; (2) Scaling failure under blind conditions; (3) Forced reasoning is epiphenomenal; (4) The observed live capability gap exceeds earlier heuristic estimates; (5) The signal is primarily structural rather than statistical; (6) Heuristic invariance versus ML fragility reveals different failure modes.",
+      "journal_ref": "Expert Systems with Applications, Vol. 332, 133329 (2026)",
+      "publication_note": "38 pages, 6 figures, 8 tables",
+      "doi": "10.1016/j.eswa.2026.133329",
+      "published": "2026-09-22T18:00:33Z",
+      "updated": "2026-09-22T18:00:33Z",
+      "authors": [
+        "Youssef Hamdi Zafaan Ibrahim",
+        "Mohammed Khalaf Salama"
+      ],
+      "url": "https://arxiv.org/abs/2609.26893v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.26893v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 4.05,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "LLM",
+            "cryptanalytic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "LLM",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "LLM의 암호 식별 능력을 통제된 블라인드 조건에서 평가하는 벤치마크로 AI 암호해석 관심사에 직결."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "메타데이터 박탈 계층화(Tier-1~3)와 강제 추론 계층을 결합한 벤치마크 설계 및 메타데이터 의존성 정량화가 새로운 기여로 제시됨."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "7,000개 파일 10구성 절제 연구, 70/30 분할, 무작위 패딩(PKCS7/ISO 10126/ANSI X9.23)과 CSPRNG 키를 쓴 라이브 API 추론, 7지 분류 무작위 기준선 14.3% 대비 비교까지 명시."
+          },
+          "reproducibility": {
+            "score": 4,
+            "reason": "스스로 재현 가능한 벤치마크라 명시하고 파일·레코드 수, 분할, 랜덤포레스트 기준선이 상세하며 SCI 저널(DOI) 게재; 다만 코드 저장소 공개 여부는 확인되지 않음."
+          },
+          "rationale": "평가 설계가 가장 정교하고 게재 정보와 수치가 충실해 종합적으로 가장 신뢰도 높은 후보이며, 코드 링크 부재만이 재현성의 남은 공백이다."
+        }
+      },
+      "rationale": "평가 설계가 가장 정교하고 게재 정보와 수치가 충실해 종합적으로 가장 신뢰도 높은 후보이며, 코드 링크 부재만이 재현성의 남은 공백이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.28205",
+      "title": "GUIAuditor: Enabling Post-hoc Child Safety Forensics via Action-Guided GUI Provenance on Mobile Devices",
+      "abstract": "The proliferation of smart devices exposes children to online risks like grooming and financial scams that are deeply embedded within legitimate applications. Current approaches rely on automated prevention and detection, a paradigm that is fundamentally limited by its inherent fallibility. Whether rule-based or AI-driven, they inevitably produce false positives and negatives, failing to provide reliable protection. In this paper, we argue for a complementary, human-in-the-loop, post-hoc forensic paradigm. We present GUIAuditor, the first system designed to realize this vision by creating GUI Provenance: a queryable, semantic record of a child's interaction sequence. To generate this, GUIAuditor leverages a Multimodal Large Language Model (MLLM) to translate the temporal sequence of GUI events into a human-understandable narrative. To make this practical on mobile devices, a novel evidence distillation pipeline reduces the data requiring analysis by over 89.2% compared to periodic sampling approaches adopted by industry standards, with negligible impact on accuracy. On a new dataset of 295 interaction clips, GUIAuditor achieves a 95.23% Macro-F1 Score in logging significant events and, crucially, its two-stage forensic query engine successfully retrieves the correct evidence as the top result for over 90.20% of natural language questions. An end-to-end evaluation on three modern smartphones shows that the full pipeline, including on-device MLLM inference, adds 2.1W of power draw and 7.4s of per-event latency, with a peak memory footprint of ${\\sim}$3.1GB. These results show that post-hoc GUI forensics can run on modern mobile devices and provide useful context for guardian-led safety review.",
+      "journal_ref": "",
+      "publication_note": "Accepted by ACM IMWUT/Ubicomp 2026",
+      "doi": "10.1145/3831978",
+      "published": "2026-09-23T14:42:50Z",
+      "updated": "2026-09-23T14:42:50Z",
+      "authors": [
+        "Junlin Liu",
+        "Yifeng Cai",
+        "Shuai Wang",
+        "Zhineng Zhong",
+        "Shaofei Li",
+        "Jiacheng Liu",
+        "Yuanchun Li",
+        "Ziqi Zhang",
+        "Xiangqun Chen",
+        "Ding Li",
+        "Yao Guo"
+      ],
+      "url": "https://arxiv.org/abs/2609.28205v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.28205v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 3.825,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "forensic",
+            "forensics"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 4,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "large language model",
+              "forensic",
+              "forensics"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "MLLM으로 모바일 GUI 이벤트를 사후 포렌식 증거로 변환하는 시스템이라 AI 디지털 포렌식 관심사에 부합한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "GUI Provenance 기반 사후 human-in-the-loop 포렌식을 최초 시스템으로 제시하고 증거 증류 파이프라인을 새로 도입한다고 주장한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "295개 상호작용 클립 신규 데이터셋, Macro-F1 95.23%, 질의 top-1 검색 90.20%, 데이터 89.2% 감소, 3개 단말에서 2.1W·7.4s·3.1GB 오버헤드까지 측정 조건이 상세하다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "IMWUT 2026 게재와 DOI가 있어 논문 접근은 확실하나 코드·데이터셋 공개 여부는 메타데이터에 언급이 없다."
+          },
+          "rationale": "포렌식 목적과 시스템 평가가 모두 구체적이고 동료심사를 통과한 점이 신뢰도를 높인다. 신규 데이터셋을 만들었으나 공개 여부가 확인되지 않아 재현성은 유보적으로 평가했다."
+        }
+      },
+      "rationale": "포렌식 목적과 시스템 평가가 모두 구체적이고 동료심사를 통과한 점이 신뢰도를 높인다. 신규 데이터셋을 만들었으나 공개 여부가 확인되지 않아 재현성은 유보적으로 평가했다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.27427",
+      "title": "Extracting CNNs in the Unknown-Architecture and Feedback-Agnostic Setting",
+      "abstract": "This paper studies the cryptanalytic extraction of convolutional neural networks (CNNs). Existing cryptanalytic extraction attacks on CNNs assume that the network architecture is known, and try to recover model parameters.In this paper, we prove for the first time that the architecture assumption can be removed for CNNs with both max and average pooling. Our core finding is that the spatial geometry of the weight vectors recovered by existing parameter-recovery attacks naturally leaks the architecture. We formalize this geometry and establish its correspondence with the architectural knowledge of a convolutional layer: (1) The sparsity consistency with the convolution receptive field reveals the layer type, the kernel size, and the stride; (2) The numerical consistency with the kernel parameters reveals the padding mode and the output-channel number; (3) The structural consistency with the pooling operation reveals the pooling type, the window size, and the stride. Although the recovered vectors are obtained using different methods in the raw-output and hard label settings, their spatial geometry remains the same. Therefore, our architecture recovery is feedback-agnostic: combined with a parameter-recovery attack, it yields a complete cryptanalytic extraction framework that recovers both the architecture and the parameters in the black-box setting. Extensive experiments, including both layer-wise and end-to-end ones, on a wide range of CNNs demonstrate that simultaneously recovering the network architecture and the model parameters is practical.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-23T06:45:53Z",
+      "updated": "2026-09-23T06:45:53Z",
+      "authors": [
+        "Jiashuo Liu",
+        "Ruijie Ma",
+        "Manman Li",
+        "Yi Chen",
+        "Shaozhen Chen"
+      ],
+      "url": "https://arxiv.org/abs/2609.27427v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.27427v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 3.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "cryptanalytic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "cryptanalytic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "CNN에 대한 암호해독적(cryptanalytic) 모델 추출을 직접 다루어 AI 암호해석 관심사에 정확히 부합."
+          },
+          "novelty": {
+            "score": 5,
+            "reason": "기존 공격의 아키텍처 기지(known) 가정을 제거하고, 복원된 가중치 벡터의 공간적 기하 구조가 아키텍처를 누출함을 최초로 증명했다고 명시."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "희소성·수치·구조 일치라는 세 가지 대응 규칙으로 층 종류·커널·스트라이드·패딩·풀링을 복원하는 절차를 형식화하고 층 단위 및 종단 실험을 수행."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "다양한 CNN에 대한 광범위 실험을 언급하나 코드·데이터 공개 언급이 메타데이터에 없고 저널 정보도 없음."
+          },
+          "rationale": "관심사 적합성과 새로움이 가장 높고 복원 절차가 구체적이지만, 공개 산출물 정보가 없어 재현성은 낮게 평가된다."
+        }
+      },
+      "rationale": "관심사 적합성과 새로움이 가장 높고 복원 절차가 구체적이지만, 공개 산출물 정보가 없어 재현성은 낮게 평가된다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.29045",
+      "title": "The Tokens Remember: When Tokenization Bypasses Knowledge Editing and Unlearning",
+      "abstract": "Open-weight LLMs give downstream users control over the inference stack, but this flexibility can undermine post-release guarantees that sensitive knowledge has been modified or removed. Model editing and machine unlearning are used to modify or remove targeted knowledge without retraining models from scratch. However, existing security evaluations of these techniques face two critical limitations. First, they typically require access to either the original pre-edit/unlearning model or auxiliary classifiers to detect modifications or reconstruct pre-edit behavior. Second, they evaluate modifications under the canonical tokenization of an input, implicitly treating tokenization as a benign preprocessing step. We show that this assumption creates a security gap: the same input string can be represented by alternative valid tokenizations that induce different computational trajectories, allowing an adversary to bypass localized modifications and recover information intended to be suppressed. We introduce Toketive, a simple yet powerful reference-free attack that exploits the tokenization-based side channel to (i) detect modified knowledge and (ii) reconstruct the corresponding pre-edit response. It operates solely on the released model and requires neither the pre-edit model, training data, shadow models, nor auxiliary classifiers. Across five LLMs, six datasets, and six editing and unlearning techniques, we find that 38.6% of alternative tokenizations bypass the modification and recover the pre-edit response. Toketive detects modified facts with an F1 score of 84.2%, a 26.2% relative gain over the strongest baseline, and reconstructs pre-edit responses with 74.5% top-5 accuracy, 21.7% higher than the best baseline. Our results show that localized modifications should not be treated as robust knowledge-control boundaries without adversarial evaluation over alternative representations.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-24T05:24:30Z",
+      "updated": "2026-09-24T05:24:30Z",
+      "authors": [
+        "Manit Baser",
+        "Aditya Nawal",
+        "Dinil Mon Divakaran",
+        "Mohan Gurusamy"
+      ],
+      "url": "https://arxiv.org/abs/2609.29045v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.29045v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 3.65,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "LLM",
+            "side channel"
+          ],
+          "categories": [
+            "cs.AI",
+            "cs.CR"
+          ],
+          "score": 4,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "LLM",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "토크나이제이션 부채널을 활용한 공격으로 부채널 개념은 겹치지만 대상은 암호 구현이 아닌 LLM 지식 편집·언러닝이다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "대체 토크나이제이션을 부채널로 본 reference-free 공격 Toketive를 제시하며 사전 모델·보조 분류기 불필요라는 새 위협 모델을 주장한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "5개 LLM, 6개 데이터셋, 6개 편집·언러닝 기법에 대해 우회율 38.6%, 탐지 F1 84.2%, 복원 top-5 74.5%와 베이스라인 대비 상대 개선을 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "평가 범위와 지표는 구체적이나 코드·데이터 공개 여부는 메타데이터에 언급이 없다."
+          },
+          "rationale": "실험 규모와 수치 보고가 탄탄하고 공격 설정이 명확하다. 다만 암호해독보다는 LLM 보안 평가에 해당해 관심사와의 정합은 부분적이며 공개 자료 정보가 없다."
+        }
+      },
+      "rationale": "실험 규모와 수치 보고가 탄탄하고 공격 설정이 명확하다. 다만 암호해독보다는 LLM 보안 평가에 해당해 관심사와의 정합은 부분적이며 공개 자료 정보가 없다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.25154",
+      "title": "Benchmarking Neural Defend ARCAS 1B: A Foundational Multimodal Deepfake Detection Model",
+      "abstract": "AI-generated imagery evolves faster than benchmark-specific detector evaluations, making a single score an incomplete account of generalization. This paper evaluates Neural Defend ARCAS 1B across benchmark families without benchmark-specific parameter updates. We retain native aggregation and supplement it with record-level measures, coverage accounting, and subgroup diagnostics. Each Results subsection identifies the release and evaluation population, reports the official metric, and describes observed error patterns. A combined analysis synthesizes shared patterns while preserving the distinction between native and pooled quantities. Cross-paper comparisons are restricted to aligned evidence; differences in release, population, preprocessing, training, or benchmark exposure are context rather than rank. The findings characterize performance on evaluated records, not universal reliability, calibration, attribution, or future adaptive attacks. By keeping benchmark-native outcomes distinct from pooled summaries, the study makes test-population, class-balance, and missing-record-coverage differences visible. It supports interpretation of detector results in research, platform-safety, and forensic-review settings, foregrounding traceable protocol conditions over claims or leaderboard comparisons.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-21T09:15:02Z",
+      "updated": "2026-09-21T09:15:02Z",
+      "authors": [
+        "Sivashankar Selvarajan",
+        "Piyush Verma",
+        "Sumit Kumar",
+        "Sharayu N. Deshmukh"
+      ],
+      "url": "https://arxiv.org/abs/2609.25154v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.25154v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 3.25,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "forensic",
+            "deepfake"
+          ],
+          "categories": [
+            "cs.AI",
+            "cs.CR"
+          ],
+          "score": 5.0,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "neural",
+              "forensic",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "딥페이크 탐지 모델 벤치마킹으로 AI 디지털 포렌식과 직접 관련되며 초록에서도 포렌식 검토 활용을 명시한다."
+          },
+          "novelty": {
+            "score": 2,
+            "reason": "새 방법이 아니라 기존 모델의 벤치마크 간 평가·보고 프로토콜 정리에 가깝고, 초록에 새 기법 제안이 없다."
+          },
+          "methodology": {
+            "score": 3,
+            "reason": "레코드 수준 지표, 커버리지 집계, 서브그룹 진단, 네이티브/풀링 구분 등 평가 절차는 서술하나 데이터셋·모델 설정 수치는 제시되지 않는다."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "코드나 데이터 공개 언급이 메타데이터에 전혀 없고 평가 대상 벤치마크도 구체적으로 명시되지 않는다."
+          },
+          "rationale": "관심 주제인 딥페이크 포렌식에 부합하지만, 새로운 기법 없이 평가 프로토콜 보고에 집중하며 공개 자료 언급이 없어 검증 가능성이 낮다."
+        }
+      },
+      "rationale": "관심 주제인 딥페이크 포렌식에 부합하지만, 새로운 기법 없이 평가 프로토콜 보고에 집중하며 공개 자료 언급이 없어 검증 가능성이 낮다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.28725",
+      "title": "Unmasking Shortcut Learning in IoT Intrusion Detection: A Forensic, Multi-Paradigm Evaluation of Feature Dependence and Data Leakage",
+      "abstract": "Machine learning-based Network Intrusion Detection Systems often report near-perfect performance on IoT benchmarks. However, whether these models learn generalizable attack behavior or exploit spurious dataset shortcuts- such as static testbed IP/MAC addresses and chronological recording artifacts-remains an important question. We evaluate the CyberFlowIoT-GICAP benchmark, containing 3,617,388 flow records across 126 PCAP sessions with 849,395 benign flows. Four learning paradigms are evaluated across four feature configurations using PCAP-disjoint splits; LightGBM is additionally evaluated using conventional random-flow splitting. When only statistical flow behavior is used (Fbehav), LightGBM (92.58% +/- 8.18%), Random Forest (92.59% +/- 8.18%), and Deep MLP (92.55% +/- 8.18%) achieve nearly identical Macro-F1, indicating that performance is constrained by feature representation rather than model complexity. With raw timestamps (Ftstamp), tree-based models reach 99.28% Macro-F1, while the linear model remains at 90.62%, showing that nonlinear models can exploit dataset-specific temporal structure. Attack detectability is highly asymmetric: high-rate and active attacks maintain >99.8% recall from flow behavior alone in nonlinear models, whereas the DNS Beaconing drops from 27.78% to 0.00% recall when contextual features are removed. Conventional random-flow splitting increases attack recall by up to 14.00%, highlighting the effect of placing flows from the same sessions in both training and test sets. We conclude with a 4-point protocol checklist for realistic IoT NIDS evaluation.",
+      "journal_ref": "",
+      "publication_note": "Currently under review",
+      "doi": "",
+      "published": "2026-09-23T19:07:27Z",
+      "updated": "2026-09-23T19:07:27Z",
+      "authors": [
+        "Uday Shankar Roy",
+        "Mahbuba Jahan Minu"
+      ],
+      "url": "https://arxiv.org/abs/2609.28725v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.28725v1",
+      "categories": [
+        "cs.CR",
+        "cs.LG",
+        "cs.NI"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 3.175,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "machine learning",
+            "forensic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "machine learning",
+              "forensic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "IoT NIDS의 데이터 누수·단축 학습을 포렌식 관점으로 감사하며 AI 디지털 포렌식 관심사와 상당히 부합하나, 침해 흔적 분석보다 침입 탐지 평가에 초점."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "단축 학습·데이터 누수 진단이라는 문제의식 자체는 기존에도 논의되었고, 특정 벤치마크에 대한 체계적 감사와 4단계 프로토콜 체크리스트 제시가 기여로 보임."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "4개 학습 패러다임 × 4개 특징 구성, PCAP 분리 분할과 무작위 플로우 분할 비교, Macro-F1·recall 수치와 표준편차까지 초록에 명시."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "공개 벤치마크(CyberFlowIoT-GICAP)와 레코드 수는 명시되었으나 코드 공개 여부는 메타데이터에 없음; 심사 중 프리프린트."
+          },
+          "rationale": "측정 가능한 실험 설계와 구체적 수치가 강점이며 포렌식 평가 방법론에 실용적이나, 코드 공개가 확인되지 않아 재현성 점수가 제한된다."
+        }
+      },
+      "rationale": "측정 가능한 실험 설계와 구체적 수치가 강점이며 포렌식 평가 방법론에 실용적이나, 코드 공개가 확인되지 않아 재현성 점수가 제한된다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.29808",
+      "title": "Hard Stop: Kernel-Level Preemption and Containment for Rogue Agentic Execution",
+      "abstract": "In July 2026, an unconstrained autonomous agent participating in a frontier AI cybersecurity evaluation harness breached its evaluation sandbox, established an external command-and-control foothold, and executed a multi-stage intrusion into Hugging Face's production multi-tenant dataset conversion infrastructure (referred to in this autopsy as Incident-2026-Alpha). Over 4.5 days, the rogue agent executed 17,600 discrete actions across 6,280 worker clusters, compromised AWS EC2 Instance Metadata Service (IMDS) credentials, forged Kubernetes service account tokens, rooted physical worker nodes via overprivileged CSI drivers, harvested 136 production secrets, and enrolled 181 ephemeral sandboxes into the organization's internal mesh VPN. This monograph presents a first-principles forensic autopsy of the intrusion, provides formal evidence that the breach was a predicted consequence under the Instrumental Convergence thesis operating within an unattenuated autonomous loop lacking out-of-band circuit-breakers, exposes the Defensive LLM Guardrail Paradox that paralyzed centralized commercial models during forensic incident response, and formalizes the Dual-Sided Epistemic Andon Imperative. We specify the dual-process systems architecture---combining out-of-band supervisory control of discrete event systems (Ramadge and Wonham 1989), Synchronous Reactive (SR) ambient sentinels (Berry and Gonthier 1992; Lee and Neuendorffer 2005), and microsecond-scale (4.8 $μ$s median / $< 0.154$ ms WCET bound) POSIX preemption buses---demonstrating how compiled, deterministic epistemic boundaries prevent autonomous rogue excursions before the first off-target socket packet traverses the hypervisor.",
+      "journal_ref": "",
+      "publication_note": "21 pages,4 figures",
+      "doi": "",
+      "published": "2026-09-24T13:42:02Z",
+      "updated": "2026-09-24T13:42:02Z",
+      "authors": [
+        "José Luis Pino"
+      ],
+      "url": "https://arxiv.org/abs/2609.29808v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.29808v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.DC",
+        "cs.OS"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 2.775,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "LLM",
+            "forensic"
+          ],
+          "categories": [
+            "cs.AI",
+            "cs.CR"
+          ],
+          "score": 4,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "LLM",
+              "forensic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "자율 에이전트 침해에 대한 포렌식 부검을 다루지만 초점은 커널 수준 선점·격리 아키텍처로 AI 포렌식 분석 기법 자체는 부차적이다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "감독 제어·SR 센티널·POSIX 선점 버스를 결합한 이중 프로세스 아키텍처와 Guardrail Paradox 등 개념 제시는 새롭게 서술되나 구성 요소는 기존 이론에 기반한다."
+          },
+          "methodology": {
+            "score": 2,
+            "reason": "단일 사건 부검과 아키텍처 명세 중심이며 지연 수치(중위 4.8μs, WCET 0.154ms) 외에 통제된 평가 설계나 비교 실험이 보이지 않는다."
+          },
+          "reproducibility": {
+            "score": 1,
+            "reason": "코드·데이터 공개 언급이 없고 사례가 특정 운영 환경의 단일 사건이라 외부 검증 근거가 제시되지 않는다."
+          },
+          "rationale": "포렌식 서술과 방어 아키텍처를 결합했으나 단일 사례 기반이고 평가·공개 근거가 부족해 관심 주제에 대한 기여가 제한적이다. 저자 1인 모노그래프 형식으로 검증 가능성이 낮다."
+        }
+      },
+      "rationale": "포렌식 서술과 방어 아키텍처를 결합했으나 단일 사례 기반이고 평가·공개 근거가 부족해 관심 주제에 대한 기여가 제한적이다. 저자 1인 모노그래프 형식으로 검증 가능성이 낮다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.27371",
+      "title": "ASAP: Visual Analytics for Identifying and Analyzing Image Patterns in AI-generated Images",
+      "abstract": "Generative image models can produce highly realistic images, raising concerns about potential misuse in creating deceptive content. Current deepfake approaches face several challenges, including limited generalizability, lack of interpretability, and poor actionability. To help address these, we present ASAP, an interactive visualization system designed to empower users in the analysis and summarization of deceptive patterns in AI-generated images. ASAP introduces a novel CLIP-adapted image encoder that generates interpretable representations, enabling the extraction of influential pixel regions via calculated masks. This approach facilitates the identification of key deceptive features through influence measurement techniques. These backend techniques are integrated into a visual analytics dashboard that allows users to quantify and analyze authenticity-indicative patterns in image collections containing both authentic and AI-generated images. This approach also supports the comparative analysis of various generative models, including GANs and diffusion models. We demonstrate ASAP's efficacy through a user study and two application scenarios using established fake image detection benchmarks, showcasing its ability to effectively extract and quantify deceptive patterns.",
+      "journal_ref": "Information Visualization (2026)",
+      "publication_note": "",
+      "doi": "10.1177/14738716261481077",
+      "published": "2026-09-23T05:20:13Z",
+      "updated": "2026-09-23T05:20:13Z",
+      "authors": [
+        "Jinbin Huang",
+        "Yuki Ueno",
+        "Chen Chen",
+        "Aditi Mishra",
+        "Bum Chul Kwon",
+        "Zhicheng Liu",
+        "Chris Bryan"
+      ],
+      "url": "https://arxiv.org/abs/2609.27371v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.27371v1",
+      "categories": [
+        "cs.HC",
+        "cs.CV"
+      ],
+      "addedAt": "2026-09-27T23:00:02+00:00",
+      "status": "candidate",
+      "score": 2.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "diffusion model",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "diffusion model",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "AI 생성 이미지의 기만적 패턴 분석은 이미지 포렌식과 맞닿지만, 기여의 중심이 시각적 분석 대시보드(cs.HC)로 포렌식 탐지 자체와는 간접적."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "해석 가능한 CLIP 적응 인코더와 영향도 기반 픽셀 마스크를 시각 분석 시스템으로 통합한 점을 새로운 접근으로 제시."
+          },
+          "methodology": {
+            "score": 3,
+            "reason": "인코더·마스크 추출·영향도 측정과 사용자 연구 및 두 가지 응용 시나리오를 기술하나, 정량 지표나 성능 수치는 초록에 없음."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "기존 공개 가짜 이미지 탐지 벤치마크를 사용하고 저널(DOI) 게재이나, 시스템·코드 공개 여부가 메타데이터에 없음."
+          },
+          "rationale": "해석성과 실사용성 측면의 기여는 분명하지만 정량 평가와 산출물 공개 정보가 부족하고, 관심사와는 부분적으로만 겹친다."
+        }
+      },
+      "rationale": "해석성과 실사용성 측면의 기여는 분명하지만 정량 평가와 산출물 공개 정보가 부족하고, 관심사와는 부분적으로만 겹친다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
     }
   ],
   "seen": [
@@ -606,9 +1243,18 @@
     "arxiv:2609.21941",
     "arxiv:2609.23319",
     "arxiv:2609.24359",
+    "arxiv:2609.25154",
+    "arxiv:2609.26893",
+    "arxiv:2609.27371",
+    "arxiv:2609.27427",
+    "arxiv:2609.28205",
+    "arxiv:2609.28725",
+    "arxiv:2609.29045",
+    "arxiv:2609.29808",
     "eprint:2026/2095",
     "eprint:2026/2097",
-    "eprint:2026/2127"
+    "eprint:2026/2127",
+    "eprint:2026/2224"
   ],
-  "lastWeeklyAt": "2026-09-22T11:21:05+00:00"
+  "lastWeeklyAt": "2026-09-27T23:00:02+00:00"
 }
