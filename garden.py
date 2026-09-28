@@ -37,6 +37,16 @@ def summary_metadata(model):
             "summarized_at": datetime.now(KST).isoformat(timespec="seconds")}
 
 
+def summary_sort_time(post):
+    for key in ("summarized_at", "created", "published"):
+        try:
+            stamp = datetime.fromisoformat(post.get(key, "").replace("Z", "+00:00"))
+            return (stamp if stamp.tzinfo else stamp.replace(tzinfo=UTC)).astimezone(UTC)
+        except (ValueError, TypeError, AttributeError):
+            continue
+    return datetime.min.replace(tzinfo=UTC)
+
+
 def summary_display(metadata):
     """Only display provenance explicitly stored with the document."""
     model, stamp = metadata.get("summary_model"), metadata.get("summarized_at")
@@ -357,7 +367,7 @@ class Garden:
                     "source": json.dumps({"url": metadata["source"], "basis": "fulltext"})}
             except (ValueError, KeyError, OSError):
                 continue
-        rows = sorted(posts.values(), key=lambda p: (p["published"], p["created"]), reverse=True)
+        rows = sorted(posts.values(), key=lambda p: (summary_sort_time(p), p["id"]), reverse=True)
         rows.sort(key=lambda p: bool(p["demo"]))
         return [dict(row) for row in rows if (not topic or row["topic_id"] == topic)
                 and (not query or query.casefold() in (row["title"] + row["source"]).casefold())]

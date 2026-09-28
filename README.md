@@ -8,6 +8,8 @@ AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 
 
 [블로그 둘러보기](https://youngjin0305.github.io/paper-blog/)
 
+글 목록은 **최근에 정리한 순서**로 표시합니다. 정리 시각이 기록되지 않은 이전 글은 글 생성 시각을 사용하고, 데모는 마지막에 둡니다. 주간 자동 수집은 arXiv와 IACR ePrint RSS를 함께 탐색합니다(`pipeline.use_eprint: true`). ePrint는 RSS가 제공하는 최신 항목 중 관심 분야와 기간에 맞는 논문을 선정하므로 매번 후보에 포함되지는 않습니다.
+
 ## 시작하기
 
 아래 명령은 **Windows PowerShell에서 프로젝트 폴더를 연 상태**로 실행합니다.

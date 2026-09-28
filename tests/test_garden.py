@@ -8,7 +8,7 @@ from unittest.mock import patch
 from subprocess import CompletedProcess
 
 from app import create_app, export_site, rendered_markdown
-from garden import Arxiv, Garden, GeminiCLI, ROOT, validate_config
+from garden import Arxiv, Garden, GeminiCLI, ROOT, validate_config, summary_sort_time
 
 
 PAPER = {"id": "2609.00001v1", "title": "A fixture paper", "abstract": "Test abstract, not a real research result.",
@@ -29,6 +29,26 @@ class FakeSummary:
 
 
 class GardenTests(unittest.TestCase):
+    def test_summary_sort_normalizes_timezones_and_legacy_dates(self):
+        older = {"summarized_at": "2026-09-28T09:00:00+09:00", "published": "2026-09-28"}
+        newer = {"summarized_at": "2026-09-28T01:00:00Z", "published": "2020-01-01"}
+        self.assertGreater(summary_sort_time(newer), summary_sort_time(older))
+        self.assertEqual(summary_sort_time({"created": newer["summarized_at"]}), summary_sort_time(newer))
+        self.assertEqual(summary_sort_time({"summarized_at": "invalid", "created": newer["summarized_at"]}), summary_sort_time(newer))
+
+    def test_live_and_export_lists_sort_by_summary_date(self):
+        topic = self.garden.config()["topics"][0]
+        body = FakeSummary().summarize(None, None, None)
+        with patch("garden.now", return_value="2026-09-28T02:00:00Z"):
+            self.garden.store_post(topic, {**PAPER, "id": "old-paper", "title": "Older paper summarized later", "published": "2020-01-01T00:00:00Z"}, body)
+        with patch("garden.now", return_value="2026-09-28T01:00:00Z"):
+            self.garden.store_post(topic, {**PAPER, "id": "new-paper", "title": "Newer paper summarized earlier"}, body)
+        self.assertEqual(self.garden.posts()[0]["title"], "Older paper summarized later")
+        site = export_site(self.app, self.garden)
+        for html in (self.client.get("/").get_data(as_text=True), self.client.get("/topics/ai").get_data(as_text=True),
+                     (site / "index.html").read_text(encoding="utf-8"), (site / "topics/ai.html").read_text(encoding="utf-8")):
+            self.assertLess(html.index("Older paper summarized later"), html.index("Newer paper summarized earlier"))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)

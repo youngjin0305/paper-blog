@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch, Mock
 
 from app import create_app, export_site
 from garden import Arxiv, Garden, ROOT, atomic_write
@@ -10,9 +11,21 @@ from paper_config import validate_pipeline
 from paper_pipeline import assemble
 from paper_publication import publication_display
 from paper_validation import validate_document
+from paper_sources import Sources
 
 
 class PublicationTests(unittest.TestCase):
+    def test_weekly_collection_includes_eprint_and_arxiv(self):
+        stamp = datetime.now(timezone.utc).isoformat()
+        xml = f'<rss><channel><item><title>Neural cryptanalysis</title><link>https://eprint.iacr.org/2026/123</link><pubDate>{stamp}</pubDate><description>Machine learning for cryptanalysis</description></item></channel></rss>'
+        config = validate_pipeline({})
+        source = Sources(config)
+        arxiv = {"id": "arxiv:2609.00001", "published": stamp}
+        with patch.object(source, "arxiv", return_value=([arxiv], 1)), patch.object(source, "get", return_value=Mock(content=xml.encode())) as get:
+            papers = source.recent()
+        self.assertEqual({p["id"] for p in papers}, {"arxiv:2609.00001", "eprint:2026/123"})
+        get.assert_called_once_with(config["eprint_rss"])
+
     def test_archive_is_not_proof_of_no_publication(self):
         cases = [
             ({"source": "https://arxiv.org/abs/2609.24359", "doi": "10.48550/arXiv.2609.24359"}, "arXiv", "2609.24359"),
