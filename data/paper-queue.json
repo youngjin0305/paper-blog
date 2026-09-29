@@ -613,7 +613,7 @@
       "published": "2026-09-26T09:16:26+00:00",
       "categories": [],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 4.65,
       "scoreDetail": {
         "rule": {
@@ -661,10 +661,10 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 1,
-      "postPath": null,
+      "postPath": "content/ai-cryptanalysis/2026-09-26-14d4dfdd1b9e8a6aed3c.md",
       "topic_id": "ai-cryptanalysis",
-      "journal_ref": "Cryptology ePrint Archive",
-      "note": "검증기 수정 후 저장된 초안 재검증"
+      "note": "검증기 수정 후 저장된 초안 재검증",
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "arxiv:2609.26893",
