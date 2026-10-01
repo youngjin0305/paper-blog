@@ -376,7 +376,9 @@ class Garden:
             rows = db.execute("SELECT * FROM posts ORDER BY demo ASC, published DESC, created DESC").fetchall()
         posts = {row["id"]: dict(row) for row in rows}
         for post in posts.values():
-            post.update(publication_display(json.loads(post["source"])))
+            source = json.loads(post["source"])
+            post["authors"] = source.get("authors", [])
+            post.update(publication_display(source))
             try:
                 document = self.markdown(post)
                 post["summary"] = card_summary(document)
@@ -384,6 +386,7 @@ class Garden:
                 metadata, _ = split_document(document)
                 post.update(summary_display(metadata))
                 post.update(publication_display(metadata))
+                post["authors"] = metadata.get("authors", post["authors"])
             except (OSError, ValueError):
                 post["summary"] = ""
         # Full-paper posts are Git-tracked Markdown; a fresh Pages checkout has no local DB.
@@ -399,6 +402,7 @@ class Garden:
                     **publication_display(metadata),
                     "paper_id": metadata["arxiv_id"], "title": metadata["title"],
                     "published": metadata["date"], "created": metadata["collected_at"],
+                    "authors": metadata.get("authors", []),
                     "path": path.relative_to(self.root).as_posix(), "demo": False, "basis": "fulltext",
                     "summary": card_summary(body),
                     "source": json.dumps({"url": metadata["source"], "basis": "fulltext"})}
@@ -435,7 +439,7 @@ class Garden:
         created = now()
         metadata = {"title": paper["title"], "date": paper["published"], "collected_at": created,
                     "category": topic["id"], "arxiv_id": paper["id"], "source": paper["url"],
-                    "basis": "abstract", "demo": demo}
+                    "basis": "abstract", "demo": demo, "authors": paper["authors"]}
         if not demo and model is not None:
             metadata.update(summary_metadata(model))
         metadata.update(publication_metadata(paper))

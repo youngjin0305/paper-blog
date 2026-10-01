@@ -87,7 +87,8 @@ def assemble(paper, groups, references, selected, config, summary_model=None, to
     path = Path(paper["replacePostPath"]) if paper.get("replacePostPath") else Path(config["post_dir"]) / f"{paper['published'][:10]}-{identifier}.md"
     metadata = {"title": paper["title"], "date": paper["published"], "collected_at": now(),
                 "category": config["category"], "arxiv_id": paper["id"].removeprefix("arxiv:") if paper["source"] == "arxiv" else "",
-                "source": paper["url"], "basis": "fulltext", "demo": False}
+                "source": paper["url"], "basis": "fulltext", "demo": False,
+                "authors": paper.get("authors", [])}
     metadata.update(summary_metadata(summary_model or config["model"]))
     if paper.get("studyType") == "conceptual":
         metadata["study_type"] = "conceptual"

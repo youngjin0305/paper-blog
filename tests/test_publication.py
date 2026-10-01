@@ -82,6 +82,7 @@ class PublicationTests(unittest.TestCase):
                 self.assertIn("Test Journal 12 (2026)", html)
                 self.assertIn("claude/opus", html)
                 self.assertIn(post["summary_date"], html)
+                self.assertIn(paper["authors"][0], html)
 
     def test_publication_metadata_does_not_relax_unknown_fields(self):
         fixture = json.loads((ROOT / "tests/fixtures/paper-pipeline.json").read_text(encoding="utf-8"))

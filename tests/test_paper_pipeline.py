@@ -135,8 +135,12 @@ class ValidationTests(unittest.TestCase):
         _, document = assemble(PAPER, FIXTURE["groups"], {}, [], config)
         metadata, body = split_document(document)
         self.assertEqual(metadata["summary_model"], "claude/opus")
+        self.assertEqual(metadata["authors"], PAPER["authors"])
         self.assertTrue(metadata["summarized_at"].endswith("+09:00"))
         self.assertEqual(validate_document(document, PAPER, FIXTURE["markdown"], config), [])
+        wrong_authors = document.replace('"authors": [', '"authors": ["Unknown Author", ')
+        self.assertIn("Frontmatter authors must match source metadata",
+                      validate_document(wrong_authors, PAPER, FIXTURE["markdown"], config))
         _, sourced = assemble(PAPER, FIXTURE["groups"], {}, [], config, model_source="configured")
         self.assertIn('"summary_model_source": "configured"', sourced)
         self.assertEqual(validate_document(sourced, PAPER, FIXTURE["markdown"], config), [])

@@ -148,12 +148,14 @@ class GardenTests(unittest.TestCase):
     def test_new_posts_record_model_and_korean_summary_date(self):
         self.garden.research()
         post = self.garden.posts()[0]
+        self.assertEqual(post["authors"], PAPER["authors"])
         self.assertEqual(post["summary_model"], self.garden.config()["model"])
         self.assertTrue(post["summarized_at"].endswith("+09:00"))
         self.assertEqual(post["summary_date"], post["summarized_at"][:10])
         html = self.client.get(f'/posts/{post["id"]}').get_data(as_text=True)
         self.assertIn("정리 모델: " + post["summary_model_label"], html)
         self.assertIn("정리 날짜: " + post["summary_date"], html)
+        self.assertIn("저자</strong><span>Test Author", html)
         site = export_site(self.app, self.garden)
         self.assertIn("정리 모델: " + post["summary_model_label"], (site / f'posts/{post["id"]}.html').read_text(encoding="utf-8"))
 

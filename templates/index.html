@@ -23,6 +23,7 @@
     <article class="post-card" data-post-id="{{ post.id }}">
       <div class="card-top"><span class="category-label">{% set ns = namespace(name=post.topic_id) %}{% for topic in topics %}{% if topic.id == post.topic_id %}{% set ns.name=topic.name %}{% endif %}{% endfor %}{{ ns.name }}</span><span class="card-arrow">↗</span></div>
       <a class="card-title" href="{{ post_href(post.id) }}" title="{{ post.title }}"><h3>{{ post.title }}</h3></a>
+      {% if post.authors %}<p class="card-authors" title="{{ post.authors|join(', ') }}">{{ post.authors|join(', ') }}</p>{% endif %}
       <p class="card-description" title="{{ post.summary }}">{{ '블로그 화면을 확인하는 데모 글입니다. 최신 조사 결과가 아닙니다.' if post.demo else post.summary }}</p>
       <div class="card-facts">
         <span class="venue-tag" title="{{ post.publication_label }} · {{ post.archive_label }}">{{ post.publication_short }}</span>

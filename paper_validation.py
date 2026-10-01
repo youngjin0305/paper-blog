@@ -13,6 +13,7 @@ GROUPS = {
 REQUIRED = ["초록", "문제 정의", "주요 기여", "제시한 방법론", "실험 및 평가", "결론"]
 FIELDS = {"title", "date", "collected_at", "category", "arxiv_id", "source", "basis", "demo"}
 SUMMARY_FIELDS = {"summary_model", "summary_model_source", "review_method", "summarized_at", "study_type"}
+AUTHOR_FIELDS = {"authors"}
 RUBRIC = ["relevance", "novelty", "methodology", "reproducibility"]
 RANK_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": RUBRIC + ["rationale"],
@@ -203,8 +204,14 @@ def validate_document(document, paper, source, config):
     errors = []
     try:
         metadata, body = split_document(document)
-        if set(metadata) - PUBLICATION_FIELDS - SUMMARY_FIELDS != FIELDS:
+        if set(metadata) - PUBLICATION_FIELDS - SUMMARY_FIELDS - AUTHOR_FIELDS != FIELDS:
             errors.append("Frontmatter fields do not match existing posts")
+        if "authors" in metadata:
+            authors = metadata["authors"]
+            if not isinstance(authors, list) or any(not isinstance(name, str) or not name.strip() for name in authors):
+                errors.append("Frontmatter authors must be a list of names")
+            elif authors != paper.get("authors", []):
+                errors.append("Frontmatter authors must match source metadata")
         for key in PUBLICATION_FIELDS & set(metadata):
             if not isinstance(metadata[key], str):
                 errors.append(f"Frontmatter {key} must be a string")
