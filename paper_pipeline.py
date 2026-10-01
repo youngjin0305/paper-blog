@@ -21,7 +21,7 @@ from model_config import DEFAULT_MODEL, recorded_model
 from paper_publication import publication_metadata
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, rule_score
-from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
+from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, abstract_number_errors, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
 
 
 COMMON = """한국어 논문 요약을 작성한다. 논문 원문에 근거한 내용만 쓰고 외부 지식으로 보충하지 않는다.
@@ -316,7 +316,10 @@ class Pipeline:
                     saved = sections(body)
                     for group, headers in GROUPS.items():
                         text = "\n\n".join("## " + h + "\n\n" + saved[h] for h in headers if h in saved)
-                        if not validate_group(group, text, evidence, self.config):
+                        failures = validate_group(group, text, evidence, self.config)
+                        if group == "A" and self.config["abstract_mode"] == "korean":
+                            failures += abstract_number_errors(sections(text).get("초록", ""), paper["abstract"])
+                        if not failures:
                             reusable[group] = text
             for group in GROUPS:
                 if group in reusable and sum(quote_words(text) for text in [*groups.values(), reusable[group]]) <= self.config["max_quote_words"]:
@@ -329,6 +332,8 @@ class Pipeline:
                     self.log(f"Generating group {group}, attempt {attempt + 1}/2")
                     groups[group] = self.group(group, paper, markdown, feedback)
                     failures = validate_group(group, groups[group], evidence, self.config)
+                    if group == "A" and self.config["abstract_mode"] == "korean":
+                        failures += abstract_number_errors(sections(groups[group]).get("초록", ""), paper["abstract"])
                     if sum(quote_words(text) for text in groups.values()) > self.config["max_quote_words"]:
                         failures.append("Total quotation limit exceeded; paraphrase this group without direct quotations")
                     if not failures:

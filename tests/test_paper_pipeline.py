@@ -274,6 +274,27 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(result["valid"])
         self.assertEqual(calls, ["A", "B", "C", "C", "D", "references"])
 
+    def test_abstract_numeric_error_retries_group_a_before_other_groups(self):
+        paper = {**PAPER, "abstract": "The study uses 7 cases."}
+        self.pipeline.fixture["papers"][0] = paper
+        pin(self.pipeline.queue, paper)
+        calls = []
+        baseline = FixtureBackend(FIXTURE)
+        def generate(prompt, options):
+            kind = options["kind"]
+            calls.append(kind)
+            if kind == "A":
+                if calls.count("A") == 2:
+                    self.assertIn("missing 7", prompt)
+                    self.assertIn("added 8", prompt)
+                count = 8 if calls.count("A") == 1 else 7
+                return FIXTURE["groups"]["A"].replace("이 합성 테스트 자료는 검색 실험을 설명한다.",
+                    f"이 합성 테스트 자료는 검색 실험 {count}건을 설명한다.")
+            return baseline.generate(prompt, options)
+        with patch.object(self.pipeline.backend, "generate", side_effect=generate):
+            self.assertTrue(self.pipeline.daily()["valid"])
+        self.assertEqual(calls, ["A", "A", "B", "C", "D", "references"])
+
     def test_failed_draft_and_report_never_publish(self):
         self.pipeline.dry_run = False
         self.pipeline.fixture["groups"]["C"] += "\nAbsent number 9999.99%"

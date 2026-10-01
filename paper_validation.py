@@ -135,6 +135,21 @@ def spelled_out_numbers(text):
             re.finditer(r"\b(?:" + "|".join(words) + r")\b", text, re.I)}
 
 
+def abstract_number_errors(translated, original):
+    source_values = numbers(original)
+    translated_values = numbers(translated)
+    missing = sorted(source_values - translated_values)
+    extra = sorted(translated_values - source_values - spelled_out_numbers(original))
+    if not missing and not extra:
+        return []
+    details = []
+    if missing:
+        details.append("missing " + ", ".join(missing))
+    if extra:
+        details.append("added " + ", ".join(extra))
+    return ["Translated abstract must preserve the original numeric values (" + "; ".join(details) + ")"]
+
+
 def validate_group(group, text, source, config):
     errors = []
     present = sections(text)
@@ -213,10 +228,7 @@ def validate_document(document, paper, source, config):
         errors.append("Missing title header")
     present = sections(body)
     if config["abstract_mode"] == "korean":
-        translated = numbers(present.get("초록", ""))
-        original = numbers(paper["abstract"])
-        if original - translated or translated - original - spelled_out_numbers(paper["abstract"]):
-            errors.append("Translated abstract must preserve the original numeric values")
+        errors.extend(abstract_number_errors(present.get("초록", ""), paper["abstract"]))
     for name in REQUIRED:
         if not present.get(name):
             errors.append("Missing required section: " + name)
