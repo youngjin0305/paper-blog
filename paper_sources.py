@@ -191,11 +191,14 @@ class Sources:
         authors = metadata.get("authors", [])
         if not isinstance(authors, list) or any(not isinstance(a, str) or not a.strip() for a in authors):
             raise ValueError("Local PDF authors must be a list of names")
+        study_type = metadata.get("studyType", "empirical")
+        if study_type not in ("empirical", "conceptual"):
+            raise ValueError("Local PDF studyType must be empirical or conceptual")
         source, identifier = identify(metadata["url"])
         paper = {"id": identifier, "source": source, "title": metadata["title"].strip(),
                  "authors": authors, "abstract": metadata["abstract"].strip(),
                  "url": metadata["url"].strip(), "pdfUrl": metadata["pdfUrl"].strip(),
-                 "published": published.isoformat(), "categories": []}
+                 "published": published.isoformat(), "categories": [], "studyType": study_type}
         for key in ("journal_ref", "doi", "publication_note"):
             if key in metadata:
                 if not isinstance(metadata[key], str):

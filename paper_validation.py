@@ -12,7 +12,7 @@ GROUPS = {
 }
 REQUIRED = ["초록", "문제 정의", "주요 기여", "제시한 방법론", "실험 및 평가", "결론"]
 FIELDS = {"title", "date", "collected_at", "category", "arxiv_id", "source", "basis", "demo"}
-SUMMARY_FIELDS = {"summary_model", "summary_model_source", "review_method", "summarized_at"}
+SUMMARY_FIELDS = {"summary_model", "summary_model_source", "review_method", "summarized_at", "study_type"}
 RUBRIC = ["relevance", "novelty", "methodology", "reproducibility"]
 RANK_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": RUBRIC + ["rationale"],
@@ -215,6 +215,9 @@ def validate_document(document, paper, source, config):
             errors.append("Summary model source requires a model and known provenance")
         if "review_method" in metadata and metadata["review_method"] != "codex-manual":
             errors.append("Unknown review method")
+        study_type = paper.get("studyType", "empirical")
+        if study_type not in ("empirical", "conceptual") or metadata.get("study_type", "empirical") != study_type:
+            errors.append("Study type mismatch")
         if metadata.get("source") != paper["url"]:
             errors.append("Frontmatter source link mismatch")
         if metadata.get("title") != paper["title"]:
@@ -234,12 +237,17 @@ def validate_document(document, paper, source, config):
     present = sections(body)
     if config["abstract_mode"] == "korean":
         errors.extend(abstract_number_errors(present.get("초록", ""), paper["abstract"]))
-    for name in REQUIRED:
+    required = [name for name in REQUIRED if study_type != "conceptual" or name != "실험 및 평가"]
+    for name in required:
         if not present.get(name):
             errors.append("Missing required section: " + name)
+    if study_type == "conceptual" and "실험 및 평가" in present:
+        errors.append("Conceptual study must omit an experiment section it did not perform")
     if paper["url"] not in body or paper["pdfUrl"] not in body:
         errors.append("Missing original/PDF link in body")
     for group, names in GROUPS.items():
+        if study_type == "conceptual" and group == "C":
+            continue
         text = "\n\n".join("## " + name + "\n" + present[name] for name in names if name in present
                            and not (name == "초록" and config["abstract_mode"] == "original"))
         errors.extend(validate_group(group, text, source, config))

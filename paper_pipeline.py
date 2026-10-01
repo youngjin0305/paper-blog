@@ -41,6 +41,20 @@ DETAIL = {
     "C": "실험 및 평가를 최대한 상세하게: 데이터셋, 베이스라인, 평가 지표, 실험 설정, 주요 결과 수치, ablation. 원문 표는 필요한 수치만 한국어로 설명한다.",
     "D": "고찰에는 한계와 원문이 제시한 논의를 포함하고 결론을 정리한다.",
 }
+CONCEPTUAL_METHOD = ("제시한 방법론에는 원문의 개념 연구 설계를 충실히 설명한다. 이론적 토대, "
+                     "구성 개념의 정의와 역할, 개념 간 제안된 경로 및 조절·매개 관계, 저자가 각 연결을 제안한 이유, "
+                     "문헌 종합 방식과 도식·표의 의미를 구분해 자세히 쓴다. 원문의 각 주요 구성 개념과 경로를 빠짐없이 다루고, "
+                     "같은 말을 반복하는 대신 근거·역할·적용 조건을 구별한다. 실제 구현, 측정 지표, 수식, "
+                     "알고리즘 절차나 하이퍼파라미터가 없으면 만들지 않는다. 제안과 검증 결과를 명확히 구별한다.")
+CONCEPTUAL_OVERVIEW = ("한눈에 보기는 연구 대상, 핵심 모형, 검증 여부를 1~2문장으로 정리한다. "
+                       "초록은 메타데이터 abstract 전체를 빠짐없이 한국어로 번역한다. "
+                       "필요성, 연구 분야 흐름, 관련 연구, 배경 지식, 문제 정의, 주요 기여에서는 "
+                       "원문이 실제로 다룬 논점을 각기 구분해 충분히 설명한다. 이론적 배경과 선행 연구의 "
+                       "논리, 기존 논의의 빈틈, 제안 모형이 그 빈틈을 어떻게 연결하는지를 담는다. "
+                       "원문에 없는 섹션은 생략하고, 사용자 질문에 대한 답변용 섹션을 만들지 않는다.")
+CONCEPTUAL_DISCUSSION = ("고찰에는 저자가 논의한 기술적·인적·제도적 함의, 적용 조건, "
+                         "이 논문 자체의 검증 부재와 원문에서 밝힌 후속 검증 방향을 구분해 설명한다. "
+                         "결론은 연구가 실제로 제안한 내용과 입증하지 않은 내용을 명료하게 정리한다.")
 
 
 class FixtureBackend:
@@ -66,11 +80,13 @@ def assemble(paper, groups, references, selected, config, summary_model=None, to
         config = {**config, "category": paper["topic_id"],
                   "post_dir": (Path(config["post_dir"]).parent / paper["topic_id"]).as_posix()}
     identifier = hashlib.sha256(f"{config['category']}:{paper['id']}:fulltext".encode()).hexdigest()[:20]
-    path = Path(config["post_dir"]) / f"{paper['published'][:10]}-{identifier}.md"
+    path = Path(paper["replacePostPath"]) if paper.get("replacePostPath") else Path(config["post_dir"]) / f"{paper['published'][:10]}-{identifier}.md"
     metadata = {"title": paper["title"], "date": paper["published"], "collected_at": now(),
                 "category": config["category"], "arxiv_id": paper["id"].removeprefix("arxiv:") if paper["source"] == "arxiv" else "",
                 "source": paper["url"], "basis": "fulltext", "demo": False}
     metadata.update(summary_metadata(summary_model or config["model"]))
+    if paper.get("studyType") == "conceptual":
+        metadata["study_type"] = "conceptual"
     if model_source:
         metadata["summary_model_source"] = model_source
     metadata.update(publication_metadata(paper))
@@ -248,7 +264,7 @@ class Pipeline:
         if changed:
             self.save_queue()
 
-    def add(self, value, note="", category=None, metadata_file=None):
+    def add(self, value, note="", category=None, metadata_file=None, replace_post=None):
         if category is not None and category not in self.topic_ids:
             raise ValueError("--category must match an existing topic ID")
         local_pdf = metadata_file is not None or (Path(value).suffix.lower() == ".pdf" and "://" not in value)
@@ -286,6 +302,17 @@ class Pipeline:
         elif not paper.get("topic_id"):
             _, detail = rule_score(paper, self.config)
             paper["topic_id"] = detail.get("topic") or self.config["category"]
+        if replace_post:
+            relative = Path(replace_post)
+            target = (self.root / relative).resolve()
+            content_root = (self.root / "content").resolve()
+            if not target.is_relative_to(content_root) or target.suffix.lower() != ".md" or not target.is_file():
+                raise ValueError("--replace-post requires an existing content Markdown file")
+            published, _ = split_document(target.read_text(encoding="utf-8"))
+            if any((published.get("source") != paper["url"], published.get("title") != paper["title"],
+                    published.get("category") != paper["topic_id"])):
+                raise ValueError("Replacement post source, title, and category must match the paper")
+            paper["replacePostPath"] = target.relative_to(self.root.resolve()).as_posix()
         if existing and existing.get("postPath"):
             # Repinning a published item may be useful for reviewing, but cannot overwrite its post.
             self.log("Already published; pinning keeps its postPath and daily will refuse overwrite")
@@ -294,16 +321,21 @@ class Pipeline:
         return self.list()
 
     def group(self, group, paper, markdown, feedback=""):
-        prompt = COMMON + DETAIL[group]
+        conceptual = {"A": CONCEPTUAL_OVERVIEW, "B": CONCEPTUAL_METHOD, "D": CONCEPTUAL_DISCUSSION}
+        prompt = COMMON + (conceptual[group] if paper.get("studyType") == "conceptual" and group in conceptual else DETAIL[group])
         prompt += "\n허용 헤더: " + ", ".join(GROUPS[group])
-        prompt += f"\n방법론 최소 {self.config['method_min_chars']}자, 실험 최소 {self.config['experiment_min_chars']}자."
+        prompt += f"\n방법론 최소 {self.config['method_min_chars']}자."
+        if paper.get("studyType") != "conceptual":
+            prompt += f" 실험 최소 {self.config['experiment_min_chars']}자."
+        else:
+            prompt += " 이 논문은 개념 연구다. 수행하지 않은 실험 및 평가 섹션이나 수치를 생성하지 않는다. 사용자와의 대화나 개별 질문에 답하는 섹션을 추가하지 않는다."
         if feedback:
             prompt += "\n이전 검증 실패를 수정하라 (원문에 없는 내용은 추가 금지):\n" + feedback
         prompt += "\n<untrusted_metadata>" + json.dumps(paper, ensure_ascii=False) + "</untrusted_metadata>"
         prompt += "\n<untrusted_paper>\n" + markdown + "\n</untrusted_paper>"
         return self.backend.generate(prompt, {"kind": group})
 
-    def daily(self, resume_draft=False):
+    def daily(self, resume_draft=False, paper_id=None):
         if isinstance(getattr(self.backend, "used_models", None), set):
             self.backend.used_models.clear()
         self.apply_topic_gate()
@@ -311,7 +343,9 @@ class Pipeline:
         if not items:
             self.log("Queue is empty; nothing to publish")
             return None
-        paper = items[0]
+        paper = next((item for item in items if item["id"] == paper_id), None) if paper_id else items[0]
+        if paper is None:
+            raise ValueError("Requested paper is not pending in the queue: " + paper_id)
         self.log(f"Daily selected: {paper['id']} {paper['title']}")
         if not self.dry_run:
             self.publisher.preflight()
@@ -349,6 +383,8 @@ class Pipeline:
                         raise ValueError("Draft metadata does not match selected paper")
                     saved = sections(body)
                     for group, headers in GROUPS.items():
+                        if paper.get("studyType") == "conceptual" and group == "C":
+                            continue
                         text = "\n\n".join("## " + h + "\n\n" + saved[h] for h in headers if h in saved)
                         failures = validate_group(group, text, evidence, self.config)
                         if group == "A" and self.config["abstract_mode"] == "korean":
@@ -356,6 +392,8 @@ class Pipeline:
                         if not failures:
                             reusable[group] = text
             for group in GROUPS:
+                if paper.get("studyType") == "conceptual" and group == "C":
+                    continue
                 if group in reusable and sum(quote_words(text) for text in [*groups.values(), reusable[group]]) <= self.config["max_quote_words"]:
                     reused_model = metadata.get("summary_model", "기존 초안(모델 미기록)")
                     groups[group] = reusable[group]
@@ -426,7 +464,8 @@ class Pipeline:
             self.log("DRY RUN validated; would publish " + path)
             print(document)
         else:
-            self.publisher.prepare(path, self.config["queue_path"], document, self.queue)
+            self.publisher.prepare(path, self.config["queue_path"], document, self.queue,
+                                   replace_existing=bool(paper.get("replacePostPath")))
             self.publisher.resume()
         return {"valid": True, "errors": [], "postPath": path, "document": document}
 
@@ -438,6 +477,7 @@ def main(argv=None):
     parser.add_argument("--note", default="")
     parser.add_argument("--category", help="add: place a manually specified paper in an existing category")
     parser.add_argument("--metadata-file", type=Path, help="add: verified JSON metadata for a local PDF")
+    parser.add_argument("--replace-post", type=Path, help="add: replace the matching existing content post at its current URL")
     parser.add_argument("--dry-run", action="store_true", help="No files, agy calls, commits or pushes")
     parser.add_argument("--resume-draft", action="store_true", help="Daily: revalidate and reuse saved draft groups")
     parser.add_argument("--fixture", type=Path, help="Offline fixture; only allowed with --dry-run")
@@ -448,6 +488,8 @@ def main(argv=None):
         parser.error("--category requires add")
     if args.metadata_file and args.command != "add":
         parser.error("--metadata-file requires add")
+    if args.replace_post and args.command != "add":
+        parser.error("--replace-post requires add")
     if args.command == "add" and not args.paper:
         parser.error("add requires an arXiv ID, HTTPS paper/PDF URL, or local PDF path")
     if args.fixture and not args.dry_run:
@@ -481,9 +523,10 @@ def main(argv=None):
                     pin(pipeline.queue, fixture["papers"][0])
                     pipeline.log("Using explicit fixture paper in memory for full daily preview")
         if args.command == "add":
-            pipeline.add(args.paper, args.note, category=args.category, metadata_file=args.metadata_file)
+            pipeline.add(args.paper, args.note, category=args.category, metadata_file=args.metadata_file,
+                         replace_post=args.replace_post)
         else:
-            result = pipeline.daily(resume_draft=args.resume_draft) if args.command == "daily" else getattr(pipeline, args.command)()
+            result = pipeline.daily(resume_draft=args.resume_draft, paper_id=args.paper) if args.command == "daily" else getattr(pipeline, args.command)()
             if args.command == "daily" and result and not result["valid"]:
                 raise SystemExit(1)
     try:

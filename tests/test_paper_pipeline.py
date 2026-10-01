@@ -89,6 +89,19 @@ class ValidationTests(unittest.TestCase):
         groups["D"] = "## 결론\n원문의 결론이다."
         self.assertEqual(validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG), [])
 
+    def test_conceptual_paper_omits_unperformed_experiments(self):
+        paper = {**PAPER, "studyType": "conceptual"}
+        groups = {key: value for key, value in FIXTURE["groups"].items() if key != "C"}
+        _, document = assemble(paper, groups, {}, [], CONFIG)
+        self.assertEqual(validate_document(document, paper, FIXTURE["markdown"], CONFIG), [])
+        self.assertIn('"study_type": "conceptual"', document)
+        self.assertNotIn("## 실험 및 평가", document)
+        self.assertIn("Missing required section: 실험 및 평가",
+                      validate_document(document, PAPER, FIXTURE["markdown"], CONFIG))
+        with_experiment = assemble(paper, FIXTURE["groups"], {}, [], CONFIG)[1]
+        self.assertTrue(any("must omit an experiment" in error for error in
+                            validate_document(with_experiment, paper, FIXTURE["markdown"], CONFIG)))
+
     def test_missing_required_and_short_sections(self):
         groups = deepcopy(FIXTURE["groups"])
         groups["A"] = "## 주요 기여\n기여만 있음"
@@ -279,6 +292,23 @@ class PipelineTests(unittest.TestCase):
             result = self.pipeline.daily()
         self.assertTrue(result["valid"])
         self.assertEqual(calls, ["A", "B", "C", "C", "D", "references"])
+
+    def test_conceptual_pipeline_skips_experiments_and_uses_source_prompt(self):
+        paper = {**PAPER, "studyType": "conceptual"}
+        self.pipeline.fixture["papers"][0] = paper
+        pin(self.pipeline.queue, paper)
+        calls = []
+        original = self.pipeline.backend.generate
+        def generate(prompt, options):
+            calls.append(options["kind"])
+            if options["kind"] == "B":
+                self.assertIn("개념 연구 설계", prompt)
+            return original(prompt, options)
+        with patch.object(self.pipeline.backend, "generate", side_effect=generate):
+            result = self.pipeline.daily(paper_id=paper["id"])
+        self.assertTrue(result["valid"], result["errors"])
+        self.assertEqual(calls, ["A", "B", "D", "references"])
+        self.assertNotIn("## 실험 및 평가", result["document"])
 
     def test_cli_reported_model_is_recorded_as_verified(self):
         pin(self.pipeline.queue, PAPER)
@@ -472,9 +502,10 @@ class SourceTests(unittest.TestCase):
         citation = {"title": "Local", "abstract": "Abstract", "published": "2025-06-30T00:00:00Z",
                     "url": "https://example.org/article", "pdfUrl": "https://example.org/article.pdf"}
         self.assertEqual(source.local_metadata(citation)["source"], "manual")
+        self.assertEqual(source.local_metadata({**citation, "studyType": "conceptual"})["studyType"], "conceptual")
         for changed in ({"title": ""}, {"url": "file:///private.pdf"}, {"pdfUrl": "https://127.0.0.1/private.pdf"},
                         {"published": "2025-06-30"},
-                        {"authors": "not a list"}):
+                        {"authors": "not a list"}, {"studyType": "unknown"}):
             with self.subTest(changed=changed), self.assertRaises(ValueError):
                 source.local_metadata({**citation, **changed})
 
@@ -735,6 +766,34 @@ class GitTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self.prepare()
         self.assertEqual(self.run_git("diff", "--cached", "--name-only").strip(), "other.txt")
+
+    def test_matching_tracked_post_can_be_replaced_at_same_path(self):
+        target = self.root / self.path
+        target.parent.mkdir(parents=True)
+        target.write_text("old published post\n", encoding="utf-8")
+        self.run_git("add", "--", self.path)
+        self.run_git("commit", "-m", "old post")
+        self.publisher.prepare(self.path, "data/paper-queue.json", self.document, self.queue,
+                               replace_existing=True)
+        self.publisher.resume()
+        self.assertEqual(target.read_text(encoding="utf-8"), self.document)
+        self.assertEqual(set(self.run_git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()),
+                         {self.path, "data/paper-queue.json"})
+
+    def test_replacement_rejects_untracked_or_edited_post(self):
+        target = self.root / self.path
+        target.parent.mkdir(parents=True)
+        target.write_text("old published post\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.publisher.prepare(self.path, "data/paper-queue.json", self.document, self.queue,
+                                   replace_existing=True)
+        self.run_git("add", "--", self.path)
+        self.run_git("commit", "-m", "old post")
+        self.publisher.prepare(self.path, "data/paper-queue.json", self.document, self.queue,
+                               replace_existing=True)
+        target.write_text("someone edited post\n", encoding="utf-8")
+        with self.assertRaises(RuntimeError):
+            self.publisher.resume()
 
 
 if __name__ == "__main__":

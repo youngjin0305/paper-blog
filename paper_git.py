@@ -26,12 +26,19 @@ class Publisher:
         if self.git("diff", "--cached", "--name-only").stdout.strip():
             raise RuntimeError("Git index already has staged changes; leave them untouched")
 
-    def prepare(self, post_path, queue_path, document, queue):
+    def prepare(self, post_path, queue_path, document, queue, replace_existing=False):
         self.preflight()
-        if (self.root / post_path).exists():
+        target = (self.root / post_path).resolve()
+        if not target.is_relative_to((self.root / "content").resolve()) or target.suffix.lower() != ".md":
+            raise ValueError("Publish target must be a content Markdown file")
+        if target.exists() and not replace_existing:
             raise RuntimeError("Post already exists; refusing to overwrite it")
+        if replace_existing:
+            if not target.is_file() or self.git("ls-files", "--error-unmatch", "--", post_path, check=False).returncode:
+                raise ValueError("Replacement must be an existing tracked post")
         payload = {"postPath": post_path, "queuePath": queue_path, "document": document,
                    "queue": queue, "headBefore": self.git("rev-parse", "HEAD").stdout.strip(),
+                   "postBefore": target.read_text(encoding="utf-8") if replace_existing else None,
                    "queueBefore": (self.root / queue_path).read_text(encoding="utf-8") if (self.root / queue_path).exists() else None,
                    "message": "post: [논문 요약] " + json.loads(document[4:].split("\n---\n", 1)[0])["title"][:72],
                    "phase": "prepared"}
@@ -62,8 +69,10 @@ class Publisher:
                         raise RuntimeError("Unrelated staged files; publish is pending")
                     for path, content in zip(paths, (payload["document"], expected_queue)):
                         target = self.root / path
-                        if path == paths[0] and target.exists() and target.read_text(encoding="utf-8") != content:
+                        if path == paths[0] and target.exists() and target.read_text(encoding="utf-8") not in (content, payload.get("postBefore")):
                             raise RuntimeError("Pending post was edited; refusing to overwrite it")
+                        if path == paths[0] and not target.exists() and payload.get("postBefore") is not None:
+                            raise RuntimeError("Pending replacement post was removed; refusing to recreate it")
                         if path == paths[1] and target.exists() and target.read_text(encoding="utf-8") not in (content, payload.get("queueBefore")):
                             raise RuntimeError("Pending queue was edited; refusing to overwrite it")
                         atomic_write(target, content)
