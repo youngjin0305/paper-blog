@@ -20,7 +20,7 @@ from paper_llm import AgyBackend, QuotaExceeded, AgyPermissionError, configure_w
 from paper_pipeline import Pipeline, FixtureBackend, assemble
 from paper_queue import canonical_id, empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, parse_eprint_feed, rule_score, keyword_matches
-from paper_validation import parse_rank, parse_references, numbers, validate_document, validate_group
+from paper_validation import parse_rank, parse_references, numbers, unsupported_numbers, validate_document, validate_group
 
 
 FIXTURE = json.loads((ROOT / "tests/fixtures/paper-pipeline.json").read_text(encoding="utf-8"))
@@ -158,6 +158,13 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(numbers("-10, 784"), numbers("-10; 784"))
         self.assertEqual(numbers("12,800; 100,000; -10,784"), numbers("12800; 100000; -10784"))
         self.assertNotEqual(numbers("-10784"), numbers(source))
+
+    def test_fractional_source_metric_matches_explicit_percentage_only(self):
+        source = "GUIAuditorw/o Pixel 0.9561\nGUIAuditorw/o Feature 0.9453"
+        self.assertEqual(unsupported_numbers("정확도 95.61%와 94.53 %", source), [])
+        self.assertEqual(unsupported_numbers("정확도 95.61과 94.53", source), ["94.53", "95.61"])
+        self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
+        self.assertEqual(unsupported_numbers("정확도 9453%", source), ["9453"])
 
     def test_pdf_table_cells_and_formatted_thousands(self):
         source = "T5 188 175 180\nEff-CNN 191 244 270\nASCAD CNN_best 400 4 _,_ 000"

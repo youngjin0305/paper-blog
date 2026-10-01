@@ -49,7 +49,10 @@ def sections(body):
             for i, m in enumerate(matches)}
 
 
-def numbers(text):
+NUMBER_PATTERN = re.compile(r"(?<![\d.])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\d|\.\d)")
+
+
+def normalized_numeric_text(text):
     text = unicodedata.normalize("NFKC", text).replace("−", "-")
     # A comma followed by whitespace separates values, not thousands. In a
     # network list such as "784-16(4)-10, 784-16(6)-10", joining "10, 784"
@@ -62,8 +65,27 @@ def numbers(text):
     text = re.sub(r"(?<![\w.-])(\d{1,2})[ \t]+(?=\d{3}(?:\D|$))", r"\1", text)
     text = re.sub(r"(?<=\d)[ \t]*\.[ \t]*(?=\d)", ".", text)
     # Percent signs and surrounding space do not change the numeric token.
-    pattern = r"(?<![\d.])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\d|\.\d)"
-    return {str(Decimal(m.group()).normalize()) for m in re.finditer(pattern, text)}
+    return text
+
+
+def numbers(text):
+    return {str(Decimal(m.group()).normalize()) for m in NUMBER_PATTERN.finditer(normalized_numeric_text(text))}
+
+
+def unsupported_numbers(text, source):
+    """Accept a source fraction as a percentage only when the summary marks it %."""
+    evidence = numbers(source)
+    normalized = normalized_numeric_text(text)
+    missing = set()
+    for match in NUMBER_PATTERN.finditer(normalized):
+        value = Decimal(match.group())
+        if str(value.normalize()) in evidence:
+            continue
+        percent = re.match(r"\s*%", normalized[match.end():])
+        if percent and 0 <= value <= 100 and str((value / 100).normalize()) in evidence:
+            continue
+        missing.add(str(value.normalize()))
+    return sorted(missing)
 
 
 def parse_references(source):
@@ -147,7 +169,7 @@ def validate_group(group, text, source, config):
         experiment = present.get("실험 및 평가", "")
         if len(experiment) < config["experiment_min_chars"]:
             errors.append(f"실험 및 평가 requires {config['experiment_min_chars']} characters")
-        missing = sorted(numbers(experiment) - numbers(source))
+        missing = unsupported_numbers(experiment, source)
         if missing:
             errors.append("Numbers absent from source: " + ", ".join(missing))
     if quote_words(text) > config["max_quote_words"]:
