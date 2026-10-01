@@ -162,6 +162,11 @@ def export_site(app, garden):
             atomic_write(output / "posts" / f"{post['id']}.html", page("post.html", depth=1, post=post,
                          source=json.loads(post["source"]), body=rendered_markdown(garden.markdown(post)), selected=None))
         atomic_write(output / "assets/style.css", (ROOT / "static/style.css").read_text(encoding="utf-8"))
+        search_index = {post["id"]: garden.search_text(post) for post in all_posts}
+        search_json = json.dumps(search_index, ensure_ascii=False, separators=(",", ":"))
+        search_json = search_json.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+        atomic_write(output / "assets/search-data.js", "window.paperSearchIndex = " + search_json + ";\n")
+        atomic_write(output / "assets/search.js", (ROOT / "static/search.js").read_text(encoding="utf-8"))
         atomic_write(output / ".nojekyll", "")
     return output
 

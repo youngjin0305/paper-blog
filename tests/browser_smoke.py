@@ -8,7 +8,7 @@ import threading
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app import create_app
 from garden import Garden, ROOT
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 from waitress import create_server
 
 
@@ -51,7 +51,7 @@ with tempfile.TemporaryDirectory() as directory:
                 page.get_by_role("link", name="Markdown").click()
             assert download.value.suggested_filename.endswith(".md")
             page.goto(url + "/settings")
-            page.wait_for_function("document.querySelectorAll('.topic-editor').length === 3")
+            expect(page.locator('.topic-editor')).to_have_count(len(config['topics']))
             page.locator("#blog-title").fill("My research journal")
             page.get_by_role("button", name="분야 추가").click()
             editor = page.locator(".topic-editor").last
@@ -60,7 +60,7 @@ with tempfile.TemporaryDirectory() as directory:
             editor.locator('[data-field="query"]').fill("cat:quant-ph")
             with page.expect_navigation():
                 page.get_by_role("button", name="설정 저장하기").click()
-            page.wait_for_function("document.querySelectorAll('.topic-editor').length === 4")
+            expect(page.locator('.topic-editor')).to_have_count(len(config['topics']) + 1)
             assert garden.config()["title"] == "My research journal"
             page.goto(url + "/topics/quantum")
             page.get_by_role("heading", name="양자 컴퓨팅", exact=True).wait_for()
@@ -72,6 +72,15 @@ with tempfile.TemporaryDirectory() as directory:
             page.get_by_role("status").filter(has_text="정적 블로그를 저장했습니다").wait_for()
             assert (root / "site/index.html").exists()
             page.goto((root / "site/index.html").as_uri())
+            page.get_by_role("searchbox", name="논문 검색").fill("Browser test")
+            expect(page.locator('#post-count')).to_have_text('1')
+            page.get_by_role("searchbox", name="논문 검색").fill("없는 논문")
+            page.get_by_role("heading", name="검색 결과가 없습니다.").wait_for()
+            page.get_by_role("searchbox", name="논문 검색").fill("Browser test")
+            expect(page.locator('#post-count')).to_have_text('1')
+            page.locator('.filter-row').get_by_role('link', name='양자 컴퓨팅').click()
+            expect(page.get_by_role("searchbox", name="논문 검색")).to_have_value("Browser test")
+            expect(page.locator('#post-count')).to_have_text('1')
             page.get_by_role("link", name="Browser test: local research pipeline").click()
             page.get_by_role("heading", name="한눈에 보기").wait_for()
             page.goto(url)

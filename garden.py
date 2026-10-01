@@ -11,6 +11,7 @@ import sqlite3
 import subprocess
 import threading
 import time
+import unicodedata
 import uuid
 import xml.etree.ElementTree as ET
 from contextlib import contextmanager
@@ -30,6 +31,10 @@ ATOM = {"a": "http://www.w3.org/2005/Atom", "o": "http://a9.com/-/spec/opensearc
 
 def now():
     return datetime.now(UTC).isoformat(timespec="seconds")
+
+
+def normalize_search(value):
+    return unicodedata.normalize("NFKC", value).casefold()
 
 
 def summary_metadata(model):
@@ -377,8 +382,19 @@ class Garden:
                 continue
         rows = sorted(posts.values(), key=lambda p: (summary_sort_time(p), p["id"]), reverse=True)
         rows.sort(key=lambda p: bool(p["demo"]))
+        terms = normalize_search(query).split()
         return [dict(row) for row in rows if (not topic or row["topic_id"] == topic)
-                and (not query or query.casefold() in (row["title"] + row["source"]).casefold())]
+                and (not terms or all(term in self.search_text(row) for term in terms))]
+
+    def search_text(self, post):
+        """The same public paper content is searched locally and in the static export."""
+        topic_name = next((t["name"] for t in self.config()["topics"] if t["id"] == post["topic_id"]), "")
+        try:
+            document = self.markdown(post)
+        except (OSError, ValueError):
+            document = ""
+        return normalize_search(" ".join((post["title"], post.get("summary", ""),
+                                          post["source"], topic_name, document)))
 
     def post(self, identifier):
         return next((post for post in self.posts() if post["id"] == identifier), None)

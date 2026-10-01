@@ -7,6 +7,7 @@
   <title>{% block title %}{{ config.title }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ asset_url }}style.css">
   {% if not static_mode %}<script src="{{ asset_url }}app.js" defer></script>{% endif %}
+  {% block scripts %}{% endblock %}
 </head>
 <body>
   <aside class="sidebar">
