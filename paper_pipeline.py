@@ -13,7 +13,7 @@ import sys
 from filelock import FileLock
 from jsonschema import ValidationError
 
-from garden import ROOT, UTC, atomic_write, now, validate_config, summary_metadata
+from garden import ROOT, UTC, atomic_write, atomic_write_bytes, now, validate_config, summary_metadata
 from paper_config import validate_pipeline
 from paper_git import Publisher
 from paper_llm import create_backend, QuotaExceeded, configure_workspace, workspace_root
@@ -60,7 +60,7 @@ def literal(text):
     return re.sub(r"([\\`*_{}\[\]<>#!|])", r"\\\1", text)
 
 
-def assemble(paper, groups, references, selected, config, summary_model=None, topic_ids=None):
+def assemble(paper, groups, references, selected, config, summary_model=None, topic_ids=None, model_source=None):
     allowed_topics = set(topic_ids) if topic_ids is not None else set(config.get("topic_filters", {}))
     if paper.get("topic_id") in allowed_topics:
         config = {**config, "category": paper["topic_id"],
@@ -71,6 +71,8 @@ def assemble(paper, groups, references, selected, config, summary_model=None, to
                 "category": config["category"], "arxiv_id": paper["id"].removeprefix("arxiv:") if paper["source"] == "arxiv" else "",
                 "source": paper["url"], "basis": "fulltext", "demo": False}
     metadata.update(summary_metadata(summary_model or config["model"]))
+    if model_source:
+        metadata["summary_model_source"] = model_source
     metadata.update(publication_metadata(paper))
     body = f"# {literal(paper['title'])}\n\n[원문]({paper['url']}) · [PDF]({paper['pdfUrl']})\n\n"
     if config["abstract_mode"] == "original":
@@ -104,7 +106,7 @@ class Pipeline:
         self.dry_run = dry_run
         self.fixture = fixture
         self.backend = backend or (FixtureBackend(fixture) if fixture else create_backend(self.config))
-        self.source = source or Sources(self.config)
+        self.source = source or Sources(self.config, root=self.root)
         self.queue_path = self.root / self.config["queue_path"]
         self.queue = json.loads(self.queue_path.read_text(encoding="utf-8")) if self.queue_path.exists() else empty_queue()
         if not isinstance(self.queue.get("papers"), list) or not isinstance(self.queue.get("seen"), list):
@@ -246,18 +248,39 @@ class Pipeline:
         if changed:
             self.save_queue()
 
-    def add(self, value, note="", category=None):
+    def add(self, value, note="", category=None, metadata_file=None):
         if category is not None and category not in self.topic_ids:
             raise ValueError("--category must match an existing topic ID")
-        source, identifier = identify(value)
+        local_pdf = metadata_file is not None or (Path(value).suffix.lower() == ".pdf" and "://" not in value)
+        if local_pdf:
+            if metadata_file is None:
+                raise ValueError("A local PDF requires --metadata-file with verified citation metadata and public links")
+            metadata = json.loads(Path(metadata_file).read_text(encoding="utf-8-sig"))
+            paper = self.source.local_metadata(metadata)
+            pdf_bytes = self.source.read_local_pdf(value)
+            cache = Path(self.config["archive_dir"]) / hashlib.sha256(pdf_bytes).hexdigest()[:20] / "original.pdf"
+            paper["localPdf"] = cache.as_posix()
+            identifier = paper["id"]
+        else:
+            if metadata_file is not None:
+                raise ValueError("--metadata-file is only for a local PDF")
+            _, identifier = identify(value)
+            paper = None
         existing = next((p for p in self.queue["papers"] if p["id"] == identifier), None)
-        paper = existing
+        if paper is None:
+            paper = existing
         if paper is None and self.fixture:
             paper = next((p for p in self.fixture["papers"] if p["id"] == identifier), None)
             if paper is None:
                 raise ValueError("Offline fixture does not contain this ID; omit --fixture for live metadata")
         if paper is None:
             paper = self.source.metadata(value)
+        if local_pdf:
+            if existing:
+                existing.update(paper)
+                paper = existing
+            if not self.dry_run:
+                atomic_write_bytes(self.root / cache, pdf_bytes)
         if category:
             paper["topic_id"] = category
         elif not paper.get("topic_id"):
@@ -306,7 +329,7 @@ class Pipeline:
                     for key in ("journal_ref", "publication_note", "doi"):
                         paper.pop(key, None)
                     paper.update(publication_metadata(fresh))
-                self.log("Downloading PDF and extracting text (no images)")
+                self.log("Loading PDF and extracting text (no images)")
                 markdown, source_text = self.source.fulltext(paper)
             archive_id = hashlib.sha256(paper["id"].encode()).hexdigest()[:20]
             if not self.dry_run:
@@ -371,9 +394,13 @@ class Pipeline:
                             selected = []
                         prompt += "\n검증 실패: 허용 번호의 JSON 정수 배열만 출력하라."
             model = recorded_model(self.backend, self.config["model"])
-            if reused_model and reused_model != model:
-                model = f"{reused_model} + {model}"
-            path, document = assemble(paper, groups, references, selected, self.config, summary_model=model, topic_ids=self.topic_ids)
+            model_source = "reported" if getattr(self.backend, "used_models", None) else "configured"
+            if reused_model:
+                if reused_model != model:
+                    model = f"{reused_model} + {model}"
+                model_source = "mixed"
+            path, document = assemble(paper, groups, references, selected, self.config, summary_model=model,
+                                      topic_ids=self.topic_ids, model_source=model_source)
             errors.extend(validate_document(document, paper, evidence, self.config))
         except QuotaExceeded:
             self.log("Quota exhausted: stopped immediately; queue status unchanged")
@@ -410,6 +437,7 @@ def main(argv=None):
     parser.add_argument("paper", nargs="?")
     parser.add_argument("--note", default="")
     parser.add_argument("--category", help="add: place a manually specified paper in an existing category")
+    parser.add_argument("--metadata-file", type=Path, help="add: verified JSON metadata for a local PDF")
     parser.add_argument("--dry-run", action="store_true", help="No files, agy calls, commits or pushes")
     parser.add_argument("--resume-draft", action="store_true", help="Daily: revalidate and reuse saved draft groups")
     parser.add_argument("--fixture", type=Path, help="Offline fixture; only allowed with --dry-run")
@@ -418,8 +446,10 @@ def main(argv=None):
         parser.error("--resume-draft requires daily")
     if args.category and args.command != "add":
         parser.error("--category requires add")
+    if args.metadata_file and args.command != "add":
+        parser.error("--metadata-file requires add")
     if args.command == "add" and not args.paper:
-        parser.error("add requires an arXiv ID or HTTPS paper/PDF URL")
+        parser.error("add requires an arXiv ID, HTTPS paper/PDF URL, or local PDF path")
     if args.fixture and not args.dry_run:
         parser.error("--fixture requires --dry-run; fixtures must never be published")
     if hasattr(sys.stdout, "reconfigure"):
@@ -451,7 +481,7 @@ def main(argv=None):
                     pin(pipeline.queue, fixture["papers"][0])
                     pipeline.log("Using explicit fixture paper in memory for full daily preview")
         if args.command == "add":
-            pipeline.add(args.paper, args.note, category=args.category)
+            pipeline.add(args.paper, args.note, category=args.category, metadata_file=args.metadata_file)
         else:
             result = pipeline.daily(resume_draft=args.resume_draft) if args.command == "daily" else getattr(pipeline, args.command)()
             if args.command == "daily" and result and not result["valid"]:

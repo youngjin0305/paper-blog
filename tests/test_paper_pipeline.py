@@ -124,6 +124,9 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(metadata["summary_model"], "claude/opus")
         self.assertTrue(metadata["summarized_at"].endswith("+09:00"))
         self.assertEqual(validate_document(document, PAPER, FIXTURE["markdown"], config), [])
+        _, sourced = assemble(PAPER, FIXTURE["groups"], {}, [], config, model_source="configured")
+        self.assertIn('"summary_model_source": "configured"', sourced)
+        self.assertEqual(validate_document(sourced, PAPER, FIXTURE["markdown"], config), [])
         for field in ("summary_model", "summarized_at"):
             metadata.pop(field)
         legacy = "---\n" + json.dumps(metadata) + "\n---\n" + body
@@ -251,7 +254,10 @@ class PipelineTests(unittest.TestCase):
         self.pipeline.weekly()
         self.pipeline.add("2609.00001v2", "fixture")
         self.assertTrue(self.pipeline.list())
-        self.assertTrue(self.pipeline.daily()["valid"])
+        result = self.pipeline.daily()
+        self.assertTrue(result["valid"])
+        from paper_validation import split_document
+        self.assertEqual(split_document(result["document"])[0]["summary_model_source"], "configured")
         after = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
         self.assertEqual(before, after)
 
@@ -273,6 +279,22 @@ class PipelineTests(unittest.TestCase):
             result = self.pipeline.daily()
         self.assertTrue(result["valid"])
         self.assertEqual(calls, ["A", "B", "C", "C", "D", "references"])
+
+    def test_cli_reported_model_is_recorded_as_verified(self):
+        pin(self.pipeline.queue, PAPER)
+        backend = FixtureBackend(FIXTURE)
+        backend.used_models = set()
+        original = backend.generate
+        def generate(prompt, options):
+            backend.used_models.add("gpt-6-sol")
+            return original(prompt, options)
+        backend.generate = generate
+        self.pipeline.backend = backend
+        result = self.pipeline.daily()
+        from paper_validation import split_document
+        metadata, _ = split_document(result["document"])
+        self.assertEqual(metadata["summary_model"], "gpt-6-sol")
+        self.assertEqual(metadata["summary_model_source"], "reported")
 
     def test_abstract_numeric_error_retries_group_a_before_other_groups(self):
         paper = {**PAPER, "abstract": "The study uses 7 cases."}
@@ -414,6 +436,48 @@ class PipelineTests(unittest.TestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_local_pdf_is_cached_for_daily_without_remote_download(self):
+        import pymupdf
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copy(ROOT / "config.json", root / "config.json")
+            with pymupdf.open() as pdf:
+                pdf.new_page().insert_text((72, 72), "Local paper. Accuracy 82.5 percent.")
+                local = root / "provided.pdf"
+                local.write_bytes(pdf.tobytes())
+            citation = {"title": "Local paper", "abstract": "Verified abstract from the supplied paper.",
+                        "published": "2025-06-30T00:00:00+00:00", "authors": ["Test Author"],
+                        "url": "https://example.org/articles/local-paper", "pdfUrl": "https://example.org/articles/local-paper.pdf",
+                        "journal_ref": "Test Journal, Vol. 4"}
+            metadata = root / "citation.json"
+            metadata.write_text(json.dumps(citation), encoding="utf-8")
+            with redirect_stdout(io.StringIO()):
+                preview = Pipeline(root, dry_run=True)
+                queued = preview.add(str(local), metadata_file=metadata, category="quantum-forensics")[0]
+            self.assertEqual(queued["topic_id"], "quantum-forensics")
+            self.assertFalse((root / queued["localPdf"]).exists())
+            self.assertFalse((root / "data/paper-queue.json").exists())
+            with redirect_stdout(io.StringIO()):
+                pipeline = Pipeline(root)
+                queued = pipeline.add(str(local), metadata_file=metadata, category="quantum-forensics")[0]
+            self.assertTrue((root / queued["localPdf"]).exists())
+            self.assertNotIn(str(root), (root / "data/paper-queue.json").read_text(encoding="utf-8"))
+            with patch.object(pipeline.source, "download_pdf", side_effect=AssertionError("remote download")):
+                markdown, source_text = pipeline.source.fulltext(queued)
+            self.assertIn("82.5", markdown)
+            self.assertIn("82.5", source_text)
+
+    def test_local_pdf_requires_verified_citation_and_public_links(self):
+        source = Sources(CONFIG)
+        citation = {"title": "Local", "abstract": "Abstract", "published": "2025-06-30T00:00:00Z",
+                    "url": "https://example.org/article", "pdfUrl": "https://example.org/article.pdf"}
+        self.assertEqual(source.local_metadata(citation)["source"], "manual")
+        for changed in ({"title": ""}, {"url": "file:///private.pdf"}, {"pdfUrl": "https://127.0.0.1/private.pdf"},
+                        {"published": "2025-06-30"},
+                        {"authors": "not a list"}):
+            with self.subTest(changed=changed), self.assertRaises(ValueError):
+                source.local_metadata({**citation, **changed})
+
     def test_eprint_uses_full_article_date_over_citation_year(self):
         html = '<meta name="citation_title" content="Title"><meta property="og:description" content="Abstract"><meta name="citation_publication_date" content="2026"><meta property="article:published_time" content="2026-09-18T13:05:43+00:00">'
         from types import SimpleNamespace

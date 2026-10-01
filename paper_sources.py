@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
 from hashlib import sha256
 from html.parser import HTMLParser
+from ipaddress import ip_address
+from pathlib import Path
 import re
 import time
 from urllib.parse import urlparse, unquote
@@ -43,8 +45,9 @@ def identify(value):
 
 
 class Sources:
-    def __init__(self, config):
+    def __init__(self, config, root=None):
         self.config = config
+        self.root = Path(root) if root is not None else None
         self.last_arxiv = 0.0
 
     def get(self, url, **kwargs):
@@ -149,10 +152,70 @@ class Sources:
             raise ValueError("Response is not a PDF")
         return bytes(data)
 
+    def read_local_pdf(self, path):
+        path = Path(path).expanduser()
+        if not path.is_file() or path.is_symlink() or path.suffix.lower() != ".pdf":
+            raise ValueError("Provide a regular local PDF file")
+        if path.stat().st_size > self.config["max_pdf_bytes"]:
+            raise ValueError("PDF exceeds max_pdf_bytes")
+        data = path.read_bytes()
+        if not data.startswith(b"%PDF-"):
+            raise ValueError("Local file is not a PDF")
+        import pymupdf
+        with pymupdf.open(stream=data, filetype="pdf") as document:
+            if not len(document):
+                raise ValueError("Local PDF has no pages")
+        return data
+
+    def local_metadata(self, metadata):
+        """Require verified public citation metadata for an attached PDF."""
+        if not isinstance(metadata, dict):
+            raise ValueError("Local PDF metadata must be a JSON object")
+        for key in ("title", "abstract", "published", "url", "pdfUrl"):
+            if not isinstance(metadata.get(key), str) or not metadata[key].strip():
+                raise ValueError(f"Local PDF metadata requires {key}")
+        for key in ("url", "pdfUrl"):
+            parsed = urlparse(metadata[key])
+            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+                raise ValueError(f"Local PDF {key} must be a public HTTPS URL")
+            try:
+                address = ip_address(parsed.hostname)
+            except ValueError:
+                address = None
+            if parsed.hostname == "localhost" or parsed.hostname.endswith((".local", ".localhost")) or (address and not address.is_global):
+                raise ValueError(f"Local PDF {key} must be a public HTTPS URL")
+            identify(metadata[key])
+        published = datetime.fromisoformat(metadata["published"].replace("Z", "+00:00"))
+        if published.tzinfo is None:
+            raise ValueError("Local PDF published timestamp must include a timezone")
+        authors = metadata.get("authors", [])
+        if not isinstance(authors, list) or any(not isinstance(a, str) or not a.strip() for a in authors):
+            raise ValueError("Local PDF authors must be a list of names")
+        source, identifier = identify(metadata["url"])
+        paper = {"id": identifier, "source": source, "title": metadata["title"].strip(),
+                 "authors": authors, "abstract": metadata["abstract"].strip(),
+                 "url": metadata["url"].strip(), "pdfUrl": metadata["pdfUrl"].strip(),
+                 "published": published.isoformat(), "categories": []}
+        for key in ("journal_ref", "doi", "publication_note"):
+            if key in metadata:
+                if not isinstance(metadata[key], str):
+                    raise ValueError(f"Local PDF metadata {key} must be a string")
+                paper[key] = metadata[key].strip()
+        return paper
+
     def fulltext(self, paper):
         import pymupdf
         import pymupdf4llm
-        data = self.download_pdf(paper["pdfUrl"])
+        if paper.get("localPdf"):
+            if self.root is None:
+                raise ValueError("Local PDF cache requires a repository root")
+            archive = (self.root / self.config["archive_dir"]).resolve()
+            path = (self.root / paper["localPdf"]).resolve()
+            if not path.is_relative_to(archive):
+                raise ValueError("Local PDF cache path is outside archive_dir")
+            data = self.read_local_pdf(path)
+        else:
+            data = self.download_pdf(paper["pdfUrl"])
         with pymupdf.open(stream=data, filetype="pdf") as document:
             markdown = pymupdf4llm.to_markdown(document, write_images=False, embed_images=False,
                                                ignore_images=True, show_progress=False)

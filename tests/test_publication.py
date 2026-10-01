@@ -47,6 +47,7 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(publication_display({**base, "publication_note": "Accepted at AI4MFDD, ECCV 2026. 34 pages"})["publication_label"], "Accepted at AI4MFDD, ECCV 2026")
         self.assertEqual(publication_display({**base, "publication_note": "Accepted at Workshop (AI4MFDD), ECCV 2026. 34 pages"})["publication_short"], "AI4MFDD · ECCV 2026")
         self.assertEqual(publication_display({**base, "journal_ref": "IEEE Transactions on Information Forensics and Security"})["publication_short"], "IEEE TIFS")
+        self.assertEqual(publication_display({**base, "journal_ref": "Journal of Emerging Technology and Digital Transformation, Vol. 4, No. 2 (2025)"})["publication_short"], "JETDT")
 
     def test_arxiv_parser_preserves_publication_fields(self):
         xml = b'''<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom">

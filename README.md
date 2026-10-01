@@ -2,7 +2,7 @@
 
 AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 블로그입니다. **AI 기반 암호분석**과 **AI 기반 디지털 포렌식**을 중심으로, 관심 있는 연구의 핵심을 빠르게 파악하고 원문을 다시 찾아 읽을 수 있도록 기록합니다.
 
-원문 기반 정리는 한국어 초록 번역, 문제 정의와 핵심 기여, 방법론, 실험 결과, 한계와 결론을 담습니다. 목록에서는 짧은 주제 요약과 게재처·출처, 정리 모델, 정리 날짜를 확인할 수 있습니다. 저널·학회 정보는 원문 메타데이터를 사용하며, 게재 정보가 확인되지 않으면 arXiv·IACR ePrint 출처를 표시합니다. 모델명은 CLI가 반환한 실제 모델 ID를 기록하고, 과거 버전 정보가 없는 글은 미기록으로 표시합니다.
+원문 기반 정리는 한국어 초록 번역, 문제 정의와 핵심 기여, 방법론, 실험 결과, 한계와 결론을 담습니다. 목록에서는 짧은 주제 요약과 게재처·출처, 모델 정보, 정리 날짜를 확인할 수 있습니다. 저널·학회 정보는 원문 메타데이터를 사용하며, 게재 정보가 확인되지 않으면 arXiv·IACR ePrint 출처를 표시합니다. CLI가 실제 모델 ID를 반환하면 **응답 확인 모델**, 반환하지 않으면 설정한 값을 **요청 모델**로 표시합니다. 과거에 별도로 작성한 글은 확인되지 않은 모델명을 추정하지 않습니다.
 
 글은 Markdown으로 저장하고 GitHub Pages로 게시합니다. AI가 정리한 내용이므로 중요한 해석과 수치는 함께 제공하는 원문·PDF 링크에서 확인하세요.
 
@@ -41,6 +41,28 @@ AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 
 ```
 
 `add`에는 arXiv 페이지, `https://eprint.iacr.org/연도/번호` 형식의 ePrint 페이지, 공개 HTTPS PDF URL도 사용할 수 있습니다. `--note`는 관리용 메모이며 요약 지침을 바꾸지는 않습니다.
+
+직접 받은 **로컬 PDF**도 같은 파이프라인에 넣습니다. PDF 첫 장과 공식 원문 페이지에서 확인한 서지 정보를 UTF-8 JSON 파일로 준비합니다. 공개 원문·PDF 링크가 없으면 게시하지 않습니다.
+
+```json
+{
+  "title": "원문 제목",
+  "abstract": "원문 초록 전체",
+  "published": "2025-06-30T00:00:00+00:00",
+  "authors": ["First Author", "Second Author"],
+  "url": "https://example.org/paper-page",
+  "pdfUrl": "https://example.org/paper.pdf",
+  "journal_ref": "Journal Name, Vol. 4, No. 2 (2025)"
+}
+```
+
+```powershell
+.\.venv\Scripts\python.exe -B paper_pipeline.py add "D:\Papers\paper.pdf" --metadata-file "D:\Papers\citation.json" --category quantum-forensics
+.\.venv\Scripts\python.exe -B paper_pipeline.py list
+.\.venv\Scripts\python.exe -u -B paper_pipeline.py daily --resume-draft
+```
+
+`add`가 원본 PDF를 Git에서 제외된 `data/papers/`에 복사하고 큐에는 상대 경로만 남깁니다. `daily`는 이 PDF를 읽어 기존의 섹션별 생성·검증·게시 절차를 적용합니다. 로컬 PDF를 재현할 수 없거나 필수 섹션의 근거가 부족하면 초안에 실패 이유를 남기며, 검증을 우회해 게시하지 않습니다. `--dry-run`은 캐시·큐·게시글을 저장하지 않습니다.
 
 **`daily`는 목록의 첫 번째 논문 한 편을 처리합니다.** 수동 추가한 `pinned` 논문이 일반 후보보다 우선이고, pinned끼리는 최초 추가 시각 순서입니다. 다른 pinned가 있으면 방금 추가한 논문보다 먼저 처리될 수 있으므로 `list`로 확인하세요. 이미 게시한 논문은 다시 추가해도 기존 글을 덮어쓰지 않습니다.
 

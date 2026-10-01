@@ -8,7 +8,8 @@ PUBLICATION_FIELDS = {"journal_ref", "publication_note", "doi"}
 def compact_venue(venue, archive):
     if not venue:
         return archive if archive != "원문" else "게재처 미확인"
-    for full, short in (("IEEE Transactions on Information Forensics and Security", "IEEE TIFS"),
+    for full, short in (("Journal of Emerging Technology and Digital Transformation", "JETDT"),
+                        ("IEEE Transactions on Information Forensics and Security", "IEEE TIFS"),
                         ("IEEE Transactions on Pattern Analysis and Machine Intelligence", "IEEE TPAMI"),
                         ("Journal of Cryptology", "J. Cryptology")):
         if full.lower() in venue.lower():

@@ -69,6 +69,11 @@ def summary_display(metadata):
     model = metadata.get("summary_model")
     if isinstance(model, str) and model.strip():
         result.update(summary_model=model.strip(), summary_model_label=model_display(model.strip()))
+        prefix = {"reported": "응답 확인 모델", "configured": "요청 모델", "mixed": "정리 모델(초안 포함)"}.get(
+            metadata.get("summary_model_source"), "정리 모델")
+        result["summary_model_caption"] = prefix + ": " + result["summary_model_label"]
+    elif metadata.get("review_method") == "codex-manual":
+        result["summary_model_caption"] = "Codex 직접 정리 · 모델 ID 미확인"
     date = parse_timestamp(metadata.get("summarized_at"))
     if date is not None:
         result.update(summarized_at=date.isoformat(), summary_date=date.astimezone(KST).strftime("%Y-%m-%d"))
@@ -80,6 +85,16 @@ def atomic_write(path: Path, content: str):
     temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
     try:
         temp.write_text(content, encoding="utf-8")
+        temp.replace(path)
+    finally:
+        temp.unlink(missing_ok=True)
+
+
+def atomic_write_bytes(path: Path, content: bytes):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
+    try:
+        temp.write_bytes(content)
         temp.replace(path)
     finally:
         temp.unlink(missing_ok=True)

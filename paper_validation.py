@@ -12,7 +12,7 @@ GROUPS = {
 }
 REQUIRED = ["초록", "문제 정의", "주요 기여", "제시한 방법론", "실험 및 평가", "결론"]
 FIELDS = {"title", "date", "collected_at", "category", "arxiv_id", "source", "basis", "demo"}
-SUMMARY_FIELDS = {"summary_model", "summarized_at"}
+SUMMARY_FIELDS = {"summary_model", "summary_model_source", "review_method", "summarized_at"}
 RUBRIC = ["relevance", "novelty", "methodology", "reproducibility"]
 RANK_SCHEMA = {
     "type": "object", "additionalProperties": False, "required": RUBRIC + ["rationale"],
@@ -210,6 +210,11 @@ def validate_document(document, paper, source, config):
                 errors.append(f"Frontmatter {key} must be a string")
         if "summary_model" in metadata and (not isinstance(metadata["summary_model"], str) or not metadata["summary_model"].strip()):
             errors.append("Summary model must be a nonempty string")
+        if "summary_model_source" in metadata and (metadata["summary_model_source"] not in ("reported", "configured", "mixed")
+                                                   or not metadata.get("summary_model")):
+            errors.append("Summary model source requires a model and known provenance")
+        if "review_method" in metadata and metadata["review_method"] != "codex-manual":
+            errors.append("Unknown review method")
         if metadata.get("source") != paper["url"]:
             errors.append("Frontmatter source link mismatch")
         if metadata.get("title") != paper["title"]:
