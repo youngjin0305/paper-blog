@@ -1234,6 +1234,37 @@
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "manual:16661c9151450f07fa3b",
+      "source": "manual",
+      "title": "QUANTUM POWERED FORENSICS: A NEW AGE OF CYBER INVESTIGATION",
+      "authors": [
+        "Muhammad Ahsan Naeem",
+        "Muzmmil Memon",
+        "Farheen Memon",
+        "Muhammad Mudasir"
+      ],
+      "abstract": "The evolution of quantum computing presents both critical risks and opportunities for digital forensics. This study addresses the urgent need to adapt forensic science in response to quantum threats, especially the vulnerabilities in classical encryption standards exposed by quantum algorithms like Shor’s and Grover’s. This conceptual paper develops an integrated framework that links Quantum Computing Capability (QCC), Quantum-Resistant Cryptography (QRC), Digital Evidence Integrity (DEI), and Forensic Analysis Accuracy (FAA), moderated by Investigator Readiness and Skills (IRS) and Legal and Regulatory Adaptability (LRA). The research builds on theories from quantum mechanics and forensic science to model how QCC can both challenge and enhance forensic processes. Key findings highlight that QRC plays a crucial mediating role in preserving evidence authenticity under quantum threats. The originality of the study lies in its holistic framework, combining legal, technological, and human readiness dimensions. This framework offers strategic value for policymakers, legal institutions, and forensic professionals aiming to secure digital evidence in a post-quantum era. Future work may test this model empirically through SEM/PLS-SEM to guide technological adoption and regulatory reforms. Ultimately, the study contributes a forward-looking roadmap for resilient, quantum-compatible forensic systems.",
+      "url": "https://journalofemergingtechnologyanddigitaltransformation.com/index.php/3/article/view/46",
+      "pdfUrl": "https://journalofemergingtechnologyanddigitaltransformation.com/index.php/3/article/download/46/40",
+      "published": "2025-06-30T00:00:00+00:00",
+      "categories": [],
+      "studyType": "conceptual",
+      "journal_ref": "Journal of Emerging Technology and Digital Transformation, Vol. 4, No. 2 (2025)",
+      "localPdf": "data/papers/ef7b4a31cb20fde95f63/original.pdf",
+      "topic_id": "quantum-forensics",
+      "replacePostPath": "content/quantum-forensics/2025-06-30-827c68391b5cd73d2c12.md",
+      "addedAt": "2026-10-01T06:42:45+00:00",
+      "status": "done",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": "content/quantum-forensics/2025-06-30-827c68391b5cd73d2c12.md",
+      "note": ""
     }
   ],
   "seen": [
@@ -1254,7 +1285,8 @@
     "eprint:2026/2095",
     "eprint:2026/2097",
     "eprint:2026/2127",
-    "eprint:2026/2224"
+    "eprint:2026/2224",
+    "manual:16661c9151450f07fa3b"
   ],
   "lastWeeklyAt": "2026-09-27T23:00:02+00:00"
 }
