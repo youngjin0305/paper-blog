@@ -41,7 +41,11 @@ class GardenTests(unittest.TestCase):
         self.assertEqual(summary_display({"summary_model": 123, "summarized_at": stamp})["summary_date"], "2026-09-24")
         self.assertEqual(summary_display({"review_method": "codex-manual"})["summary_model_caption"],
                          "Codex 직접 정리 · 모델 ID 미확인")
-        self.assertIn("요청 모델", summary_display({"summary_model": "claude/opus", "summary_model_source": "configured"})["summary_model_caption"])
+        reported = summary_display({"summary_model": "claude-opus-5", "summary_model_source": "reported"})
+        self.assertEqual(reported["summary_model_caption"], "정리 모델: Claude Opus 5")
+        self.assertIn("CLI 응답", reported["summary_model_provenance"])
+        configured = summary_display({"summary_model": "claude/opus", "summary_model_source": "configured"})
+        self.assertEqual(configured["summary_model_caption"], "정리 모델: Claude Opus (버전 미기록) (요청값)")
         self.assertEqual(summary_display({"summarized_at": "2026-09-24T23:30:00Z"})["summary_date"], "2026-09-25")
 
     def test_date_only_post_in_live_static_and_sorting(self):

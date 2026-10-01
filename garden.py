@@ -69,9 +69,14 @@ def summary_display(metadata):
     model = metadata.get("summary_model")
     if isinstance(model, str) and model.strip():
         result.update(summary_model=model.strip(), summary_model_label=model_display(model.strip()))
-        prefix = {"reported": "응답 확인 모델", "configured": "요청 모델", "mixed": "정리 모델(초안 포함)"}.get(
-            metadata.get("summary_model_source"), "정리 모델")
-        result["summary_model_caption"] = prefix + ": " + result["summary_model_label"]
+        source = metadata.get("summary_model_source")
+        suffix = {"configured": " (요청값)", "mixed": " (초안 포함)"}.get(source, "")
+        result["summary_model_caption"] = "정리 모델: " + result["summary_model_label"] + suffix
+        result["summary_model_provenance"] = {
+            "reported": "CLI 응답에서 실제 모델 ID 확인",
+            "configured": "CLI 응답에서 모델 ID를 확인하지 못해 요청한 설정값을 표시",
+            "mixed": "기존 초안과 이번 생성 결과의 모델 정보가 함께 기록됨",
+        }.get(source, "모델 ID 확인 방식 미기록")
     elif metadata.get("review_method") == "codex-manual":
         result["summary_model_caption"] = "Codex 직접 정리 · 모델 ID 미확인"
     date = parse_timestamp(metadata.get("summarized_at"))

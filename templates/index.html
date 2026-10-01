@@ -27,7 +27,7 @@
       <div class="card-facts">
         <span class="venue-tag" title="{{ post.publication_label }} · {{ post.archive_label }}">{{ post.publication_short }}</span>
         {% if post.demo %}<span class="demo-label">DEMO</span>{% else %}
-        <span class="model-tag" title="{{ post.summary_model_caption|default('모델 미기록', true) }}{% if post.summary_model %} · {{ post.summary_model }}{% endif %}">{{ post.summary_model_caption|default('모델 미기록', true) }}</span>
+        <span class="model-tag" title="{{ post.summary_model_provenance|default(post.summary_model_caption|default('모델 미기록', true), true) }}{% if post.summary_model %} · {{ post.summary_model }}{% endif %}">{{ post.summary_model_caption|default('모델 미기록', true) }}</span>
         {% if post.summary_date %}<time datetime="{{ post.summarized_at }}" title="정리 날짜">{{ post.summary_date }}</time>{% else %}<span>날짜 미기록</span>{% endif %}
         {% endif %}
       </div>
