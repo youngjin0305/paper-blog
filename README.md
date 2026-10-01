@@ -6,6 +6,8 @@ AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 
 
 글은 Markdown으로 저장하고 GitHub Pages로 게시합니다. AI가 정리한 내용이므로 중요한 해석과 수치는 함께 제공하는 원문·PDF 링크에서 확인하세요.
 
+분야는 **자동 수집 대상**과 **지정 논문 분류용**으로 나눌 수 있습니다. 설정 화면에서 ‘논문 수집 대상에 포함’을 끄면 그 분야는 주간 검색·로컬 자동 조사에서 빠지고, 직접 지정한 글을 모으는 분류로 남습니다. 현재 `PQC Migration`과 `Quantum Forensics`는 분류 전용이며 검색식을 비워 두었습니다. 수동으로 큐에 넣는 공개 논문은 `paper_pipeline.py add <원문 URL 또는 arXiv ID> --category pqc-migration`처럼 분류를 지정할 수 있습니다.
+
 [블로그 둘러보기](https://youngjin0305.github.io/paper-blog/)
 
 글 목록은 **최근에 정리한 순서**로 표시합니다. 정리 시각이 기록되지 않은 이전 글은 글 생성 시각을 사용하고, 데모는 마지막에 둡니다. 주간 자동 수집은 arXiv와 IACR ePrint RSS를 함께 탐색합니다(`pipeline.use_eprint: true`). ePrint는 RSS가 제공하는 최신 항목 중 관심 분야와 기간에 맞는 논문을 선정하므로 매번 후보에 포함되지는 않습니다.

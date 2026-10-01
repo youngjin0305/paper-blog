@@ -60,8 +60,9 @@ def literal(text):
     return re.sub(r"([\\`*_{}\[\]<>#!|])", r"\\\1", text)
 
 
-def assemble(paper, groups, references, selected, config, summary_model=None):
-    if paper.get("topic_id") in config.get("topic_filters", {}):
+def assemble(paper, groups, references, selected, config, summary_model=None, topic_ids=None):
+    allowed_topics = set(topic_ids) if topic_ids is not None else set(config.get("topic_filters", {}))
+    if paper.get("topic_id") in allowed_topics:
         config = {**config, "category": paper["topic_id"],
                   "post_dir": (Path(config["post_dir"]).parent / paper["topic_id"]).as_posix()}
     identifier = hashlib.sha256(f"{config['category']}:{paper['id']}:fulltext".encode()).hexdigest()[:20]
@@ -90,11 +91,16 @@ class Pipeline:
         raw = json.loads((self.root / "config.json").read_text(encoding="utf-8-sig"))
         validate_config(raw)
         self.config = validate_pipeline(raw.get("pipeline", {}))
-        self.config["model"] = self.config["model"].strip() or raw.get("model", "").strip() or DEFAULT_MODEL
-        if self.config["category"] not in {t["id"] for t in raw["topics"]}:
+        self.topic_ids = {t["id"] for t in raw["topics"]}
+        if self.config["category"] not in self.topic_ids:
             raise ValueError("pipeline.category must match an existing topic ID")
-        if set(self.config["topic_filters"]) - {t["id"] for t in raw["topics"]}:
+        if set(self.config["topic_filters"]) - self.topic_ids:
             raise ValueError("topic_filters must match existing topic IDs")
+        enabled_topics = {t["id"] for t in raw["topics"] if t["enabled"]}
+        self.collection_filter_mode = bool(self.config["topic_filters"])
+        self.config["topic_filters"] = {topic: groups for topic, groups in self.config["topic_filters"].items()
+                                        if topic in enabled_topics}
+        self.config["model"] = self.config["model"].strip() or raw.get("model", "").strip() or DEFAULT_MODEL
         self.dry_run = dry_run
         self.fixture = fixture
         self.backend = backend or (FixtureBackend(fixture) if fixture else create_backend(self.config))
@@ -131,7 +137,8 @@ class Pipeline:
         if weekly_completed(self.queue, timestamp):
             self.log("Weekly already completed in this local calendar week")
             return self.list()
-        fetched = deepcopy(self.fixture["papers"]) if self.fixture else self.source.recent()
+        fetched = ([] if self.collection_filter_mode and not self.config["topic_filters"] else
+                   deepcopy(self.fixture["papers"]) if self.fixture else self.source.recent())
         self.log(f"Fetched {len(fetched)} papers; applying topic filters")
         seen = set(self.queue["seen"]) | {p["id"] for p in self.queue["papers"]}
         shortlist = {}
@@ -239,7 +246,9 @@ class Pipeline:
         if changed:
             self.save_queue()
 
-    def add(self, value, note=""):
+    def add(self, value, note="", category=None):
+        if category is not None and category not in self.topic_ids:
+            raise ValueError("--category must match an existing topic ID")
         source, identifier = identify(value)
         existing = next((p for p in self.queue["papers"] if p["id"] == identifier), None)
         paper = existing
@@ -249,7 +258,9 @@ class Pipeline:
                 raise ValueError("Offline fixture does not contain this ID; omit --fixture for live metadata")
         if paper is None:
             paper = self.source.metadata(value)
-        if not paper.get("topic_id"):
+        if category:
+            paper["topic_id"] = category
+        elif not paper.get("topic_id"):
             _, detail = rule_score(paper, self.config)
             paper["topic_id"] = detail.get("topic") or self.config["category"]
         if existing and existing.get("postPath"):
@@ -307,7 +318,7 @@ class Pipeline:
             reusable = {}
             reused_model = None
             if resume_draft:
-                draft_path, _ = assemble(paper, {}, {}, [], self.config)
+                draft_path, _ = assemble(paper, {}, {}, [], self.config, topic_ids=self.topic_ids)
                 draft = self.root / self.config["draft_dir"] / Path(draft_path).name
                 if draft.exists():
                     metadata, body = split_document(draft.read_text(encoding="utf-8"))
@@ -362,7 +373,7 @@ class Pipeline:
             model = recorded_model(self.backend, self.config["model"])
             if reused_model and reused_model != model:
                 model = f"{reused_model} + {model}"
-            path, document = assemble(paper, groups, references, selected, self.config, summary_model=model)
+            path, document = assemble(paper, groups, references, selected, self.config, summary_model=model, topic_ids=self.topic_ids)
             errors.extend(validate_document(document, paper, evidence, self.config))
         except QuotaExceeded:
             self.log("Quota exhausted: stopped immediately; queue status unchanged")
@@ -373,7 +384,7 @@ class Pipeline:
         if errors:
             errors = list(dict.fromkeys(errors))
             if not document:
-                path, document = assemble(paper, groups, {}, [], self.config)
+                path, document = assemble(paper, groups, {}, [], self.config, topic_ids=self.topic_ids)
             paper["status"] = "failed"
             paper["failCount"] += 1
             if not self.dry_run:
@@ -398,12 +409,15 @@ def main(argv=None):
     parser.add_argument("command", choices=["weekly", "daily", "add", "list", "setup-agy"])
     parser.add_argument("paper", nargs="?")
     parser.add_argument("--note", default="")
+    parser.add_argument("--category", help="add: place a manually specified paper in an existing category")
     parser.add_argument("--dry-run", action="store_true", help="No files, agy calls, commits or pushes")
     parser.add_argument("--resume-draft", action="store_true", help="Daily: revalidate and reuse saved draft groups")
     parser.add_argument("--fixture", type=Path, help="Offline fixture; only allowed with --dry-run")
     args = parser.parse_args(argv)
     if args.resume_draft and args.command != "daily":
         parser.error("--resume-draft requires daily")
+    if args.category and args.command != "add":
+        parser.error("--category requires add")
     if args.command == "add" and not args.paper:
         parser.error("add requires an arXiv ID or HTTPS paper/PDF URL")
     if args.fixture and not args.dry_run:
@@ -437,7 +451,7 @@ def main(argv=None):
                     pin(pipeline.queue, fixture["papers"][0])
                     pipeline.log("Using explicit fixture paper in memory for full daily preview")
         if args.command == "add":
-            pipeline.add(args.paper, args.note)
+            pipeline.add(args.paper, args.note, category=args.category)
         else:
             result = pipeline.daily(resume_draft=args.resume_draft) if args.command == "daily" else getattr(pipeline, args.command)()
             if args.command == "daily" and result and not result["valid"]:

@@ -76,6 +76,11 @@ function addTopic(topic) {
     if (input.type === 'checkbox') input.checked = topic[input.dataset.field];
     else input.value = topic[input.dataset.field] ?? '';
   }
+  const collection = editor.querySelector('[data-field="enabled"]');
+  const query = editor.querySelector('[data-field="query"]');
+  const updateQueryRequirement = () => { query.required = collection.checked; };
+  collection.addEventListener('change', updateQueryRequirement);
+  updateQueryRequirement();
   editor.querySelector('.remove-topic').addEventListener('click', () => {
     editor.remove(); renumber();
     toast('저장하면 분야가 목록에서 제거됩니다. 기존 Markdown과 글은 보존됩니다.');

@@ -565,6 +565,36 @@ class TopicTests(unittest.TestCase):
         self.assertTrue(path.startswith("content/ai-digital-forensics/"))
         self.assertIn('"category": "ai-digital-forensics"', document)
 
+    def test_manual_only_category_routes_without_collection_filter(self):
+        config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
+        self.assertNotIn("pqc-migration", config["pipeline"]["topic_filters"])
+        self.assertFalse(next(t for t in config["topics"] if t["id"] == "pqc-migration")["enabled"])
+        path, document = assemble({**PAPER, "topic_id": "pqc-migration"}, FIXTURE["groups"], {}, [],
+                                  self.config, topic_ids={t["id"] for t in config["topics"]})
+        self.assertTrue(path.startswith("content/pqc-migration/"))
+        self.assertIn('"category": "pqc-migration"', document)
+
+    def test_manual_add_accepts_existing_classification_only_category(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copy(ROOT / "config.json", root / "config.json")
+            pipeline = Pipeline(root, dry_run=True, fixture=deepcopy(FIXTURE))
+            with redirect_stdout(io.StringIO()):
+                paper = pipeline.add("2609.00001", category="pqc-migration")[0]
+            self.assertEqual(paper["topic_id"], "pqc-migration")
+            with self.assertRaisesRegex(ValueError, "--category"):
+                pipeline.add("2609.00001", category="missing")
+
+    def test_disabled_topic_is_excluded_from_weekly_collection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
+            config["topics"][0]["enabled"] = False
+            (root / "config.json").write_text(json.dumps(config), encoding="utf-8")
+            pipeline = Pipeline(root, dry_run=True, fixture=deepcopy(FIXTURE))
+            self.assertNotIn("ai-cryptanalysis", pipeline.config["topic_filters"])
+            self.assertIn("ai-digital-forensics", pipeline.config["topic_filters"])
+
     def test_invalid_empty_keyword_group_rejected(self):
         with self.assertRaises(ValueError):
             validate_pipeline({"topic_filters": {"ai": [[], ["forensics"]]}})

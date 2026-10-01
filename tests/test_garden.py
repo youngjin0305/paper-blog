@@ -116,6 +116,20 @@ class GardenTests(unittest.TestCase):
         self.assertNotIn(PAPER["abstract"], md)
         self.assertIn("실제 연구 결과가 아닌 테스트용 초록", md)
 
+    def test_classification_only_topic_has_no_search(self):
+        config = self.garden.config()
+        config["topics"].append({"id": "pqc-migration", "name": "PQC Migration", "description": "",
+            "query": "", "instructions": "", "interval_hours": 24, "lookback_days": 7,
+            "max_papers": 5, "enabled": False})
+        self.garden.save_config(config)
+        self.assertNotIn("pqc-migration", self.garden.due_topics())
+        with self.assertRaisesRegex(ValueError, "분류 전용"):
+            self.garden.research("pqc-migration")
+        response = self.client.post('/api/research', json={"topic_id": "pqc-migration"},
+                                    headers={"X-Garden-Token": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertNotIn('data-research="pqc-migration"', self.client.get('/topics/pqc-migration').get_data(as_text=True))
+
     def test_cards_use_topic_summary_in_live_and_exported_pages(self):
         self.garden.research()
         self.assertEqual(self.garden.posts()[0]["summary"], "테스트 요약입니다.")

@@ -5,7 +5,7 @@
   <h1>{{ selected.name if selected else '오늘의 발견, 내일의 아이디어.' }}</h1>
   <p>{{ selected.description if selected else '관심 있는 분야의 새 논문을 모으고, 읽기 좋은 기록으로 남깁니다.' }}<br>나만의 속도로 가꾸는 연구 아카이브.</p>
   <div class="hero-actions">
-    {% if not static_mode %}<button class="primary" data-research="{{ selected.id if selected else '' }}">✧ &nbsp; 지금 논문 조사하기 <span>↗</span></button><a class="quiet-link" href="/settings">조사 설정 <span>→</span></a>{% else %}<span class="badge">정적 블로그 · {{ total }}개의 기록</span>{% endif %}
+    {% if not static_mode %}{% if selected and not selected.enabled %}<span class="badge">직접 지정한 논문만 분류</span>{% else %}<button class="primary" data-research="{{ selected.id if selected else '' }}">✧ &nbsp; 지금 논문 조사하기 <span>↗</span></button>{% endif %}<a class="quiet-link" href="/settings">조사 설정 <span>→</span></a>{% else %}<span class="badge">정적 블로그 · {{ total }}개의 기록</span>{% endif %}
   </div>
   <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="paper paper-back"><i></i><i></i><i></i></div><div class="paper paper-front"><span>FIELD NOTES</span><b>새로운 생각의<br>씨앗을 모으다.</b><i></i><i></i><small>RESEARCH / DISCOVERY</small></div><span class="art-spark">✳</span><span class="art-dot"></span></div>
 </section>

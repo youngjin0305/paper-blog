@@ -118,8 +118,11 @@ def create_app(garden=None):
         if not isinstance(payload, dict):
             return jsonify(error="올바른 JSON 객체를 보내세요."), 400
         topic_id = payload.get("topic_id")
-        if topic_id is not None and topic_id not in [t["id"] for t in garden.config()["topics"]]:
+        topics = {t["id"]: t for t in garden.config()["topics"]}
+        if topic_id is not None and topic_id not in topics:
             return jsonify(error="존재하지 않는 분야입니다."), 400
+        if topic_id is not None and not topics[topic_id]["enabled"]:
+            return jsonify(error="분류 전용 분야는 논문을 조사하지 않습니다."), 400
         if not garden.launch(topic_id):
             return jsonify(error="이미 조사 중입니다. 완료 후 다시 실행하세요."), 409
         return jsonify(message="조사를 시작했습니다. 실행 기록에서 진행 상황을 확인하세요."), 202

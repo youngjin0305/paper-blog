@@ -24,6 +24,28 @@
       "lookback_days": 7,
       "max_papers": 5,
       "enabled": true
+    },
+    {
+      "id": "pqc-migration",
+      "name": "PQC Migration",
+      "description": "수동으로 지정한 포스트 양자 암호 전환 논문을 분류하는 공간",
+      "query": "",
+      "instructions": "",
+      "interval_hours": 24,
+      "lookback_days": 7,
+      "max_papers": 5,
+      "enabled": false
+    },
+    {
+      "id": "quantum-forensics",
+      "name": "Quantum Forensics",
+      "description": "양자 컴퓨팅과 디지털 증거의 무결성·포렌식 절차를 다룬 지정 논문",
+      "query": "",
+      "instructions": "",
+      "interval_hours": 24,
+      "lookback_days": 7,
+      "max_papers": 5,
+      "enabled": false
     }
   ],
   "pipeline": {

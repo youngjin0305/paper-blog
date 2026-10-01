@@ -104,7 +104,8 @@ def validate_config(config):
         item = {"id": topic["id"]}
         for key, maximum in (("name", 80), ("description", 300), ("query", 1000), ("instructions", 5000)):
             value = topic.get(key, "")
-            if not isinstance(value, str) or len(value) > maximum or (key in ("name", "query") and not value.strip()):
+            required = key == "name" or (key == "query" and topic.get("enabled"))
+            if not isinstance(value, str) or len(value) > maximum or (required and not value.strip()):
                 raise ValueError(f"{topic['id']}: {key} 입력을 확인하세요. 최대 {maximum}자입니다.")
             item[key] = value.strip()
         for key, low, high in (("interval_hours", 1, 720), ("lookback_days", 1, 365), ("max_papers", 1, 20)):
@@ -467,6 +468,8 @@ class Garden:
                 topics = [topic for topic in config["topics"] if topic["id"] == topic_id] if topic_id else [t for t in config["topics"] if t["enabled"]]
                 if topic_id and not topics:
                     raise ValueError("존재하지 않는 분야입니다.")
+                if topic_id and not topics[0]["enabled"]:
+                    raise ValueError("분류 전용 분야는 논문을 조사하지 않습니다.")
                 if due_only:
                     if not config["schedule_enabled"]:
                         return []
