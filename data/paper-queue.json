@@ -670,9 +670,6 @@
       "id": "arxiv:2609.26893",
       "title": "ACTS: A multi-tier benchmark evaluating LLM cipher identification under controlled blind conditions",
       "abstract": "We introduce ACTS (Artifacts in Cipher Testing Suite), a reproducible benchmark that isolates cryptanalytic ability through tiered metadata deprivation (Tier-1: full metadata; Tier-2: filename only; Tier-3: completely blind) and tests forced reasoning (Tier-5: chain-of-thought, code-as-reasoning, self-correction) on ciphertext alone. A 10-configuration ablation study on 7,000 files, using a single 70/30 train-test split for feature-removal analysis, provides additional evidence at scale. Live API inference on a v2b corpus with fully randomised padding (PKCS7, ISO 10126, and ANSI X9.23 selected per file), unique CSPRNG keys, and unique plaintexts (127 files per model, 381 Tier-1 records, 380 Tier-3 records across three cloud systems, supplemented by 254 autonomous agentic evaluations in Tier-4) yields a combined Tier-3 accuracy of 30.8%, only modestly above the 14.3% random baseline for seven-way classification. The corresponding combined metadata-dependency gap is 40.9 percentage points (Tier-1: 71.7% vs. Tier-3: 30.8%). Against a classical Random Forest (69.2% on 7,000 files, trained on engineered byte-level features), the observed live gap is 38.4 percentage points. Because this comparison spans different input representations and training paradigms, the gap should be interpreted as an overall capability difference rather than a clean factorial decomposition. Six findings are reported: (1) Metadata dependency remains large; (2) Scaling failure under blind conditions; (3) Forced reasoning is epiphenomenal; (4) The observed live capability gap exceeds earlier heuristic estimates; (5) The signal is primarily structural rather than statistical; (6) Heuristic invariance versus ML fragility reveals different failure modes.",
-      "journal_ref": "Expert Systems with Applications, Vol. 332, 133329 (2026)",
-      "publication_note": "38 pages, 6 figures, 8 tables",
-      "doi": "10.1016/j.eswa.2026.133329",
       "published": "2026-09-22T18:00:33Z",
       "updated": "2026-09-22T18:00:33Z",
       "authors": [
@@ -686,7 +683,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 4.05,
       "scoreDetail": {
         "rule": {
@@ -729,17 +726,17 @@
       "rationale": "평가 설계가 가장 정교하고 게재 정보와 수치가 충실해 종합적으로 가장 신뢰도 높은 후보이며, 코드 링크 부재만이 재현성의 남은 공백이다.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
-      "topic_id": "ai-cryptanalysis"
+      "topic_id": "ai-cryptanalysis",
+      "publication_note": "38 pages, 6 figures, 8 tables",
+      "doi": "10.1016/j.eswa.2026.133329",
+      "journal_ref": "Expert Systems with Applications, Vol. 332, 133329 (2026)"
     },
     {
       "id": "arxiv:2609.28205",
       "title": "GUIAuditor: Enabling Post-hoc Child Safety Forensics via Action-Guided GUI Provenance on Mobile Devices",
       "abstract": "The proliferation of smart devices exposes children to online risks like grooming and financial scams that are deeply embedded within legitimate applications. Current approaches rely on automated prevention and detection, a paradigm that is fundamentally limited by its inherent fallibility. Whether rule-based or AI-driven, they inevitably produce false positives and negatives, failing to provide reliable protection. In this paper, we argue for a complementary, human-in-the-loop, post-hoc forensic paradigm. We present GUIAuditor, the first system designed to realize this vision by creating GUI Provenance: a queryable, semantic record of a child's interaction sequence. To generate this, GUIAuditor leverages a Multimodal Large Language Model (MLLM) to translate the temporal sequence of GUI events into a human-understandable narrative. To make this practical on mobile devices, a novel evidence distillation pipeline reduces the data requiring analysis by over 89.2% compared to periodic sampling approaches adopted by industry standards, with negligible impact on accuracy. On a new dataset of 295 interaction clips, GUIAuditor achieves a 95.23% Macro-F1 Score in logging significant events and, crucially, its two-stage forensic query engine successfully retrieves the correct evidence as the top result for over 90.20% of natural language questions. An end-to-end evaluation on three modern smartphones shows that the full pipeline, including on-device MLLM inference, adds 2.1W of power draw and 7.4s of per-event latency, with a peak memory footprint of ${\\sim}$3.1GB. These results show that post-hoc GUI forensics can run on modern mobile devices and provide useful context for guardian-led safety review.",
-      "journal_ref": "",
-      "publication_note": "Accepted by ACM IMWUT/Ubicomp 2026",
-      "doi": "10.1145/3831978",
       "published": "2026-09-23T14:42:50Z",
       "updated": "2026-09-23T14:42:50Z",
       "authors": [
@@ -762,7 +759,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.825,
       "scoreDetail": {
         "rule": {
@@ -807,9 +804,12 @@
       "rationale": "포렌식 목적과 시스템 평가가 모두 구체적이고 동료심사를 통과한 점이 신뢰도를 높인다. 신규 데이터셋을 만들었으나 공개 여부가 확인되지 않아 재현성은 유보적으로 평가했다.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
-      "failCount": 0,
-      "postPath": null,
-      "topic_id": "ai-digital-forensics"
+      "failCount": 1,
+      "postPath": "content/ai-digital-forensics/2026-09-23-b57bad1cd900a0ac9af3.md",
+      "topic_id": "ai-digital-forensics",
+      "note": "오늘 검증기 수치 환산 수정 후 초안 재검증",
+      "publication_note": "Accepted by ACM IMWUT/Ubicomp 2026",
+      "doi": "10.1145/3831978"
     },
     {
       "id": "arxiv:2609.27427",
