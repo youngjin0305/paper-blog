@@ -815,9 +815,6 @@
       "id": "arxiv:2609.27427",
       "title": "Extracting CNNs in the Unknown-Architecture and Feedback-Agnostic Setting",
       "abstract": "This paper studies the cryptanalytic extraction of convolutional neural networks (CNNs). Existing cryptanalytic extraction attacks on CNNs assume that the network architecture is known, and try to recover model parameters.In this paper, we prove for the first time that the architecture assumption can be removed for CNNs with both max and average pooling. Our core finding is that the spatial geometry of the weight vectors recovered by existing parameter-recovery attacks naturally leaks the architecture. We formalize this geometry and establish its correspondence with the architectural knowledge of a convolutional layer: (1) The sparsity consistency with the convolution receptive field reveals the layer type, the kernel size, and the stride; (2) The numerical consistency with the kernel parameters reveals the padding mode and the output-channel number; (3) The structural consistency with the pooling operation reveals the pooling type, the window size, and the stride. Although the recovered vectors are obtained using different methods in the raw-output and hard label settings, their spatial geometry remains the same. Therefore, our architecture recovery is feedback-agnostic: combined with a parameter-recovery attack, it yields a complete cryptanalytic extraction framework that recovers both the architecture and the parameters in the black-box setting. Extensive experiments, including both layer-wise and end-to-end ones, on a wide range of CNNs demonstrate that simultaneously recovering the network architecture and the model parameters is practical.",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2026-09-23T06:45:53Z",
       "updated": "2026-09-23T06:45:53Z",
       "authors": [
@@ -834,7 +831,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.7,
       "scoreDetail": {
         "rule": {
@@ -878,7 +875,7 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 0,
-      "postPath": null,
+      "postPath": "content/ai-cryptanalysis/2026-09-23-a31fd1225f727ee7adeb.md",
       "topic_id": "ai-cryptanalysis"
     },
     {
