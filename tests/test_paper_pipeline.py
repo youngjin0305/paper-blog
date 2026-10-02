@@ -297,6 +297,23 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(result["valid"])
         self.assertEqual(calls, ["A", "B", "C", "C", "D", "references"])
 
+    def test_invalid_equation_regenerates_only_its_group(self):
+        pin(self.pipeline.queue, PAPER)
+        baseline = FixtureBackend(FIXTURE)
+        calls = []
+        def generate(prompt, options):
+            kind = options["kind"]
+            calls.append(kind)
+            if kind == "B" and calls.count("B") == 1:
+                return baseline.generate(prompt, options) + r" $\notacommand{x}$"
+            if kind == "B":
+                self.assertIn("Invalid TeX", prompt)
+            return baseline.generate(prompt, options)
+        with patch.object(self.pipeline.backend, "generate", side_effect=generate):
+            result = self.pipeline.daily()
+        self.assertTrue(result["valid"], result["errors"])
+        self.assertEqual(calls, ["A", "B", "B", "C", "D", "references"])
+
     def test_conceptual_pipeline_skips_experiments_and_uses_source_prompt(self):
         paper = {**PAPER, "studyType": "conceptual"}
         self.pipeline.fixture["papers"][0] = paper

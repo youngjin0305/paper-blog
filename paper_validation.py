@@ -4,6 +4,7 @@ import json
 import re
 import unicodedata
 from paper_publication import PUBLICATION_FIELDS
+from paper_math import validate_math
 
 
 GROUPS = {
@@ -179,6 +180,7 @@ def validate_group(group, text, source, config):
         errors.append("Duplicate section headers")
     if re.search(r"!\[|<\s*(?:img|svg|script|iframe)\b", text, re.I):
         errors.append("Images or executable HTML are forbidden")
+    errors.extend(validate_math(text))
     if group == "B" and len(present.get("제시한 방법론", "")) < config["method_min_chars"]:
         errors.append(f"제시한 방법론 requires {config['method_min_chars']} characters")
     if group == "C":
@@ -252,6 +254,7 @@ def validate_document(document, paper, source, config):
         errors.append("Conceptual study must omit an experiment section it did not perform")
     if paper["url"] not in body or paper["pdfUrl"] not in body:
         errors.append("Missing original/PDF link in body")
+    errors.extend(validate_math(body))
     for group, names in GROUPS.items():
         if study_type == "conceptual" and group == "C":
             continue

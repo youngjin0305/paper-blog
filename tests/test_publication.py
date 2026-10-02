@@ -77,6 +77,8 @@ class PublicationTests(unittest.TestCase):
             index = client.get("/").get_data(as_text=True)
             detail = client.get('/posts/' + post["id"]).get_data(as_text=True)
             site = export_site(app, garden)
+            self.assertTrue((site / "assets/vendor/katex/katex.min.js").is_file())
+            self.assertTrue((site / "assets/vendor/katex/fonts/KaTeX_Main-Regular.woff2").is_file())
             for html in (index, detail, (site / "index.html").read_text(encoding="utf-8"),
                          (site / "posts" / (post["id"] + ".html")).read_text(encoding="utf-8")):
                 self.assertIn("Test Journal 12 (2026)", html)

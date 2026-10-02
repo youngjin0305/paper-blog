@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+from html import escape
 import json
 import logging
 import secrets
 import threading
+import uuid
 import webbrowser
 from pathlib import Path
 
@@ -13,16 +15,31 @@ from flask import Flask, Response, abort, jsonify, render_template, request
 import markdown
 from markupsafe import Markup
 
-from garden import Garden, ROOT, atomic_write
+from garden import Garden, ROOT, atomic_write, atomic_write_bytes
+from paper_math import math_spans
 
 
 def rendered_markdown(document):
     if document.startswith("---\n"):
         parts = document.split("\n---\n", 1)
         document = parts[1] if len(parts) == 2 else document
+    spans, _ = math_spans(document)
+    marker_prefix = "MATHPLACEHOLDER" + uuid.uuid4().hex.upper() + "X"
+    markers = {}
+    if spans:
+        chunks, offset = [], 0
+        for index, span in enumerate(spans):
+            marker = marker_prefix + str(index) + "END"
+            chunks.extend((document[offset:span.start], marker))
+            markers[marker] = document[span.start:span.end]
+            offset = span.end
+        document = "".join(chunks) + document[offset:]
     html = markdown.markdown(document, extensions=["tables", "fenced_code", "sane_lists"])
     tags = set(bleach.sanitizer.ALLOWED_TAGS) | {"p", "h1", "h2", "h3", "h4", "br", "hr", "pre", "code", "table", "thead", "tbody", "tr", "th", "td"}
-    return Markup(bleach.clean(html, tags=tags, attributes={"a": ["href", "title"]}, protocols=["https", "http"], strip=True))
+    safe = bleach.clean(html, tags=tags, attributes={"a": ["href", "title"]}, protocols=["https", "http"], strip=True)
+    for marker, original in markers.items():
+        safe = safe.replace(marker, escape(original, quote=True))
+    return Markup(safe)
 
 
 def create_app(garden=None):
@@ -44,7 +61,12 @@ def create_app(garden=None):
     def headers(response):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+        # KaTeX positions glyphs with inline style attributes; keep the
+        # exception limited to article HTML, while stylesheets remain local.
+        math_style = "style-src-attr 'unsafe-inline'; " if request.path.startswith("/posts/") and response.mimetype == "text/html" else ""
+        response.headers["Content-Security-Policy"] = ("default-src 'self'; script-src 'self'; style-src 'self'; "
+                                                       + math_style + "img-src 'self' data:; connect-src 'self'; "
+                                                       "frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
         if request.path.startswith("/api/") or response.mimetype == "text/html":
             response.headers["Cache-Control"] = "no-store"
         return response
@@ -167,6 +189,10 @@ def export_site(app, garden):
         search_json = search_json.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
         atomic_write(output / "assets/search-data.js", "window.paperSearchIndex = " + search_json + ";\n")
         atomic_write(output / "assets/search.js", (ROOT / "static/search.js").read_text(encoding="utf-8"))
+        atomic_write(output / "assets/math.js", (ROOT / "static/math.js").read_text(encoding="utf-8"))
+        for asset in (ROOT / "static/vendor/katex").rglob("*"):
+            if asset.is_file():
+                atomic_write_bytes(output / "assets/vendor/katex" / asset.relative_to(ROOT / "static/vendor/katex"), asset.read_bytes())
         atomic_write(output / ".nojekyll", "")
     return output
 

@@ -5,3 +5,5 @@ When the user supplies a paper for the blog, use `paper_pipeline.py add` and `pa
 Present a model ID as the model actually used only when the CLI response identifies it. If the CLI does not report one, label the configured value as a requested model. For a historical manual review without a model log, record the review method and unknown ID rather than guessing a specific Codex model.
 
 Summary prompts should preserve the paper's English form for important, recurring, or translation-sensitive technical terms. Introduce them as Korean (original English) or retain English where Korean would change the meaning; keep terminology consistent and never invent an English expansion absent from the paper.
+
+Keep paper equations in supported TeX delimiters (`$...$` or `$$...$$`) and validate them with the bundled KaTeX checker before publishing. Fix rendering and syntax at the pipeline level; never replace a source-based equation with a guess.

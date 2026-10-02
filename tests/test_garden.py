@@ -210,6 +210,10 @@ class GardenTests(unittest.TestCase):
         self.assertNotIn("<script", rendered)
         self.assertNotIn("javascript:", rendered)
         self.assertNotIn("onerror", rendered)
+        self.garden.research()
+        identifier = self.garden.posts()[0]["id"]
+        self.assertIn("style-src-attr 'unsafe-inline'", self.client.get(f"/posts/{identifier}").headers["Content-Security-Policy"])
+        self.assertNotIn("style-src-attr 'unsafe-inline'", self.client.get("/").headers["Content-Security-Policy"])
 
     def test_pages_download_search_and_export(self):
         self.garden.research()

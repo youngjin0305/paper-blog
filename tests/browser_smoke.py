@@ -21,7 +21,7 @@ class Source:
 
 class Summary:
     def summarize(self, *args):
-        return "## 한눈에 보기\n\n브라우저 테스트용 모의 요약입니다.\n\n## 한계와 확인할 점\n\n실제 논문이 아닙니다."
+        return "## 한눈에 보기\n\n브라우저 테스트용 모의 요약입니다.\n\n## 한계와 확인할 점\n\n실제 논문이 아닙니다. $$a^2+b^2=c^2$$"
 
 
 with tempfile.TemporaryDirectory() as directory:
@@ -67,6 +67,9 @@ with tempfile.TemporaryDirectory() as directory:
             page.get_by_role("button", name="지금 논문 조사하기").click()
             page.get_by_role("heading", name="Browser test: local research pipeline").wait_for(timeout=20000)
             assert len(garden.posts("quantum")) == 1
+            page.get_by_role("link", name="Browser test: local research pipeline").click()
+            expect(page.locator(".katex")).to_have_count(1)
+            expect(page.locator(".katex-error")).to_have_count(0)
             page.goto(url + "/settings")
             page.get_by_role("button", name="정적 블로그 내보내기").click()
             page.get_by_role("status").filter(has_text="정적 블로그를 저장했습니다").wait_for()
@@ -83,6 +86,8 @@ with tempfile.TemporaryDirectory() as directory:
             expect(page.locator('#post-count')).to_have_text('1')
             page.get_by_role("link", name="Browser test: local research pipeline").click()
             page.get_by_role("heading", name="한눈에 보기").wait_for()
+            expect(page.locator(".katex")).to_have_count(1)
+            expect(page.locator(".katex-error")).to_have_count(0)
             page.goto(url)
             page.set_viewport_size({"width": 390, "height": 844})
             page.screenshot(path=str(ROOT / "data/preview-mobile.png"), full_page=True)
