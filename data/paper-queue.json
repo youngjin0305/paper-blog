@@ -882,9 +882,6 @@
       "id": "arxiv:2609.29045",
       "title": "The Tokens Remember: When Tokenization Bypasses Knowledge Editing and Unlearning",
       "abstract": "Open-weight LLMs give downstream users control over the inference stack, but this flexibility can undermine post-release guarantees that sensitive knowledge has been modified or removed. Model editing and machine unlearning are used to modify or remove targeted knowledge without retraining models from scratch. However, existing security evaluations of these techniques face two critical limitations. First, they typically require access to either the original pre-edit/unlearning model or auxiliary classifiers to detect modifications or reconstruct pre-edit behavior. Second, they evaluate modifications under the canonical tokenization of an input, implicitly treating tokenization as a benign preprocessing step. We show that this assumption creates a security gap: the same input string can be represented by alternative valid tokenizations that induce different computational trajectories, allowing an adversary to bypass localized modifications and recover information intended to be suppressed. We introduce Toketive, a simple yet powerful reference-free attack that exploits the tokenization-based side channel to (i) detect modified knowledge and (ii) reconstruct the corresponding pre-edit response. It operates solely on the released model and requires neither the pre-edit model, training data, shadow models, nor auxiliary classifiers. Across five LLMs, six datasets, and six editing and unlearning techniques, we find that 38.6% of alternative tokenizations bypass the modification and recover the pre-edit response. Toketive detects modified facts with an F1 score of 84.2%, a 26.2% relative gain over the strongest baseline, and reconstructs pre-edit responses with 74.5% top-5 accuracy, 21.7% higher than the best baseline. Our results show that localized modifications should not be treated as robust knowledge-control boundaries without adversarial evaluation over alternative representations.",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2026-09-24T05:24:30Z",
       "updated": "2026-09-24T05:24:30Z",
       "authors": [
@@ -901,7 +898,7 @@
         "cs.AI"
       ],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.65,
       "scoreDetail": {
         "rule": {
@@ -946,7 +943,7 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
       "failCount": 0,
-      "postPath": null,
+      "postPath": "content/ai-cryptanalysis/2026-09-24-24fc77c70fae9942c9bc.md",
       "topic_id": "ai-cryptanalysis"
     },
     {
