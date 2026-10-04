@@ -379,6 +379,7 @@ class Pipeline:
             evidence = source_text + "\n" + markdown
             references = parse_references(markdown) or parse_references(source_text)
             reusable = {}
+            draft_failures = {}
             reused_model = None
             if resume_draft:
                 draft_path, _ = assemble(paper, {}, {}, [], self.config, topic_ids=self.topic_ids)
@@ -397,6 +398,8 @@ class Pipeline:
                             failures += abstract_number_errors(sections(text).get("초록", ""), paper["abstract"])
                         if not failures:
                             reusable[group] = text
+                        else:
+                            draft_failures[group] = failures
             for group in GROUPS:
                 if paper.get("studyType") == "conceptual" and group == "C":
                     continue
@@ -405,7 +408,7 @@ class Pipeline:
                     groups[group] = reusable[group]
                     self.log("Reusing draft group after source validation: " + group)
                     continue
-                feedback = ""
+                feedback = "\n".join(draft_failures.get(group, []))
                 for attempt in range(2):
                     self.log(f"Generating group {group}, attempt {attempt + 1}/2")
                     groups[group] = self.group(group, paper, markdown, feedback)

@@ -163,11 +163,24 @@ class ValidationTests(unittest.TestCase):
     def test_numeric_normalization_and_hallucination_report(self):
         self.assertEqual(numbers("1,000 82.50 % -0.50"), numbers("1000 82.5% -0.5"))
         self.assertEqual(numbers("1 000"), numbers("1,000"))
+        self.assertEqual(numbers("20        351"), numbers("20; 351"))
         errors = validate_group("C", FIXTURE["groups"]["C"] + "\n없는 수치 99.99%", FIXTURE["markdown"], CONFIG)
         self.assertTrue(any("99.99" in e for e in errors))
         self.assertNotEqual(numbers("12"), numbers("112"))
         self.assertEqual(numbers("Batch size 16."), {"16"})
         self.assertEqual(numbers("정확도99.99%, GPT-4, 82 . 5"), {"99.99", "-4", "82.5"})
+
+    def test_reference_hash_is_not_a_scientific_number(self):
+        source = ("결과 95.61%. References: "
+                  "https://papers.nips.cc/paper_files/paper/2025/hash/"
+                  "fb693c67f61e5321746ffce8b6fdd2d0-Abstract.html")
+        self.assertNotIn("6.1E+5321747", numbers(source))
+        self.assertEqual(unsupported_numbers("정확도 95.61%", source), [])
+        self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
+
+    def test_large_exponents_do_not_overflow_numeric_validation(self):
+        self.assertEqual(numbers("1e999999999"), numbers("10e999999998"))
+        self.assertEqual(unsupported_numbers("값 1e999999999", "값 10e999999998"), [])
 
     def test_numeric_lists_do_not_become_thousands(self):
         source = "784-16(4)-10\n784-16(6)-10"
@@ -388,7 +401,11 @@ class PipelineTests(unittest.TestCase):
         path, document = assemble(PAPER, groups, {}, [], CONFIG)
         atomic_write(self.root / "drafts" / Path(path).name, document)
         backend = FixtureBackend(FIXTURE)
-        with patch.object(self.pipeline.backend, "generate", side_effect=backend.generate) as generate:
+        def regenerate(prompt, options):
+            if options["kind"] == "C":
+                self.assertIn("9999.99", prompt)
+            return backend.generate(prompt, options)
+        with patch.object(self.pipeline.backend, "generate", side_effect=regenerate) as generate:
             self.assertTrue(self.pipeline.daily(resume_draft=True)["valid"])
         self.assertEqual([call.args[1]["kind"] for call in generate.call_args_list], ["C", "references"])
 

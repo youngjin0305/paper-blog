@@ -51,7 +51,7 @@ def sections(body):
             for i, m in enumerate(matches)}
 
 
-NUMBER_PATTERN = re.compile(r"(?<![\d.])[-+]?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?!\d|\.\d)")
+NUMBER_PATTERN = re.compile(r"(?:(?<![A-Za-z0-9_.])[-+]?|(?<=[A-Za-z])-)(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?(?![A-Za-z0-9_]|\.\d)")
 
 
 def normalized_numeric_text(text):
@@ -64,14 +64,27 @@ def normalized_numeric_text(text):
     text = re.sub(r"(?<=\d)[ \t]*_[ \t]*,[ \t]*_[ \t]*(?=\d{3}(?!\d))", "", text)
     # A three-digit table cell followed by another is not a spaced thousands
     # group ("188 175 180"). Nor is the digit in a model name ("T5 188").
-    text = re.sub(r"(?<![\w.-])(\d{1,2})[ \t]+(?=\d{3}(?:\D|$))", r"\1", text)
+    text = re.sub(r"(?<![\w.-])(\d{1,2})[ \t](?=\d{3}(?:\D|$))", r"\1", text)
     text = re.sub(r"(?<=\d)[ \t]*\.[ \t]*(?=\d)", ".", text)
     # Percent signs and surrounding space do not change the numeric token.
     return text
 
 
+def canonical_number(value):
+    """Normalize a decimal without the ambient context's exponent limit."""
+    parts = value.as_tuple()
+    digits = list(parts.digits)
+    exponent = parts.exponent
+    if not any(digits):
+        return "0"
+    while len(digits) > 1 and digits[-1] == 0:
+        digits.pop()
+        exponent += 1
+    return str(Decimal((parts.sign, tuple(digits), exponent)))
+
+
 def numbers(text):
-    return {str(Decimal(m.group()).normalize()) for m in NUMBER_PATTERN.finditer(normalized_numeric_text(text))}
+    return {canonical_number(Decimal(m.group())) for m in NUMBER_PATTERN.finditer(normalized_numeric_text(text))}
 
 
 def unsupported_numbers(text, source):
@@ -81,12 +94,12 @@ def unsupported_numbers(text, source):
     missing = set()
     for match in NUMBER_PATTERN.finditer(normalized):
         value = Decimal(match.group())
-        if str(value.normalize()) in evidence:
+        if canonical_number(value) in evidence:
             continue
         percent = re.match(r"\s*%", normalized[match.end():])
-        if percent and 0 <= value <= 100 and str((value / 100).normalize()) in evidence:
+        if percent and 0 <= value <= 100 and canonical_number(value / 100) in evidence:
             continue
-        missing.add(str(value.normalize()))
+        missing.add(canonical_number(value))
     return sorted(missing)
 
 
