@@ -950,9 +950,6 @@
       "id": "arxiv:2609.25154",
       "title": "Benchmarking Neural Defend ARCAS 1B: A Foundational Multimodal Deepfake Detection Model",
       "abstract": "AI-generated imagery evolves faster than benchmark-specific detector evaluations, making a single score an incomplete account of generalization. This paper evaluates Neural Defend ARCAS 1B across benchmark families without benchmark-specific parameter updates. We retain native aggregation and supplement it with record-level measures, coverage accounting, and subgroup diagnostics. Each Results subsection identifies the release and evaluation population, reports the official metric, and describes observed error patterns. A combined analysis synthesizes shared patterns while preserving the distinction between native and pooled quantities. Cross-paper comparisons are restricted to aligned evidence; differences in release, population, preprocessing, training, or benchmark exposure are context rather than rank. The findings characterize performance on evaluated records, not universal reliability, calibration, attribution, or future adaptive attacks. By keeping benchmark-native outcomes distinct from pooled summaries, the study makes test-population, class-balance, and missing-record-coverage differences visible. It supports interpretation of detector results in research, platform-safety, and forensic-review settings, foregrounding traceable protocol conditions over claims or leaderboard comparisons.",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2026-09-21T09:15:02Z",
       "updated": "2026-09-21T09:15:02Z",
       "authors": [
@@ -969,7 +966,7 @@
         "cs.AI"
       ],
       "addedAt": "2026-09-27T23:00:02+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.25,
       "scoreDetail": {
         "rule": {
@@ -1015,9 +1012,10 @@
       "rationale": "관심 주제인 딥페이크 포렌식에 부합하지만, 새로운 기법 없이 평가 프로토콜 보고에 집중하며 공개 자료 언급이 없어 검증 가능성이 낮다.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-09-27T23:00:02+00:00",
-      "failCount": 0,
-      "postPath": null,
-      "topic_id": "ai-digital-forensics"
+      "failCount": 1,
+      "postPath": "content/ai-digital-forensics/2026-09-21-8bcb7cbec4fb28551b7d.md",
+      "topic_id": "ai-digital-forensics",
+      "note": "Retry after numeric validation fix"
     },
     {
       "id": "arxiv:2609.28725",
