@@ -465,8 +465,8 @@
         }
       },
       "rationale": "AI CryptAnalysis 핵심 주제인 모델 추출 공격을 다루며 방법론과 실험 대상이 명확히 기술되었으나 코드 공개 정보는 없음.",
-      "weeksInQueue": 2,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 3,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
@@ -525,8 +525,8 @@
         }
       },
       "rationale": "하드라벨 블랙박스 모델 추출의 핵심 난제를 해결하는 우수한 관련 연구이나 메타데이터상 코드 공개 여부는 확인되지 않음.",
-      "weeksInQueue": 2,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 3,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
@@ -592,8 +592,8 @@
         }
       },
       "rationale": "신경망 기반 물리계층 은닉 채널 구축 및 실물 SDR 검증이 구체적이나 관심사 핵심과의 직접성은 다소 낮고 코드 공개가 없음.",
-      "weeksInQueue": 2,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 3,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-cryptanalysis"
@@ -1080,8 +1080,8 @@
         }
       },
       "rationale": "측정 가능한 실험 설계와 구체적 수치가 강점이며 포렌식 평가 방법론에 실용적이나, 코드 공개가 확인되지 않아 재현성 점수가 제한된다.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-digital-forensics"
@@ -1150,8 +1150,8 @@
         }
       },
       "rationale": "포렌식 서술과 방어 아키텍처를 결합했으나 단일 사례 기반이고 평가·공개 근거가 부족해 관심 주제에 대한 기여가 제한적이다. 저자 1인 모노그래프 형식으로 검증 가능성이 낮다.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-digital-forensics"
@@ -1221,8 +1221,8 @@
         }
       },
       "rationale": "해석성과 실사용성 측면의 기여는 분명하지만 정량 평가와 산출물 공개 정보가 부족하고, 관심사와는 부분적으로만 겹친다.",
-      "weeksInQueue": 1,
-      "lastRankedAt": "2026-09-27T23:00:02+00:00",
+      "weeksInQueue": 2,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
       "postPath": null,
       "topic_id": "ai-digital-forensics"
@@ -1257,6 +1257,714 @@
       "failCount": 0,
       "postPath": "content/quantum-forensics/2025-06-30-827c68391b5cd73d2c12.md",
       "note": ""
+    },
+    {
+      "id": "arxiv:2609.38830",
+      "title": "SparLeak: Privacy Leakage from Sparse Attention in LLM Inference on Shared GPUs",
+      "abstract": "Sparse attention is widely used to accelerate long-context inference in modern large language models (LLMs), but its input-dependent execution behavior introduces previously unexplored privacy risks. We identify a new GPU micro-architectural side channel, termed Sparsity-Induced Memory Access (SIMA), which arises from secret-dependent key-value cache access patterns induced by sparse attention. Based on this observation, we present SparLeak, a phase-aware side-channel attack that extracts SIMA traces during LLM inference and enables two practical privacy extractions: query attribute inference from prefill-phase traces and autoregressive response reconstruction from decoding-phase traces. By reconstructing approximate token-level sparsity profiles from page-level observations and applying profiling-based learning, SparLeak accurately recovers sensitive information, including user-query attributes and private LLM response content. Extensive evaluation across three LLM architectures, three sparse attention mechanisms, and three privacy-sensitive datasets shows that SparLeak achieves average attack success rates of 90.9% for attribute inference and 87.3% for response reconstruction under real-world LLM serving settings, highlighting the significance to account for SIMA leakage when deploying sparse-attention-based LLM systems. We provide anonymized SIMA traces, trained attack models, evaluation scripts, and documentation as artifacts at https://anonymous.4open.science/r/Janus_artifacts/.",
+      "published": "2026-09-30T02:52:28Z",
+      "updated": "2026-09-30T02:52:28Z",
+      "authors": [
+        "Fahao Chen",
+        "Linkang Du",
+        "Jinhao Zhou",
+        "Peng Li",
+        "Zhou Su"
+      ],
+      "url": "https://arxiv.org/abs/2609.38830v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.38830v1",
+      "categories": [
+        "cs.LG",
+        "cs.CR"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "done",
+      "score": 4.525,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "LLM",
+            "side channel"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 4,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "large language model",
+              "LLM",
+              "side channel"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "GPU 마이크로아키텍처 부채널로 LLM 추론 정보를 복원하는 공격으로 AI 기반 부채널 분석 관심사와 직접 맞는다."
+          },
+          "novelty": {
+            "score": 5,
+            "reason": "희소 어텐션에서 유래하는 SIMA라는 새 부채널을 식별하고 이를 이용한 공격을 제시한다고 명시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "prefill/decoding 단계별 공격, 페이지 수준 관측에서 토큰 수준 희소성 복원, 프로파일링 학습, 3개 모델×3개 희소 어텐션×3개 데이터셋 평가와 성공률(90.9%/87.3%)이 구체적이다."
+          },
+          "reproducibility": {
+            "score": 5,
+            "reason": "익명 저장소에 트레이스, 학습된 공격 모델, 평가 스크립트, 문서를 아티팩트로 공개한다고 밝힌다."
+          },
+          "rationale": "새로운 부채널 발견과 체계적 평가, 아티팩트 전면 공개가 모두 갖춰져 전반적으로 가장 높게 평가했다."
+        }
+      },
+      "rationale": "새로운 부채널 발견과 체계적 평가, 아티팩트 전면 공개가 모두 갖춰져 전반적으로 가장 높게 평가했다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": "content/ai-cryptanalysis/2026-09-30-b1cda916d4487e46a272.md",
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "arxiv:2609.39066",
+      "title": "Agentic Tool-Augmented Reasoning for Explainable Image Forgery Detection",
+      "abstract": "Conventional image forgery detection methods produce binary scores or pixel-level masks without interpretable evidence, while recent multimodal large language model (MLLM)-based approaches generate post-hoc explanations of predetermined classification results rather than reasoning from evidence. Inspired by the forensic workflow of human judicial experts, we propose Agentic Tool-Augmented Reasoning (ATAR), a framework integrating 22 specialized forensic tools across seven complementary domains to autonomously detect, localize, and explain image forgeries through multi-turn reasoning. A Dual-Stream Forensic Reasoning paradigm combines a high-level semantic anomaly path, which magnifies suspicious regions for fine-grained inspection, with a low-level forgery artifact path, which invokes forensic tools to extract objective evidence. We further introduce Forensics Curriculum Learning: during General Experience SFT, an automated teacher-student mentoring pipeline synthesizes multi-turn tool-usage reasoning trajectories; during Forensic Scene RL, a Tool Prior Curriculum guides early tool exploration and progressively transfers control to the agent, while a Structured Evidence Reward provides fine-grained process-level supervision. Experiments across IMDL, Deepfake detection, DMDL, and AIGC detection show that ATAR achieves 78.5% average image-level F1 on six zero-shot IMDL benchmarks, surpassing the strongest MLLM baseline by 11.8 percentage points, and remains competitive with specialized detectors on other tasks while producing substantially more faithful and grounded explanations.",
+      "journal_ref": "",
+      "publication_note": "Accepted at ACM Multimedia 2026 (Oral)",
+      "doi": "",
+      "published": "2026-09-30T06:05:16Z",
+      "updated": "2026-09-30T06:05:16Z",
+      "authors": [
+        "Zhiya Tan",
+        "Jing Huang",
+        "Changtao Miao",
+        "Lin Tan",
+        "Xin Zhang",
+        "Weiwei Feng",
+        "Jianshu Li",
+        "Joey Tianyi Zhou"
+      ],
+      "url": "https://arxiv.org/abs/2609.39066v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.39066v1",
+      "categories": [
+        "cs.CV"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.825,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "forensic",
+            "forensics",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 4,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "large language model",
+              "forensic",
+              "forensics",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "이미지 위조 탐지·국소화·설명을 다루는 멀티모달 포렌식 에이전트로 AI Digital Forensics와 직접 일치한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "22개 포렌식 도구를 활용한 에이전트형 다중 턴 추론과 Dual-Stream 추론, Forensics Curriculum Learning 조합을 새로 제시한다고 명시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "이중 경로 추론, 교사-학생 궤적 합성 SFT, Tool Prior Curriculum RL, 구조화 증거 보상 등 구성요소와 IMDL/Deepfake/DMDL/AIGC 평가, 수치(F1 78.5%, +11.8pp)가 구체적이다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "초록에 코드·데이터·모델 공개 링크가 없고 도구 세트와 학습 파이프라인이 복잡하다."
+          },
+          "rationale": "관심 주제에 가장 부합하는 포렌식 에이전트 연구로, 방법 서술과 벤치마크 수치는 구체적이나 공개 자료 언급이 없어 재현성만 낮게 평가했다."
+        }
+      },
+      "rationale": "관심 주제에 가장 부합하는 포렌식 에이전트 연구로, 방법 서술과 벤치마크 수치는 구체적이나 공개 자료 언급이 없어 재현성만 낮게 평가했다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.39651",
+      "title": "Neural Audio Codec for Robust Audio Deepfake Detection",
+      "abstract": "Audio deepfake detectors are typically evaluated on uncompressed audio, although real-world audio often undergoes low-bitrate coding. In this work, we investigate how audio coding affects deepfake detection across codecs, bitrates, and detectors, finding higher errors at lower rates. A mixed-pair protocol isolates codec-induced changes in bona fide and spoof audio, revealing asymmetric, codec-dependent failures: low-rate DAC and EnCodec mainly degrade bona fide detection, whereas X-Codec shows a stronger spoof-side limitation. Motivated by these, we propose a forensic-preserving neural audio codec (FP-NAC), which fine-tunes a pretrained codec using a detector-guided objective while preserving its native hard quantization path and bitrate. On ASVspoof 2019 LA, FP-NAC reduces EER by up to 49.8~pp compared with the original DAC at 0.5~kbps while maintaining comparable reconstruction quality. Although supervised by only one detector, FP-NAC improves performance across multiple detectors, highlighting forensic transparency as a codec design objective alongside perceptual quality. Our codes are available at https://github.com/kjungwoo03/FP-NAC.",
+      "journal_ref": "",
+      "publication_note": "5 pages, 7 figures",
+      "doi": "",
+      "published": "2026-09-30T12:53:53Z",
+      "updated": "2026-09-30T12:53:53Z",
+      "authors": [
+        "Jungwoo Kim",
+        "Joonyong Park",
+        "Junyoung Koh",
+        "Jong-Seok Lee"
+      ],
+      "url": "https://arxiv.org/abs/2609.39651v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.39651v1",
+      "categories": [
+        "cs.SD",
+        "cs.MM"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "forensic",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "neural",
+              "forensic",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "오디오 딥페이크 탐지의 코덱 압축 강건성을 다루므로 AI Digital Forensics와 밀접하다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "탐지기 유도 목적함수로 미세조정한 '포렌식 보존 신경 오디오 코덱(FP-NAC)'과 코덱별 비대칭 실패 분석을 새로 제시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "mixed-pair 프로토콜, 하드 양자화 경로·비트레이트 유지 미세조정, ASVspoof 2019 LA·0.5kbps에서 EER 최대 49.8pp 감소 및 다중 탐지기 일반화 검증이 명시된다."
+          },
+          "reproducibility": {
+            "score": 4,
+            "reason": "GitHub에 코드를 공개하고 공개 데이터셋(ASVspoof 2019 LA)을 사용하지만 학습된 코덱 가중치 공개는 명시되지 않는다."
+          },
+          "rationale": "5페이지 분량의 제한은 있으나 문제 분석에서 해법·공개 코드까지 이어져 포렌식 관점에서 균형 있게 평가했다."
+        }
+      },
+      "rationale": "5페이지 분량의 제한은 있으나 문제 분석에서 해법·공개 코드까지 이어져 포렌식 관점에서 균형 있게 평가했다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.36145",
+      "title": "From Sharp Eyes to Expert Mind: Internalizing Expert Knowledge in MLLMs for Tampered Text Detection",
+      "abstract": "Tampered Text Detection (TTD) is essential for safeguarding document authenticity in security-critical workflows. Existing expert models are effective at capturing subtle manipulation traces but often generalize poorly across diverse document domains, while Multimodal Large Language Models (MLLMs) offer stronger semantic understanding and transferability yet remain insensitive to fine-grained forensic artifacts. This complementarity motivates us to investigate how expert forensic perception can be internalized into an MLLM rather than merely accessed through an external module. We identify a fundamental Double Mismatch that hinders this goal: a Spatial Precision Mismatch between coarse visual tokens and tiny tampered regions, and a Perceptual Granularity Mismatch between semantics-oriented pre-training and low-level forensic perception. To address these challenges, we propose Expert Knowledge Internalization (EKI), a progressive two-stage framework that transfers forensic expertise into the MLLM itself. In Stage 1, Text-Focused and Image-Focused strategies establish precise spatial focus on small text regions. In Stage 2, the proposed Forensic-General Representation Alignment (FGRA) loss aligns shallow LLM representations with those of a pre-trained forensic expert, enabling the model to acquire fine-grained artifact perception before such cues are diluted by deeper semantic abstraction. Extensive experiments on multiple in-domain and cross-domain benchmarks demonstrate that EKI achieves state-of-the-art performance and stronger generalization than existing expert-model-based and MLLM-based methods. Moreover, the expert is required only during training, allowing the resulting MLLM to maintain inference efficiency nearly identical to the vanilla model without relying on any external expert at inference.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-28T19:20:22Z",
+      "updated": "2026-09-28T19:20:22Z",
+      "authors": [
+        "Kaiqing Lin",
+        "Songze Li",
+        "Shen Chen",
+        "Yunfei Guo",
+        "Xiaoye Qiu",
+        "Haodong Li",
+        "Taiping Yao",
+        "Bo Wang",
+        "Youchang Xiao",
+        "Bin Li",
+        "Shouhong Ding"
+      ],
+      "url": "https://arxiv.org/abs/2609.36145v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.36145v1",
+      "categories": [
+        "cs.CV"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.525,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "LLM",
+            "forensic"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "large language model",
+              "LLM",
+              "forensic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "문서 위조 텍스트 탐지(TTD)와 포렌식 아티팩트 인지를 다루어 AI 디지털 포렌식에 정면으로 해당한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "Double Mismatch(공간 정밀도·지각 granularity) 문제 정식화와 FGRA 손실을 통한 전문가 지식 내재화는 외부 모듈 호출 방식과 구분되는 새로운 접근으로 제시된다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "2단계 프레임워크(Text/Image-Focused 전략, 얕은 LLM 표현 정렬 손실)와 in-domain/cross-domain 벤치마크 평가, 추론 시 전문가 불필요 설계가 명확히 기술된다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "코드·체크포인트·데이터 공개에 대한 언급이 메타데이터에 없고, 사용 벤치마크도 '다수'로만 표기되어 구체적 식별이 어렵다."
+          },
+          "rationale": "문제 진단과 해법이 모두 포렌식 특화되어 관심사 적합도와 방법론 구체성이 높지만, 공개 여부가 확인되지 않아 재현성 점수는 낮다."
+        }
+      },
+      "rationale": "문제 진단과 해법이 모두 포렌식 특화되어 관심사 적합도와 방법론 구체성이 높지만, 공개 여부가 확인되지 않아 재현성 점수는 낮다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.35536",
+      "title": "Look Before You Judge: Training-Free Region Mining for Grounded and Explainable Deepfake Detection",
+      "abstract": "Multimodal large language models (MLLMs) can explain deepfake verdicts in natural language, but such explanations are not necessarily visually grounded in the visual evidence underlying the prediction. A model may describe plausible artifacts inferred from language priors rather than from image evidence. Existing grounding methods improve visual reliance through decoding or attention interventions, but they generally strengthen grounding over the entire image, making them ill-suited for forensic artifacts that are subtle, spatially localized, and image-dependent. We propose Look Before You Judge, a training-free framework that formulates explainable deepfake detection as a sequential evidence acquisition process. Instead of directly predicting image authenticity from holistic visual reasoning, our framework first identifies image-specific candidate evidence regions by contrasting the MLLM's decoder-to-visual attention between an original image and its Gaussian-blurred counterpart. The identified regions are then inspected individually, and the resulting local evidence is integrated with the global image context before reaching a final verdict. The framework operates without manipulation masks, external forensic models, or parameter updates, making it directly applicable to off-the-shelf MLLMs. Across five open-source MLLMs on TriDF and MMTD-Set, our framework improves detection accuracy by up to 12.8%, reduces CHAIR by up to 33.4% and hallucination rate by up to 21.3%, and outperforms representative training-free decoding and attention methods.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-28T16:19:22Z",
+      "updated": "2026-09-28T16:19:22Z",
+      "authors": [
+        "Chia-Ling Chen",
+        "Yu-Ting Ta",
+        "Jian-Yu Jiang-Lin",
+        "Tai-Ming Huang",
+        "Ling Lo",
+        "Po-Ching Chen",
+        "Yan-Tsung Wang",
+        "Pei-Heng Li",
+        "Ling Zou",
+        "Hong-Han Shuai",
+        "Wen-Huang Cheng"
+      ],
+      "url": "https://arxiv.org/abs/2609.35536v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.35536v1",
+      "categories": [
+        "cs.CV"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.525,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "large language model",
+            "forensic",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "large language model",
+              "forensic",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "딥페이크 탐지와 설명 가능한 포렌식 증거 근거화를 다루어 AI 디지털 포렌식과 밀접하나, 초점은 MLLM 환각 억제에 더 가깝다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "원본과 가우시안 블러 이미지 간 디코더-비전 어텐션 대비로 증거 영역을 채굴하는 학습 불필요 순차 증거 획득 정식화는 전역 그라운딩 기법과 차별화된다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "영역 채굴→개별 검사→전역 문맥 통합의 단계가 구체적이고, 5개 오픈소스 MLLM과 TriDF·MMTD-Set에서 정확도·CHAIR·환각률로 다면 평가한다."
+          },
+          "reproducibility": {
+            "score": 3,
+            "reason": "학습·마스크·파라미터 업데이트가 불필요하고 공개 MLLM과 공개 벤치마크를 쓴다는 점은 유리하나, 코드 공개 여부는 메타데이터에 없다."
+          },
+          "rationale": "훈련 불요 설계와 공개 모델·벤치마크 사용으로 재현 여지가 상대적으로 크며, 평가 지표 구성도 구체적이다."
+        }
+      },
+      "rationale": "훈련 불요 설계와 공개 모델·벤치마크 사용으로 재현 여지가 상대적으로 크며, 평가 지표 구성도 구체적이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.36549",
+      "title": "MedForge-RSI: Medical Deepfake Detection via Recursive Self-Improvement",
+      "abstract": "Text-guided image editors can generate high-fidelity medical deepfakes, challenging the reliability of clinical imagery. Although reasoning-based detectors perform strongly in distribution, they degrade substantially under deployment shift. MedForge-Reasoner, an 8B vision-language model trained with supervised fine-tuning and reinforcement learning, achieves 99.2% accuracy on its target distribution, yet misclassifies 40% of authentic scans, reaches only 77% accuracy on unseen generators, and falls to 59% under transmission distortion. Adapting such models through conventional retraining is costly, requiring large-scale supervision and expert-designed guidelines. We introduce MedForge-RSI, a recursive self-improvement framework that enables a deployed detector to adapt while keeping its model weights frozen. Over 20 rounds, the detector analyzes verified errors, accumulates reusable experience, and autonomously develops image-analysis tools, while an independent acceptance test retains only validated improvements. Across 49 registered configurations, MedForge-RSI increases average accuracy over four test sets from 75.0% to 84.4%. On a held-out 4,000-image evaluation, it improves clean accuracy from 76.5% to 87.9% and transmission-distorted accuracy from 59.0% to 70.5%, with the largest gains in authentic-image recall. Controlled analysis across all 49 trajectories identifies which self-improvement mechanisms replicate across seeds, shows acceptance testing to be the largest individual contributor, and reveals a taxonomy of failed adaptations. We release the complete trajectories, including all rejected and rolled-back changes.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-29T02:37:09Z",
+      "updated": "2026-09-29T02:37:09Z",
+      "authors": [
+        "Zhihui Chen",
+        "Mengling Feng"
+      ],
+      "url": "https://arxiv.org/abs/2609.36549v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.36549v1",
+      "categories": [
+        "eess.IV"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.4,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "reinforcement learning",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "reinforcement learning",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "텍스트 유도 편집으로 생성된 의료영상 딥페이크 탐지와 배포 환경 시프트 대응은 AI 디지털 포렌식의 이미지 위조 검증 과제에 해당한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "가중치를 고정한 상태에서 검증된 오류 분석·경험 누적·도구 자율 개발과 수용 테스트를 결합한 재귀적 자기개선 적응 방식을 제시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "20라운드 자기개선, 49개 등록 구성, 4개 테스트셋 평균 및 4,000장 홀드아웃 평가, 전송 왜곡 조건, 수용 테스트 기여도 분리까지 수치와 절차가 상세하다."
+          },
+          "reproducibility": {
+            "score": 4,
+            "reason": "거부·롤백된 변경을 포함한 전체 궤적을 공개한다고 명시했으나, 모델 가중치나 코드 공개 범위는 언급되지 않았다."
+          },
+          "rationale": "관심 주제 적합도, 기법의 새로움, 실험 설계 구체성이 모두 높고 실패 사례까지 포함한 궤적 공개를 명시해 검증 가능성이 비교적 양호하다. 다만 공개 범위가 궤적에 한정될 수 있다."
+        }
+      },
+      "rationale": "관심 주제 적합도, 기법의 새로움, 실험 설계 구체성이 모두 높고 실패 사례까지 포함한 궤적 공개를 명시해 검증 가능성이 비교적 양호하다. 다만 공개 범위가 궤적에 한정될 수 있다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.38391",
+      "title": "Team MSU GenText-Forensics Challenge 2026 Technical Report",
+      "abstract": "Document text forgery has evolved beyond simple pixel-level manipulation: modern attacks alter not only the appearance of a document but also its meaning, and increasingly target the OCR & LLM pipelines that consume such documents. The ACM MM 2026 GenText-Forensics challenge therefore requires systems that not only decide whether a multilingual text image is forged, but also localize the point of manipulation, identify the attack type, and produce a human-readable forensic report with supporting evidence. We present our solution, a decomposed chain-of-thought (CoT) pipeline that combines a document tampering detector (DTD) with two Qwen3-VL-32B vision-language models, each LoRA-adapted to a distinct sub-task. DTD produces tampering probability maps that are converted into numbered candidate regions; a first model (the Filterer) validates these regions and assigns a preliminary forgery type, while a second model (the Semantic Detective) merges and re-grounds the surviving regions, searches for purely semantic anomalies that are invisible to pixel-level detectors, and writes the final report. Both models are trained by distilling chain-of-thought traces from a privileged Qwen3-VL-235B teacher that has access to ground-truth masks and reports. Our approach secured third place in the ACM MM 2026 GenText-Forensics challenge. We describe the data preparation, test-time augmentation, region rendering, distillation protocol, and training configuration in detail, and report ablations over detector thresholds, prompt designs, and pipeline decompositions.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-29T18:49:01Z",
+      "updated": "2026-09-29T18:49:01Z",
+      "authors": [
+        "Kirill Koltsov",
+        "Aleksandr Gushchin",
+        "Dmitriy Vatolin",
+        "Anastasia Antsiferova"
+      ],
+      "url": "https://arxiv.org/abs/2609.38391v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.38391v1",
+      "categories": [
+        "cs.CV"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.35,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "LLM",
+            "forensic",
+            "forensics"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "LLM",
+              "forensic",
+              "forensics"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "문서 텍스트 위조 탐지·위조 유형 식별·포렌식 리포트 생성으로 AI 디지털 포렌식 관심사에 직접 부합한다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "분해형 CoT 파이프라인과 특권 교사 모델 증류 조합은 구성적 기여이며, 챌린지 기술 보고서로서 개별 구성요소는 기존 기법 활용이다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "DTD 확률맵→후보 영역 변환, Filterer/Semantic Detective 2단 LoRA 구성, 데이터 준비·TTA·증류 프로토콜·학습 설정과 임계값/프롬프트/분해 구조 애블레이션까지 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "메타데이터에 코드·데이터 공개 언급이 없고, 챌린지 데이터 접근 조건도 기재되지 않았다. 세부 설정 기술 약속만 확인된다."
+          },
+          "rationale": "관심 주제와의 정합성이 가장 높고 파이프라인 기술이 구체적이나, 공개 자원 정보가 없어 재현성은 보수적으로 평가했다."
+        }
+      },
+      "rationale": "관심 주제와의 정합성이 가장 높고 파이프라인 기술이 구체적이나, 공개 자원 정보가 없어 재현성은 보수적으로 평가했다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2610.01788",
+      "title": "SAGE: Similarity-Based Cleaning of Poisoned Training Data from Verified Examples",
+      "abstract": "As machine learning increasingly relies on public, untrusted data sources, data poisoning attacks, which inject malicious examples into training data to induce misclassification of a chosen target, pose a growing threat. Existing defenses either assume zero ground-truth information about which examples are poisoned, or they assume access to a large set of examples verified to be clean. Satisfying the latter assumption incurs significant cost since reliable verification can be very resource- or labor-intensive. This cost is particularly high for clean-label attacks, where poisoned examples are visually indistinguishable from clean data. Since requiring a large set of verified examples is impractical, we propose relying on a small set of verified examples including both clean and poisoned ones, i.e., each example verified either to be clean or poisoned through inspection by a forensic expert. The challenge is then to detect poisons based on a set of verified examples that is so small that most classification models would overfit. To address this challenge, we propose Similarity-based Approach for Ground-truth-driven Exclusion (SAGE), which trains a generic feature extractor on a separate dataset and then flags poisoned training examples using a non-parametric, similarity-weighted prediction based on the verified set. On standard benchmarks against seven clean-label attack methods, we demonstrate that having access to even a handful of verified poisoned examples provides a substantial advantage. We also find that the distribution of verified clean examples across classes matters more than the number of verified examples.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-10-01T14:34:54Z",
+      "updated": "2026-10-01T14:34:54Z",
+      "authors": [
+        "Chaeeun Han",
+        "Soodeh Atefi",
+        "Yevgeniy Vorobeychik",
+        "Aron Laszka"
+      ],
+      "url": "https://arxiv.org/abs/2610.01788v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.01788v1",
+      "categories": [
+        "cs.LG",
+        "cs.CR"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.175,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "machine learning",
+            "forensic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "machine learning",
+              "forensic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "데이터 포이즈닝 방어가 주제이며 검증 집합을 포렌식 전문가 검사로 얻는다는 점에서 부분적으로만 관심사와 접점이 있다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "소수의 '정상/오염' 검증 예시를 활용하는 새 위협·방어 가정과 비모수 유사도 가중 탐지 기법을 제안한다고 명시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "별도 데이터셋의 특징 추출기 학습 후 유사도 가중 예측으로 플래깅하는 절차와 7개 clean-label 공격 대상 벤치마크, 검증 예시 분포 영향 분석이 서술된다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "코드·데이터 공개 언급이 없고 표준 벤치마크 사용만 알 수 있다."
+          },
+          "rationale": "방법과 실험 설계는 비교적 명확하지만 암호분석/디지털 포렌식 관심사와는 간접적 연결이고 공개 자료 정보가 없다."
+        }
+      },
+      "rationale": "방법과 실험 설계는 비교적 명확하지만 암호분석/디지털 포렌식 관심사와는 간접적 연결이고 공개 자료 정보가 없다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2610.00649",
+      "title": "On Evaluating Quantum Kernel Robustness for Low-Resource Cross-Corpus Audio Deepfake Detection",
+      "abstract": "Synthetic speech detection is critical for audio security, but performance can degrade when labeled data are scarce and evaluation conditions differ from training. This study examines quantum kernel methods and lightweight neural models for cross-corpus audio deepfake detection under limited training data. We compare a Quantum Support Vector Machine (QSVM), a classical support vector machine (SVM), and a multilayer perceptron (MLP), all trained on frozen wav2vec 2.0 embeddings using a strict budget of 200 training samples. To match the qubit budget of near-term quantum hardware, embeddings are reduced to four dimensions using principal component analysis, and all models use the same reduced features. Experiments on ASVspoof 2019, ASVspoof 5, the ADD 2023 Challenge, and the In-the-Wild dataset show that under severe domain shift from ASVspoof 2019 to ADD 2023, the MLP degrades to near-random performance, with an area under the curve of approximately 50% and an equal error rate of 50.0%. In contrast, the QSVM maintains meaningful discrimination, achieving an area under the curve of 76.0% and an equal error rate of 27.0%. This advantage is not consistent across transfer directions. When trained on ADD 2023, the QSVM falls below chance on two of three transfers, while the MLP performs better. These results suggest that quantum kernel methods can be competitive under severe cross-corpus shifts and strict low-resource constraints, but do not provide a consistent advantage under near-domain transfer. We interpret these findings as an empirical characterization of quantum kernel inductive bias under distribution shift, rather than evidence of quantum advantage, since the four-qubit kernel can be simulated exactly on classical hardware.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-30T19:51:25Z",
+      "updated": "2026-09-30T19:51:25Z",
+      "authors": [
+        "Lisan Al Amin",
+        "Lei Zhang",
+        "Vandana P. Janeja"
+      ],
+      "url": "https://arxiv.org/abs/2610.00649v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.00649v1",
+      "categories": [
+        "cs.SD",
+        "cs.LG"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.05,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "deepfake"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "neural",
+              "deepfake"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "저자원·교차코퍼스 오디오 딥페이크 탐지로 AI 디지털 포렌식의 핵심 과제(도메인 시프트 하 위조 판별)를 직접 다룬다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "양자 커널(QSVM)을 교차코퍼스 딥페이크 탐지에 적용해 귀납적 편향을 특성화한 시도이며, 초록에서 스스로 양자 우위 주장이 아님을 한정한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "wav2vec 2.0 고정 임베딩, PCA 4차원 축소, 학습 200샘플 고정 예산, QSVM/SVM/MLP 동일 피처 비교, AUC·EER 수치와 전이 방향별 결과까지 구체적이다."
+          },
+          "reproducibility": {
+            "score": 3,
+            "reason": "ASVspoof 2019/5, ADD 2023, In-the-Wild 등 공개 벤치마크와 설정이 명시되나, 코드 공개 언급은 메타데이터에 없다."
+          },
+          "rationale": "평가 설계가 명확하고 한계를 과장하지 않은 교차코퍼스 딥페이크 탐지 연구로 관심사 적합도가 높다. 공개 벤치마크 사용은 재현에 유리하지만 코드 공개 여부는 확인되지 않는다."
+        }
+      },
+      "rationale": "평가 설계가 명확하고 한계를 과장하지 않은 교차코퍼스 딥페이크 탐지 연구로 관심사 적합도가 높다. 공개 벤치마크 사용은 재현에 유리하지만 코드 공개 여부는 확인되지 않는다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
+    },
+    {
+      "id": "arxiv:2609.34080",
+      "title": "LoRo-Mark:Provably Lossless and Robust Agent Watermarking",
+      "abstract": "As LLM agents are increasingly deployed as commercial services, protecting proprietary orchestration logic and tool-use policies is important. We consider agent repackaging: an adversary integrates a protected agent into its own application via API and presents it under its own identity. It may modify parts of execution to obscure the source. The owner typically has only black-box access to the repackaged service, so black-box ownership verification is essential. Agent watermarking embeds ownership evidence into agent behavior for later verification. An effective watermark should satisfy two requirements: losslessness, preserving original functionality, and robustness, keeping ownership evidence recoverable after partial modification of execution. Existing methods often embed signals into behavior selection or execution trajectories, intervene in normal decisions, and offer limited robustness to behavior modification. We propose LoRo-Mark, a provably lossless and robust agent watermarking mechanism. For losslessness, it isolates watermarking into a cryptographically authenticated forensic branch that remains inactive during normal execution and is activated only by owner-authorized requests. By reducing unauthorized branch activation to standard MAC security, LoRo-Mark formally guarantees performance preservation. For robustness, it redundantly distributes ownership information across forensic behavior sequences, enabling reliable recovery under partial behavior substitution and sequence truncation. Experiments across multiple LLM agents show zero degradation on normal tasks and reliable ownership verification under sequence modifications.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-09-28T01:16:46Z",
+      "updated": "2026-09-28T01:16:46Z",
+      "authors": [
+        "Haoyang Zou",
+        "Yao Wang",
+        "Jun Yao",
+        "Weiming Zhang",
+        "Han Fang"
+      ],
+      "url": "https://arxiv.org/abs/2609.34080v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2609.34080v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-10-04T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.0,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "LLM",
+            "forensic"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "ai-digital-forensics",
+          "topicMatches": {
+            "ai-digital-forensics": [
+              "LLM",
+              "forensic"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "MAC 기반 인증 분기와 소유권 검증은 AI 크립트아날리시스·포렌식 경계에 걸치나, 핵심 과제는 에이전트 워터마킹/저작권 보호로 두 관심사 어느 쪽의 중심도 아니다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "워터마크를 암호학적으로 인증된 비활성 포렌식 분기로 격리해 무손실성을 MAC 보안으로 환원하는 구성은 행동 선택·실행 궤적 삽입 방식과 구분된다."
+          },
+          "methodology": {
+            "score": 3,
+            "reason": "무손실성의 보안 환원 논증과 중복 분산을 통한 부분 치환·절단 복원이라는 설계 축은 분명하지만, 실험은 '여러 LLM 에이전트'로만 기술되어 벤치마크·공격 모델 세부가 부족하다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "코드·에이전트 구성·데이터 공개 정보가 메타데이터에 없고 평가 대상 에이전트도 특정되지 않았다."
+          },
+          "rationale": "암호학적 보증을 갖춘 설계라는 강점은 있으나 관심사 중심에서 다소 벗어나며, 실험 범위와 공개 자원 정보가 제한적이다."
+        }
+      },
+      "rationale": "암호학적 보증을 갖춘 설계라는 강점은 있으나 관심사 중심에서 다소 벗어나며, 실험 범위와 공개 자원 정보가 제한적이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-04T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-digital-forensics"
     }
   ],
   "seen": [
@@ -1274,11 +1982,21 @@
     "arxiv:2609.28725",
     "arxiv:2609.29045",
     "arxiv:2609.29808",
+    "arxiv:2609.34080",
+    "arxiv:2609.35536",
+    "arxiv:2609.36145",
+    "arxiv:2609.36549",
+    "arxiv:2609.38391",
+    "arxiv:2609.38830",
+    "arxiv:2609.39066",
+    "arxiv:2609.39651",
+    "arxiv:2610.00649",
+    "arxiv:2610.01788",
     "eprint:2026/2095",
     "eprint:2026/2097",
     "eprint:2026/2127",
     "eprint:2026/2224",
     "manual:16661c9151450f07fa3b"
   ],
-  "lastWeeklyAt": "2026-09-27T23:00:02+00:00"
+  "lastWeeklyAt": "2026-10-04T23:00:03+00:00"
 }
