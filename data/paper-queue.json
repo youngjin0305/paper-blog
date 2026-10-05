@@ -1332,9 +1332,6 @@
       "id": "arxiv:2609.39066",
       "title": "Agentic Tool-Augmented Reasoning for Explainable Image Forgery Detection",
       "abstract": "Conventional image forgery detection methods produce binary scores or pixel-level masks without interpretable evidence, while recent multimodal large language model (MLLM)-based approaches generate post-hoc explanations of predetermined classification results rather than reasoning from evidence. Inspired by the forensic workflow of human judicial experts, we propose Agentic Tool-Augmented Reasoning (ATAR), a framework integrating 22 specialized forensic tools across seven complementary domains to autonomously detect, localize, and explain image forgeries through multi-turn reasoning. A Dual-Stream Forensic Reasoning paradigm combines a high-level semantic anomaly path, which magnifies suspicious regions for fine-grained inspection, with a low-level forgery artifact path, which invokes forensic tools to extract objective evidence. We further introduce Forensics Curriculum Learning: during General Experience SFT, an automated teacher-student mentoring pipeline synthesizes multi-turn tool-usage reasoning trajectories; during Forensic Scene RL, a Tool Prior Curriculum guides early tool exploration and progressively transfers control to the agent, while a Structured Evidence Reward provides fine-grained process-level supervision. Experiments across IMDL, Deepfake detection, DMDL, and AIGC detection show that ATAR achieves 78.5% average image-level F1 on six zero-shot IMDL benchmarks, surpassing the strongest MLLM baseline by 11.8 percentage points, and remains competitive with specialized detectors on other tasks while producing substantially more faithful and grounded explanations.",
-      "journal_ref": "",
-      "publication_note": "Accepted at ACM Multimedia 2026 (Oral)",
-      "doi": "",
       "published": "2026-09-30T06:05:16Z",
       "updated": "2026-09-30T06:05:16Z",
       "authors": [
@@ -1354,7 +1351,7 @@
         "cs.CV"
       ],
       "addedAt": "2026-10-04T23:00:03+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.825,
       "scoreDetail": {
         "rule": {
@@ -1400,8 +1397,9 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
-      "postPath": null,
-      "topic_id": "ai-digital-forensics"
+      "postPath": "content/ai-digital-forensics/2026-09-30-4f6590f24f22e0bf2f42.md",
+      "topic_id": "ai-digital-forensics",
+      "publication_note": "Accepted at ACM Multimedia 2026 (Oral)"
     },
     {
       "id": "arxiv:2609.39651",
