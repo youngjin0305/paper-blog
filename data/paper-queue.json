@@ -1549,9 +1549,6 @@
       "id": "arxiv:2609.35536",
       "title": "Look Before You Judge: Training-Free Region Mining for Grounded and Explainable Deepfake Detection",
       "abstract": "Multimodal large language models (MLLMs) can explain deepfake verdicts in natural language, but such explanations are not necessarily visually grounded in the visual evidence underlying the prediction. A model may describe plausible artifacts inferred from language priors rather than from image evidence. Existing grounding methods improve visual reliance through decoding or attention interventions, but they generally strengthen grounding over the entire image, making them ill-suited for forensic artifacts that are subtle, spatially localized, and image-dependent. We propose Look Before You Judge, a training-free framework that formulates explainable deepfake detection as a sequential evidence acquisition process. Instead of directly predicting image authenticity from holistic visual reasoning, our framework first identifies image-specific candidate evidence regions by contrasting the MLLM's decoder-to-visual attention between an original image and its Gaussian-blurred counterpart. The identified regions are then inspected individually, and the resulting local evidence is integrated with the global image context before reaching a final verdict. The framework operates without manipulation masks, external forensic models, or parameter updates, making it directly applicable to off-the-shelf MLLMs. Across five open-source MLLMs on TriDF and MMTD-Set, our framework improves detection accuracy by up to 12.8%, reduces CHAIR by up to 33.4% and hallucination rate by up to 21.3%, and outperforms representative training-free decoding and attention methods.",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2026-09-28T16:19:22Z",
       "updated": "2026-09-28T16:19:22Z",
       "authors": [
@@ -1574,7 +1571,7 @@
         "cs.CV"
       ],
       "addedAt": "2026-10-04T23:00:03+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.525,
       "scoreDetail": {
         "rule": {
@@ -1618,7 +1615,7 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-10-04T23:00:03+00:00",
       "failCount": 0,
-      "postPath": null,
+      "postPath": "content/ai-digital-forensics/2026-09-28-45239c5c4a95f78560ea.md",
       "topic_id": "ai-digital-forensics"
     },
     {
