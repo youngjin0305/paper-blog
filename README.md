@@ -99,6 +99,26 @@ Gemini는 웹 조사에서 `login-gemini.cmd`로 로그인하고, 원문 기반 
 
 ## 대기 목록과 실패 작업 관리
 
+별도의 **연구 흐름** 페이지는 메인 페이지의 ‘연구 흐름 그래프 보기’ 또는 사이드바에서 엽니다. 필수 논문을 뼈대로, 대기 큐와 원문 기반 게시글을 연도·분야별 SVG 그래프로 보여줍니다. 제목은 정리 글(아직 없으면 원문)로 이동하고, ⓘ는 논문의 선정 상태와 연결 목록, 선은 관계의 근거를 보여줍니다. 분야·논문 범위·정리 완료 필터, 검색, 선택 논문 주변만 보기, 확대/축소·이동을 지원합니다.
+
+**실선(확인된 인용)**은 Crossref 참고문헌 DOI 또는 PDF References의 전체 제목을 대조합니다. 방향은 인용된 논문 → 인용한 논문입니다. **점선(주제 연결·추정)**은 공통 개념과 제목·초록의 TF-IDF 유사도를 이용하며 인용·방법 개선·실제 영향 관계로 취급하지 않습니다. 일치한 개념과 유사도는 선을 눌러 확인할 수 있습니다. 연도만 알려진 같은 해의 논문에 추정 선후관계를 만들지 않으며, 근거가 없으면 독립 노드로 남습니다.
+
+기본 **핵심·선별 논문**은 필수 논문 또는 현재 분야 범위에 맞으면서 (a) 출처 메타데이터에 게재처가 명시되거나 (b) 전문 정리가 완료되고 기존 관련성 점수가 4/5 이상·선정 점수가 3.5/5 이상인 논문입니다. ‘필수·게재 확인’, ‘필수만’, ‘전체 수집·정리’를 따로 선택할 수 있습니다. 데모·실패/만료된 일반 후보는 제외합니다. 기존 수집 방향에만 맞는 오래된 글은 기본 범위에서 제외될 수 있으며 전체 보기에는 남습니다. 게재 정보와 구조 검증은 연구 결과 자체에 대한 독립 검증이 아닙니다.
+
+`config.json`의 `research_graph`에서 개념 키워드, 선별 점수, 유사도 임계값, 추정 부모 수(기본 2), 화면 최대 논문 수(기본 60), 근거 파일 경로를 관리합니다. 그래프 빌드와 주제 연결에는 LLM·API 키·CDN이 필요하지 않습니다. `daily`는 성공한 글의 원문 참고문헌에서 발견한 관계를 큐의 `graphReferences`에 저장하며, GitHub Pages가 새 게시물·큐를 받아 내보낼 때 그래프와 정리 링크도 자동 갱신됩니다. 공개 사이트에서 논문을 조사하거나 모델을 호출하지 않습니다.
+
+```powershell
+# 초기 필수 논문 또는 새 DOI의 공개 인용 근거를 추가 조사 (모델 호출 없음)
+.\.venv\Scripts\python.exe -B app.py graph-sync
+
+# 근거 파일을 저장하지 않고 조회 결과 확인
+.\.venv\Scripts\python.exe -B app.py graph-sync --dry-run
+
+.\.venv\Scripts\python.exe -B app.py export
+```
+
+`graph-sync` 결과는 `data/paper-graph-evidence.json`에 출처·대조 방식·확인 시각과 함께 저장합니다. 조회되지 않는 원문은 경고 목록에 남기고 기존 확인 근거를 보존합니다. 수동 갱신 후에는 이 파일만 명시적으로 커밋하면 됩니다. Pages의 `export`는 네트워크 조회 없이 추적된 근거와 큐를 읽으므로 신규 게시 때 빌드가 외부 API 장애에 의존하지 않습니다. 참고문헌 추출과 Crossref 등록 정보의 누락 때문에 인용선이 없는 것이 ‘인용하지 않음’을 뜻하지는 않습니다.
+
 관심 분야는 `config.json`의 `topics[].group`으로 상위 카테고리에 묶습니다. 현재 Cryptography 아래 CryptAnalysis·AI CryptAnalysis·PQC Migration, Digital Forensics 아래 AI Digital Forensics·Quantum Forensics가 있습니다. `enabled`는 자동 수집 여부이고, 꺼도 기존 글과 직접 지정한 논문을 분류할 수 있습니다. AI Digital Forensics 자동 수집은 중지했습니다.
 
 AI CryptAnalysis는 neural distinguisher, 신경망 기반 차분·선형 구별과 실제 키 복구 등 암호 자체에 AI를 적용하는 연구를 수집합니다. LLM 보안 지식 평가·모델 개인정보 유출·일반 보안 벤치마크·구현 부채널만 다루는 연구는 범위에서 제외합니다. 일반 CryptAnalysis는 AI를 사용하지 않는 암호분석을 따로 수집합니다. 전문 파이프라인은 `pipeline.topic_filters`(그룹 사이 AND, 그룹 안 OR), `topic_exclusions`와 활성 분야의 조사 지침을 함께 적용합니다. 웹의 초록 조사에는 각 분야의 `query`를 적용하므로 두 설정을 함께 관리하세요.
@@ -170,6 +190,7 @@ Disable-ScheduledTask -TaskName 'PaperBlog-daily'
 | `content/` | 게시글 Markdown과 글별 메타데이터 |
 | `data/paper-queue.json` | 논문 대기 목록과 처리 상태 |
 | `data/core-papers.json` | 필수 논문 서지·선정 근거·인용수 조회 기록 |
+| `data/paper-graph-evidence.json` | 연구 흐름의 확인된 인용 근거·출처·확인 시각 |
 | `data/garden.sqlite3` | 로컬 웹 조사 글의 인덱스와 실행 기록 |
 | `drafts/`, `logs/`, `data/papers/` | 실패 초안·오류 기록·추출한 원문 |
 

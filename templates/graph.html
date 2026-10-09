@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}연구 흐름 · {{ config.title }}{% endblock %}
+{% block scripts %}<script src="{{ graph_data_url }}" defer></script><script src="{{ asset_url }}research-graph.js" defer></script>{% endblock %}
+{% block content %}
+<section class="flow-header"><div class="eyebrow">RESEARCH PATHS</div><h1>연구는 어디에서 시작해<br>어디로 이어졌을까요.</h1><p>★ 필수 논문을 뼈대로, 수집한 논문과 정리 글을 연결합니다. 제목을 누르면 요약 글 또는 원문으로 이동하고, ⓘ와 연결선을 누르면 근거를 볼 수 있습니다.</p></section>
+<section class="flow-controls" aria-label="연구 흐름 필터">
+  <label>분야<select id="flow-field"><option value="all">전체 분야</option>{% for group in topic_groups %}<option value="group:{{ group.name }}">{{ group.name }} 전체</option><optgroup label="{{ group.name }}">{% for topic in group.topics %}<option value="topic:{{ topic.id }}" {{ 'selected' if topic.id == (config.pipeline|default({})).category|default('') else '' }}>{{ topic.name }}</option>{% endfor %}</optgroup>{% endfor %}</select></label>
+  <label>논문 범위<select id="flow-quality"><option value="recommended">핵심·선별 논문</option><option value="venues">필수·게재 확인 논문</option><option value="core">필수 논문만</option><option value="all">전체 수집·정리 논문</option></select></label>
+  <label>연결<select id="flow-links"><option value="all">인용 + 주제 연결</option><option value="citation">확인된 인용만</option></select></label>
+  <label>논문 찾기<input id="flow-search" type="search" placeholder="제목·저자·개념 검색"></label>
+  <label class="flow-check"><input id="flow-reviewed" type="checkbox">정리 완료만</label>
+  <label class="flow-check"><input id="flow-neighbors" type="checkbox">선택 논문 주변만</label>
+</section>
+<div class="flow-legend"><span><i class="legend-citation"></i>확인된 인용 · 인용된 논문 → 인용한 논문</span><span><i class="legend-related"></i>주제 연결(추정) · 인용/계승 확인 아님</span><span>★ 필수 논문</span><span>가로축: 발표 연도 순서 · 간격은 균등</span></div>
+<div class="flow-layout">
+  <section class="flow-canvas-panel">
+    <div class="flow-toolbar"><span id="flow-count" aria-live="polite"></span><div><button id="flow-zoom-in" aria-label="그래프 확대">＋</button><button id="flow-zoom-out" aria-label="그래프 축소">－</button><button id="flow-fit">전체 맞춤</button></div></div>
+    <div id="flow-viewport"><svg id="flow-svg" role="group" aria-label="논문 연구 흐름 그래프"></svg><p id="flow-empty" hidden>조건에 맞는 논문이 없습니다. 논문 범위 또는 분야를 바꿔 보세요.</p></div>
+    <p class="flow-help">빈 곳을 드래그해서 이동 · 확대/축소 버튼 또는 Ctrl + 휠 · 키보드로 논문 제목과 ⓘ 선택</p>
+  </section>
+  <aside id="flow-details" class="flow-details" aria-live="polite"><h2>연결의 근거를 읽어보세요.</h2><p>노드의 ⓘ를 누르면 논문의 선정 상태와 연결된 연구가 표시됩니다. 선을 누르면 참고문헌 출처 또는 주제 유사성의 근거를 확인할 수 있습니다.</p></aside>
+</div>
+<details class="flow-policy"><summary>논문 선별과 연결 기준</summary><p>기본 ‘핵심·선별 논문’은 필수 논문, 또는 현재 분야 범위에 맞으면서 게재처가 출처 메타데이터로 확인되거나 전문 정리가 완료되고 관련성 {{ (config.research_graph|default({})).recommended_relevance|default(4) }}/5 이상·선정 점수 {{ (config.research_graph|default({})).recommended_score|default(3.5) }}/5 이상인 논문을 표시합니다. 이 기준은 탐색을 위한 선별이며, 요약 검증이나 게재처 확인이 연구 결과의 정확성을 보증하지는 않습니다.</p><p>실선은 Crossref에 등록된 참고문헌 DOI 또는 원문 References의 전체 제목을 대조한 인용입니다. 점선은 공통 개념과 제목·초록의 TF-IDF 유사도로 계산한 주제 연결이며 실제 영향이나 계승을 단정하지 않습니다. 연결 근거가 없으면 독립 노드로 남습니다. 검색 시 가까운 연결을 함께 표시하며, 많아지면 필수 논문과 최근 논문을 우선해 한 번에 최대 {{ (config.research_graph|default({})).max_nodes|default(60) }}편을 표시합니다. ‘전체 수집·정리 논문’에서 미확인 논문도 확인할 수 있습니다.</p></details>
+<noscript><p>이 그래프를 사용하려면 JavaScript를 활성화하세요. <a href="{{ essential_href }}">필수 논문 목록</a>은 JavaScript 없이도 읽을 수 있습니다.</p></noscript>
+{% endblock %}

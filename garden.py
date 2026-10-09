@@ -146,6 +146,9 @@ def validate_config(config):
     if "pipeline" in config:
         from paper_config import validate_pipeline
         result["pipeline"] = validate_pipeline(config["pipeline"])
+    if "research_graph" in config:
+        from paper_graph import validate_graph_settings
+        result["research_graph"] = validate_graph_settings(config["research_graph"])
     return result
 
 
@@ -371,10 +374,10 @@ class Garden:
         clean = validate_config(config)
         with self.config_lock:
             # The existing settings form edits only blog fields, not pipeline settings.
-            if "pipeline" not in clean:
-                existing = self.config()
-                if "pipeline" in existing:
-                    clean["pipeline"] = existing["pipeline"]
+            existing = self.config()
+            for key in ("pipeline", "research_graph"):
+                if key not in clean and key in existing:
+                    clean[key] = existing[key]
             atomic_write(self.root / "config.json", json.dumps(clean, ensure_ascii=False, indent=2) + "\n")
         return clean
 

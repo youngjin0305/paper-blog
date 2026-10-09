@@ -20,6 +20,7 @@ from paper_llm import create_backend, QuotaExceeded, configure_workspace, worksp
 from model_config import DEFAULT_MODEL, recorded_model
 from paper_publication import publication_metadata
 from paper_catalog import load_catalog, seed_core
+from paper_graph import references_from_text
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, identify, rule_score
 from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, abstract_number_errors, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
@@ -399,6 +400,9 @@ class Pipeline:
                 atomic_write(archive / "source.txt", source_text)
             evidence = source_text + "\n" + markdown
             references = parse_references(markdown) or parse_references(source_text)
+            targets = {p["id"]: p for p in [*self.queue["papers"], *load_catalog(self.root, self.config)["papers"]]}
+            graph_refs = references_from_text(paper, source_text, list(targets.values()), now())
+            graph_refs += references_from_text(paper, markdown, list(targets.values()), now())
             reusable = {}
             draft_failures = {}
             reused_model = None
@@ -489,6 +493,7 @@ class Pipeline:
                 self.save_queue()
             self.log("Validation failed; no commit/push: " + json.dumps(errors, ensure_ascii=False))
             return {"valid": False, "errors": errors, "document": document}
+        paper["graphReferences"] = list({ref["citedId"]: ref for ref in graph_refs}.values())
         paper["status"], paper["postPath"] = "done", path
         if self.dry_run:
             self.log("DRY RUN validated; would publish " + path)

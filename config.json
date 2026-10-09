@@ -183,5 +183,126 @@
       ]
     },
     "core_catalog_path": "data/core-papers.json"
+  },
+  "research_graph": {
+    "evidence_path": "data/paper-graph-evidence.json",
+    "recommended_score": 3.5,
+    "recommended_relevance": 4,
+    "similarity_threshold": 0.12,
+    "max_related_parents": 2,
+    "max_nodes": 60,
+    "concepts": [
+      {
+        "id": "differential",
+        "label": "차분 암호분석",
+        "keywords": [
+          "differential",
+          "differential-neural"
+        ]
+      },
+      {
+        "id": "linear",
+        "label": "선형 암호분석",
+        "keywords": [
+          "linear cryptanalysis",
+          "linear attack"
+        ]
+      },
+      {
+        "id": "speck",
+        "label": "SPECK",
+        "keywords": [
+          "Speck"
+        ]
+      },
+      {
+        "id": "neural-distinguisher",
+        "label": "Neural distinguisher",
+        "keywords": [
+          "neural distinguisher",
+          "neural differential",
+          "neural cryptanalysis"
+        ]
+      },
+      {
+        "id": "key-recovery",
+        "label": "키 복구",
+        "keywords": [
+          "key recovery",
+          "key-recovery"
+        ]
+      },
+      {
+        "id": "image-localization",
+        "label": "이미지 조작 위치·흔적",
+        "keywords": [
+          "image manipulation",
+          "tampered region",
+          "localization",
+          "image forgery",
+          "tampering"
+        ]
+      },
+      {
+        "id": "face-forgery",
+        "label": "얼굴 영상 위조",
+        "keywords": [
+          "facial",
+          "face",
+          "blinking"
+        ]
+      },
+      {
+        "id": "deepfake",
+        "label": "Deepfake 탐지",
+        "keywords": [
+          "deepfake"
+        ]
+      },
+      {
+        "id": "audio-forgery",
+        "label": "음성 위조",
+        "keywords": [
+          "audio",
+          "speech",
+          "codec"
+        ]
+      },
+      {
+        "id": "agentic-forensics",
+        "label": "Agentic 포렌식",
+        "keywords": [
+          "agentic",
+          "evidence arbitration",
+          "tool-augmented"
+        ]
+      },
+      {
+        "id": "side-channel",
+        "label": "부채널 분석",
+        "keywords": [
+          "side channel",
+          "side-channel"
+        ]
+      },
+      {
+        "id": "model-extraction",
+        "label": "모델 추출·정보 유출",
+        "keywords": [
+          "model extraction",
+          "privacy leakage",
+          "unlearning"
+        ]
+      },
+      {
+        "id": "quantum",
+        "label": "양자·PQC 포렌식",
+        "keywords": [
+          "quantum",
+          "post-quantum",
+          "PQC"
+        ]
+      }
+    ]
   }
 }

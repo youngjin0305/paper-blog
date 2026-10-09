@@ -9,6 +9,7 @@
     "paper:add": "python -B paper_pipeline.py add",
     "paper:list": "python -B paper_pipeline.py list",
     "paper:seed-core": "python -B paper_pipeline.py seed-core",
+    "paper:graph-sync": "python -B app.py graph-sync",
     "test": "python -m unittest discover -s tests -p test_*.py"
   },
   "dependencies": { "@google/gemini-cli": "0.60.0" }
