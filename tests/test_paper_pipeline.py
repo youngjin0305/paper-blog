@@ -178,6 +178,14 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(unsupported_numbers("정확도 95.61%", source), [])
         self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
 
+    def test_decade_translation_preserves_source_year(self):
+        from paper_validation import abstract_number_errors
+        self.assertEqual(numbers("mid 1970s"), numbers("1970년대 중반"))
+        self.assertEqual(numbers("the 1990's"), numbers("1990년대"))
+        self.assertEqual(abstract_number_errors("1970년대 중반", "the mid 1970s"), [])
+        self.assertNotEqual(numbers("mid 1970s"), numbers("1980년대"))
+        self.assertEqual(numbers("hash1970sdeadbeef"), set())
+
     def test_large_exponents_do_not_overflow_numeric_validation(self):
         self.assertEqual(numbers("1e999999999"), numbers("10e999999998"))
         self.assertEqual(unsupported_numbers("값 1e999999999", "값 10e999999998"), [])

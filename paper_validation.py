@@ -56,6 +56,9 @@ NUMBER_PATTERN = re.compile(r"(?:(?<![A-Za-z0-9_.])[-+]?|(?<=[A-Za-z])-)(?:\d+(?
 
 def normalized_numeric_text(text):
     text = unicodedata.normalize("NFKC", text).replace("−", "-")
+    # English decade suffixes carry the same year as Korean '1970년대'.
+    # Keep ASCII identifier boundaries so hashes remain nonnumeric.
+    text = re.sub(r"(?<![A-Za-z0-9_])((?:18|19|20)\d0)['’]?s(?![A-Za-z0-9_])", r"\1", text, flags=re.I)
     # A comma followed by whitespace separates values, not thousands. In a
     # network list such as "784-16(4)-10, 784-16(6)-10", joining "10, 784"
     # invents -10784. Also keep unspaced commas before hyphenated structures.
