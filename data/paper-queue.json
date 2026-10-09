@@ -2020,14 +2020,15 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 1,
+      "postPath": "content/cryptanalysis/1991-01-01-e45e0f54dfca5c32cc60.md",
+      "note": "Awaiting Claude OAuth reauthentication"
     },
     {
       "id": "eprint:2019/037",
