@@ -75,9 +75,14 @@ class Sources:
         terms += ['all:"' + k.replace('"', '') + '"' for k in self.config["keywords"]]
         if self.config.get("topic_filters"):
             # A category alone cannot widen an intersection topic to all AI/security papers.
-            terms = ["(" + " AND ".join("(" + " OR ".join('all:"' + term.replace('"', '') + '"'
-                     for term in group) + ")" for group in groups) + ")"
-                     for groups in self.config["topic_filters"].values()]
+            terms = []
+            for topic, groups in self.config["topic_filters"].items():
+                query = " AND ".join("(" + " OR ".join('all:"' + term.replace('"', '') + '"'
+                                    for term in group) + ")" for group in groups)
+                excluded = self.config.get("topic_exclusions", {}).get(topic, [])
+                if excluded:
+                    query += " ANDNOT (" + " OR ".join('all:"' + term.replace('"', '') + '"' for term in excluded) + ")"
+                terms.append("(" + query + ")")
         papers = []
         if terms:
             query = "(" + " OR ".join(terms) + f") AND submittedDate:[{cutoff:%Y%m%d%H%M} TO {current:%Y%m%d%H%M}]"
@@ -274,6 +279,8 @@ def rule_score(paper, config):
     categories = sorted(set(config["arxiv_categories"]) & set(paper.get("categories", [])))
     topic_matches = {}
     for topic, groups in config.get("topic_filters", {}).items():
+        if any(keyword_matches(text, term) for term in config.get("topic_exclusions", {}).get(topic, [])):
+            continue
         matches = [[term for term in group if keyword_matches(text, term)] for group in groups]
         if all(matches):
             topic_matches[topic] = [term for group in matches for term in group]

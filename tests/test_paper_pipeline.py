@@ -722,11 +722,12 @@ class TopicTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
-            config["topics"][0]["enabled"] = False
+            next(t for t in config["topics"] if t["id"] == "ai-cryptanalysis")["enabled"] = False
             (root / "config.json").write_text(json.dumps(config), encoding="utf-8")
             pipeline = Pipeline(root, dry_run=True, fixture=deepcopy(FIXTURE))
             self.assertNotIn("ai-cryptanalysis", pipeline.config["topic_filters"])
-            self.assertIn("ai-digital-forensics", pipeline.config["topic_filters"])
+            self.assertIn("cryptanalysis", pipeline.config["topic_filters"])
+            self.assertNotIn("ai-digital-forensics", pipeline.config["topic_filters"])
 
     def test_invalid_empty_keyword_group_rejected(self):
         with self.assertRaises(ValueError):

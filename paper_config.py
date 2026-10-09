@@ -8,6 +8,7 @@ from model_config import resolve_model
 DEFAULTS = {
     "keywords": ["large language model", "cryptography", "retrieval"],
     "topic_filters": {},
+    "topic_exclusions": {},
     "arxiv_categories": ["cs.AI", "cs.CL", "cs.CR"], "use_eprint": True,
     "weekly_new": 10, "pool_limit": 20, "expiry_weeks": 3, "llm_shortlist": 30,
     "rank_batch_size": 5,
@@ -15,6 +16,7 @@ DEFAULTS = {
     "method_min_chars": 1200, "experiment_min_chars": 1000,
     "post_dir": "content/ai", "category": "ai", "queue_path": "data/paper-queue.json",
     "draft_dir": "drafts", "archive_dir": "data/papers", "log_dir": "logs",
+    "core_catalog_path": "data/core-papers.json",
     "agy_path": "agy", "codex_path": "codex", "claude_path": "claude",
     "agy_work_dir": "~/.paper-blog/agy-work", "model": "", "timeout": 300, "http_timeout": 60,
     "max_pdf_bytes": 52428800, "rule_weight": 0.3, "llm_weight": 0.7,
@@ -54,6 +56,11 @@ def validate_pipeline(value):
             for group in groups
         ):
             raise ValueError("topic_filters requires nonempty keyword groups (AND between groups; OR within each group)")
+    for topic, terms in config["topic_exclusions"].items():
+        if topic not in config["topic_filters"] or not isinstance(terms, list) or any(
+            not isinstance(term, str) or not term.strip() for term in terms
+        ):
+            raise ValueError("topic_exclusions requires keyword lists for existing topic_filters")
     if config["abstract_mode"] not in ("korean", "original"):
         raise ValueError("abstract_mode must be korean or original")
     if config["min_relevance_score"] > 5:
@@ -62,7 +69,7 @@ def validate_pipeline(value):
         raise ValueError("Scoring weights must have a positive sum")
     if config["llm_shortlist"] < config["weekly_new"]:
         raise ValueError("llm_shortlist must be >= weekly_new")
-    for key in ("post_dir", "queue_path", "draft_dir", "archive_dir", "log_dir"):
+    for key in ("post_dir", "queue_path", "draft_dir", "archive_dir", "log_dir", "core_catalog_path"):
         path = Path(config[key])
         if path.is_absolute() or ".." in path.parts or not path.parts:
             raise ValueError(f"pipeline.{key} must be a repository-relative path")

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ '필수 논문' if essential_view else '정리 대기 목록' }} · {{ config.title }}{% endblock %}
+{% block scripts %}{% if static_mode %}<script src="{{ asset_url }}search-data.js" defer></script><script src="{{ asset_url }}search.js" defer></script>{% endif %}{% endblock %}
+{% block content %}
+<section class="reading-hero">
+  <div class="eyebrow">READING LIBRARY</div>
+  <h1>{{ '★ 필수 논문' if essential_view else '정리 대기 목록' }}</h1>
+  <p>{{ '분야의 기반 방법과 벤치마크부터 차례로 읽습니다. 정리가 끝난 논문도 이 목록에 남습니다.' if essential_view else '우선 지정한 논문을 먼저 정리하고, 이후 수집 후보를 점수순으로 처리합니다.' }}</p>
+  <div class="filter-row"><a class="chip {{ 'selected' if essential_view else '' }}" href="{{ essential_href }}">★ 필수 논문만 보기</a><a class="chip {{ 'selected' if not essential_view else '' }}" href="{{ reading_href }}">전체 대기 목록</a></div>
+  {% if criteria %}<details class="selection-policy"><summary>필수 논문 선정 기준과 인용수 안내</summary><p>{{ criteria }}</p></details>{% endif %}
+</section>
+<section class="library reading-library">
+  <div class="section-heading"><h2>분야별 읽기 목록 <span id="post-count">{{ papers|length }}</span></h2>
+    <form class="search" method="get" role="search"><input type="search" name="q" value="{{ query }}" placeholder="제목·저자·선정 근거 검색" aria-label="읽기 목록 검색"><button type="submit">검색</button>
+      <select name="category" aria-label="읽기 목록 분야"><option value="">전체 분야</option>{% for group in topic_groups %}<optgroup label="{{ group.name }}">{% for topic in group.topics %}<option value="{{ topic.id }}" {{ 'selected' if category == topic.id else '' }}>{{ topic.name }}</option>{% endfor %}</optgroup>{% endfor %}</select>
+    </form>
+  </div>
+  {% for group in topic_groups %}{% for topic in group.topics %}
+  {% set items = papers|selectattr('topic_id', 'equalto', topic.id)|list %}
+  {% if items %}<section class="reading-topic" data-reading-group><h3>{{ group.name }} <span>/</span> {{ topic.name }}</h3>
+    <div class="reading-grid">{% for paper in items %}
+      <article class="post-card reading-card" data-post-id="reading:{{ paper.id }}" data-topic-id="{{ paper.topic_id }}">
+        <div class="card-top">{% if paper.essential %}<span class="essential-badge">★ 필수 논문</span>{% else %}<span>수집 후보</span>{% endif %}<span class="reading-status">{{ paper.status_label }}</span></div>
+        <a class="card-title" href="{{ post_href(paper.summary_id) if paper.summary_id else paper.url }}"><h4>{{ paper.title }}</h4></a>
+        <p class="card-authors">{{ paper.authors|join(', ') }}</p>
+        <p class="reading-reason">{{ paper.coreRationale|default(paper.rationale|default('')) }}</p>
+        <div class="reading-facts"><span>{{ paper.journal_ref|default(paper.publication_note|default(paper.source)) }} · {{ paper.publicationYear|default(paper.published[:4]) }}</span>
+          {% if paper.citation %}<a href="{{ paper.citation.url }}" title="조회일 {{ paper.citation.checkedAt }} · Crossref에 등록된 인용만 집계">Crossref 인용 {{ paper.citation.count }}회 <small>({{ paper.citation.checkedAt[:10] }})</small></a>{% endif %}
+        </div>
+        {% if paper.evidence %}<details class="paper-evidence"><summary>{{ paper.coreBasis }} · 선정 근거 보기</summary><ul>{% for evidence in paper.evidence %}<li><a href="{{ evidence.url }}">{{ evidence.label }}</a></li>{% endfor %}</ul></details>{% endif %}
+        <div class="reading-links">{% if paper.summary_id %}<a href="{{ post_href(paper.summary_id) }}">정리 글 읽기 →</a>{% endif %}<a href="{{ paper.url }}">원문 ↗</a><a href="{{ paper.pdfUrl }}">PDF ↗</a></div>
+      </article>
+    {% endfor %}</div>
+  </section>{% endif %}
+  {% endfor %}{% endfor %}
+  <div class="empty-state" id="search-empty" {{ 'hidden' if papers else '' }}><h3>해당 논문이 없습니다.</h3><p>다른 분야나 검색어를 선택해 보세요.</p></div>
+</section>
+{% endblock %}

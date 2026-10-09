@@ -98,7 +98,7 @@ class GardenTests(unittest.TestCase):
         config["schedule_enabled"] = False
         config["topics"] = config["topics"][:1]
         config["topics"][0]["id"] = "ai"
-        config["pipeline"].update(category="ai", post_dir="content/ai", topic_filters={})
+        config["pipeline"].update(category="ai", post_dir="content/ai", topic_filters={}, topic_exclusions={})
         (self.root / "config.json").write_text(json.dumps(config), encoding="utf-8")
         self.summary = FakeSummary()
         self.garden = Garden(self.root, FakeSource(), self.summary)

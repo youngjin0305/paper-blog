@@ -7,7 +7,9 @@ import threading
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app import create_app
-from garden import Garden, ROOT
+from garden import Garden, ROOT, atomic_write
+from paper_queue import empty_queue
+from paper_catalog import seed_core
 from playwright.sync_api import expect, sync_playwright
 from waitress import create_server
 
@@ -71,6 +73,16 @@ with tempfile.TemporaryDirectory() as directory:
             expect(page.locator(".katex")).to_have_count(1)
             expect(page.locator(".katex-error")).to_have_count(0)
             page.goto(url + "/settings")
+            core = {**Source().search(None)[0][0], "id": "arxiv:2609.00001", "source": "arxiv",
+                    "pdfUrl": "https://arxiv.org/pdf/2609.00001v1", "topic_id": "quantum", "essential": True,
+                    "coreBasis": "테스트용 원전", "coreRationale": "실제 선정이 아닌 브라우저 테스트 fixture.",
+                    "evidence": [{"url": "https://arxiv.org/abs/2609.00001v1", "label": "Fixture metadata"}],
+                    "citation": {"count": 125, "source": "Crossref", "checkedAt": "2026-10-09",
+                                 "url": "https://api.crossref.org/works/fixture"}}
+            atomic_write(root / "data/core-papers.json", json.dumps({"version": 1, "papers": [core], "criteria": "Fixture policy"}))
+            queue = empty_queue()
+            seed_core(queue, [core], "2026-10-09T00:00:00+00:00")
+            atomic_write(root / "data/paper-queue.json", json.dumps(queue))
             page.get_by_role("button", name="정적 블로그 내보내기").click()
             page.get_by_role("status").filter(has_text="정적 블로그를 저장했습니다").wait_for()
             assert (root / "site/index.html").exists()
@@ -88,6 +100,15 @@ with tempfile.TemporaryDirectory() as directory:
             page.get_by_role("heading", name="한눈에 보기").wait_for()
             expect(page.locator(".katex")).to_have_count(1)
             expect(page.locator(".katex-error")).to_have_count(0)
+            page.goto((root / "site/essentials.html").as_uri())
+            expect(page.locator('#post-count')).to_have_text('1')
+            expect(page.get_by_role('link', name='정리 글 읽기')).to_be_visible()
+            page.get_by_role('combobox', name='읽기 목록 분야').select_option('quantum')
+            expect(page.locator('#post-count')).to_have_text('1')
+            page.get_by_role('searchbox', name='읽기 목록 검색').fill('없는 논문')
+            expect(page.locator('#search-empty')).to_be_visible()
+            page.get_by_role('searchbox', name='읽기 목록 검색').fill('Test')
+            expect(page.locator('#post-count')).to_have_text('1')
             page.goto(url)
             page.set_viewport_size({"width": 390, "height": 844})
             page.screenshot(path=str(ROOT / "data/preview-mobile.png"), full_page=True)

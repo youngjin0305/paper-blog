@@ -1,0 +1,486 @@
+{
+  "version": 1,
+  "verifiedAt": "2026-10-09",
+  "criteria": "★는 기초 읽기 목록을 위한 편집 선정 표시입니다. 원전·기반 기법·공용 벤치마크 중 Crossref 등록 인용 100회 이상인 연구를 우선 선정했습니다. 인용수가 적어도 검증한 분야 survey에서 다루는 핵심 공격 확장 연구와 분야 전체를 체계화한 survey는 별도 예외로 포함하고 각 논문에 이유를 표시합니다. 인용수는 Crossref 등록 참고문헌 기준이며 Google Scholar 전체 인용수와 다릅니다. 2026-10-09 조회한 고정값으로, 모든 논문이 인용한다는 의미나 자동 품질 판정이 아닙니다.",
+  "papers": [
+    {
+      "id": "manual:27d827b6e7accfdbd227",
+      "source": "manual",
+      "title": "Differential cryptanalysis of DES-like cryptosystems",
+      "authors": [
+        "Eli Biham",
+        "Adi Shamir"
+      ],
+      "abstract": "The Data Encryption Standard (DES) is the best known and most widely used cryptosystem for civilian applications. It was developed at IBM and adopted by the National Bureau of Standards in the mid 1970s, and has successfully withstood all the attacks published so far in the open literature. In this paper we develop a new type of cryptanalytic attack which can break the reduced variant of DES with eight rounds in a few minutes on a personal computer and can break any reduced variant of DES (with up to 15 rounds) using less than 2^{56} operations and chosen plaintexts. The new attack can be applied to a variety of DES-like substitution/permutation cryptosystems, and demonstrates the crucial role of the (unpublished) design rules.",
+      "url": "https://link.springer.com/article/10.1007/BF00630563",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/BF00630563.pdf",
+      "published": "1991-01-01T00:00:00+00:00",
+      "publishedPrecision": "month",
+      "doi": "10.1007/BF00630563",
+      "journal_ref": "Journal of Cryptology 1991",
+      "categories": [],
+      "topic_id": "cryptanalysis",
+      "essential": true,
+      "coreBasis": "차분 암호분석 원전",
+      "coreRationale": "블록 암호의 입력 차분과 출력 차분을 이용하는 공격의 원전으로, neural differential cryptanalysis를 읽기 전에 공격 모델과 차분 확률을 익힐 기반 논문이다.",
+      "evidence": [
+        {
+          "url": "https://link.springer.com/article/10.1007/BF00630563",
+          "label": "출판사 원문·서지 정보"
+        },
+        {
+          "url": "https://api.crossref.org/works/10.1007/BF00630563",
+          "label": "Crossref 인용 기록"
+        }
+      ],
+      "citation": {
+        "count": 1807,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/BF00630563",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 1991
+    },
+    {
+      "id": "eprint:2019/037",
+      "source": "eprint",
+      "title": "Improving Attacks on Round-Reduced Speck32/64 using Deep Learning",
+      "journal_ref": "CRYPTO 2019",
+      "doi": "10.1007/978-3-030-26951-7_6",
+      "authors": [
+        "Aron Gohr"
+      ],
+      "abstract": "This paper has four main contributions. First, we calculate the predicted difference distribution of Speck32/64 with one specific input difference under the Markov assumption completely for up to eight rounds and verify that this yields a globally fairly good model of the difference distribution of Speck32/64. Secondly, we show that contrary to conventional wisdom, machine learning can produce very powerful cryptographic distinguishers: for instance, in a simple low-data, chosen plaintext attack on nine rounds of Speck, we present distinguishers based on deep residual neural networks that achieve a mean key rank roughly five times lower than an analogous classical distinguisher using the full difference distribution table. Thirdly, we develop a highly selective key search policy based on a variant of Bayesian optimization which, together with our neural distinguishers, can be used to reduce the remaining security of 11-round Speck32/64 to roughly 38 bits. This is a significant improvement over previous literature. Lastly, we show that our neural distinguishers successfully use features of the ciphertext pair distribution that are invisible to all purely differential distinguishers even given unlimited data.\nWhile our attack is based on a known input difference taken from the literature, we also show that neural networks can be used to rapidly (within a matter of minutes on our machine) find good input differences without using prior human cryptanalysis.",
+      "url": "https://eprint.iacr.org/2019/037",
+      "pdfUrl": "https://eprint.iacr.org/2019/037.pdf",
+      "published": "2019-01-17T23:15:38+00:00",
+      "categories": [],
+      "topic_id": "ai-cryptanalysis",
+      "essential": true,
+      "coreBasis": "고인용 기반 기법",
+      "coreRationale": "Speck32/64의 neural distinguisher와 키 복구를 결합한 분야의 출발점이다. 2024/1300 survey가 이 논문을 기준으로 후속 연구를 체계화한다.",
+      "evidence": [
+        {
+          "url": "https://eprint.iacr.org/2019/037",
+          "label": "IACR 원문·학술 발표 정보"
+        },
+        {
+          "url": "https://eprint.iacr.org/2024/1300",
+          "label": "Neural differential cryptanalysis 분야 survey"
+        }
+      ],
+      "citation": {
+        "count": 185,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/978-3-030-26951-7_6",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2019
+    },
+    {
+      "id": "arxiv:1805.04953",
+      "title": "Learning Rich Features for Image Manipulation Detection",
+      "abstract": "Image manipulation detection is different from traditional semantic object detection because it pays more attention to tampering artifacts than to image content, which suggests that richer features need to be learned. We propose a two-stream Faster R-CNN network and train it endto- end to detect the tampered regions given a manipulated image. One of the two streams is an RGB stream whose purpose is to extract features from the RGB image input to find tampering artifacts like strong contrast difference, unnatural tampered boundaries, and so on. The other is a noise stream that leverages the noise features extracted from a steganalysis rich model filter layer to discover the noise inconsistency between authentic and tampered regions. We then fuse features from the two streams through a bilinear pooling layer to further incorporate spatial co-occurrence of these two modalities. Experiments on four standard image manipulation datasets demonstrate that our two-stream framework outperforms each individual stream, and also achieves state-of-the-art performance compared to alternative methods with robustness to resizing and compression.",
+      "journal_ref": "CVPR 2018",
+      "publication_note": "CVPR 2018 Camera Ready",
+      "doi": "10.1109/CVPR.2018.00116",
+      "published": "2018-05-13T21:29:38Z",
+      "updated": "2018-05-13T21:29:38Z",
+      "authors": [
+        "Peng Zhou",
+        "Xintong Han",
+        "Vlad I. Morariu",
+        "Larry S. Davis"
+      ],
+      "url": "https://arxiv.org/abs/1805.04953v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/1805.04953v1",
+      "categories": [
+        "cs.CV"
+      ],
+      "topic_id": "ai-digital-forensics",
+      "essential": true,
+      "coreBasis": "고인용 조작 위치 탐지",
+      "coreRationale": "RGB와 noise stream을 결합해 조작 위치를 탐지하는 기반 방법이다. 딥페이크 분류에만 치우치지 않고 이미지 조작 흔적과 지역화(localization)를 함께 읽기 위해 선정했다.",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/1805.04953v1",
+          "label": "저자 공개 원문·서지 정보"
+        },
+        {
+          "url": "https://doi.org/10.1109/CVPR.2018.00116",
+          "label": "학술 발표 버전"
+        }
+      ],
+      "citation": {
+        "count": 663,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1109/CVPR.2018.00116",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2018
+    },
+    {
+      "id": "manual:4772153072351b952954",
+      "source": "manual",
+      "title": "Linear Cryptanalysis Method for DES Cipher",
+      "authors": [
+        "Mitsuru Matsui"
+      ],
+      "abstract": "We introduce a new method for cryptanalysis of DES cipher, which is essentially a known-plaintext attack. As a result, it is possible to break 8-round DES cipher with 2^{21} known-plaintexts and 16-round DES cipher with 2 ^{47} known-plaintexts, respectively. Moreover, this method is applicable to an only-ciphertext attack in certain situations. For example, if plaintexts consist of natural English sentences represented by ASCII codes, 8-round DES cipher is breakable with 2^{29} ciphertexts only.",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48285-7_33",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/3-540-48285-7_33.pdf",
+      "published": "1994-01-01T00:00:00+00:00",
+      "publishedPrecision": "year",
+      "doi": "10.1007/3-540-48285-7_33",
+      "journal_ref": "EUROCRYPT 1993",
+      "categories": [],
+      "topic_id": "cryptanalysis",
+      "essential": true,
+      "coreBasis": "선형 암호분석 원전",
+      "coreRationale": "선형 근사와 편향을 이용한 DES 키 복구의 기반 논문이다. 차분 공격과 구별되는 통계적 암호분석의 기본 축을 먼저 익히기 위해 선정했다.",
+      "evidence": [
+        {
+          "url": "https://link.springer.com/chapter/10.1007/3-540-48285-7_33",
+          "label": "출판사 원문·서지 정보"
+        },
+        {
+          "url": "https://api.crossref.org/works/10.1007/3-540-48285-7_33",
+          "label": "Crossref 인용 기록"
+        }
+      ],
+      "citation": {
+        "count": 1596,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/3-540-48285-7_33",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 1994
+    },
+    {
+      "id": "eprint:2021/287",
+      "source": "eprint",
+      "title": "A Deeper Look at Machine Learning-Based Cryptanalysis",
+      "journal_ref": "EUROCRYPT 2021",
+      "doi": "10.1007/978-3-030-77870-5_28",
+      "authors": [
+        "Adrien Benamira",
+        "David Gerault",
+        "Thomas Peyrin",
+        "Quan Quan Tan"
+      ],
+      "abstract": "At CRYPTO'19, Gohr proposed a new cryptanalysis strategy based on the utilisation of machine learning algorithms. Using deep neural networks, he managed to build a neural based distinguisher that surprisingly surpassed state-of-the-art cryptanalysis efforts on one of the versions of the well studied NSA block cipher speck (this distinguisher could in turn be placed in a larger key recovery attack). While this work opens new possibilities for machine learning-aided cryptanalysis, it remains unclear how this distinguisher actually works and what information is the machine learning algorithm deducing. The attacker is left with a black-box that does not tell much about the nature of the possible weaknesses of the algorithm tested, while hope is thin as interpretability of deep neural networks is a well-known difficult task.\n\nIn this article, we propose a detailed analysis and thorough explanations of the inherent workings of this new neural distinguisher. First, we studied the classified sets and tried to find some patterns that could guide us to better understand Gohr's results. We show with experiments that the neural distinguisher generally relies on the differential distribution on the ciphertext pairs, but also on the differential distribution in penultimate and antepenultimate rounds. In order to validate our findings, we construct a distinguisher for speck cipher based on pure cryptanalysis, without using any neural network, that achieves basically the same accuracy as Gohr's neural distinguisher and with the same efficiency (therefore improving over previous non-neural based distinguishers).\n\nMoreover, as another approach, we provide a machine learning-based distinguisher that strips down Gohr's deep neural network to a bare minimum. We are able to remain very close to Gohr's distinguishers' accuracy using simple standard machine learning tools. In particular, we show that Gohr's neural distinguisher is in fact inherently building a very good approximation of the Differential Distribution Table (DDT) of the cipher during the learning phase, and using that information to directly classify ciphertext pairs. This result allows a full interpretability of the distinguisher and represents on its own an interesting contribution towards interpretability of deep neural networks.\n\nFinally, we propose some method to improve over Gohr's work and possible new neural distinguishers settings. All our results are confirmed with experiments we have been conducted on speck block cipher (source code available online).",
+      "url": "https://eprint.iacr.org/2021/287",
+      "pdfUrl": "https://eprint.iacr.org/2021/287.pdf",
+      "published": "2021-03-07T02:24:29+00:00",
+      "categories": [],
+      "topic_id": "ai-cryptanalysis",
+      "essential": true,
+      "coreBasis": "고인용 해석 연구",
+      "coreRationale": "Gohr 구별자가 학습하는 정보와 차분 분포의 관계를 해석하고 고전 구별자와 비교한다. 신경망 정확도를 암호분석상의 이점과 연결해 읽기 위한 기반 연구다.",
+      "evidence": [
+        {
+          "url": "https://eprint.iacr.org/2021/287",
+          "label": "IACR 원문·학술 발표 정보"
+        },
+        {
+          "url": "https://eprint.iacr.org/2024/1300",
+          "label": "Neural differential cryptanalysis 분야 survey"
+        }
+      ],
+      "citation": {
+        "count": 110,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/978-3-030-77870-5_28",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2021
+    },
+    {
+      "id": "arxiv:1901.08971",
+      "title": "FaceForensics++: Learning to Detect Manipulated Facial Images",
+      "abstract": "The rapid progress in synthetic image generation and manipulation has now come to a point where it raises significant concerns for the implications towards society. At best, this leads to a loss of trust in digital content, but could potentially cause further harm by spreading false information or fake news. This paper examines the realism of state-of-the-art image manipulations, and how difficult it is to detect them, either automatically or by humans. To standardize the evaluation of detection methods, we propose an automated benchmark for facial manipulation detection. In particular, the benchmark is based on DeepFakes, Face2Face, FaceSwap and NeuralTextures as prominent representatives for facial manipulations at random compression level and size. The benchmark is publicly available and contains a hidden test set as well as a database of over 1.8 million manipulated images. This dataset is over an order of magnitude larger than comparable, publicly available, forgery datasets. Based on this data, we performed a thorough analysis of data-driven forgery detectors. We show that the use of additional domainspecific knowledge improves forgery detection to unprecedented accuracy, even in the presence of strong compression, and clearly outperforms human observers.",
+      "journal_ref": "ICCV 2019",
+      "publication_note": "Video: https://youtu.be/x2g48Q2I2ZQ",
+      "doi": "10.1109/ICCV.2019.00009",
+      "published": "2019-01-25T16:38:21Z",
+      "updated": "2019-08-26T17:59:54Z",
+      "authors": [
+        "Andreas Rössler",
+        "Davide Cozzolino",
+        "Luisa Verdoliva",
+        "Christian Riess",
+        "Justus Thies",
+        "Matthias Nießner"
+      ],
+      "url": "https://arxiv.org/abs/1901.08971v3",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/1901.08971v3",
+      "categories": [
+        "cs.CV"
+      ],
+      "topic_id": "ai-digital-forensics",
+      "essential": true,
+      "coreBasis": "고인용 공용 벤치마크",
+      "coreRationale": "얼굴 조작 탐지의 공개 데이터셋과 평가 조건을 제공한 대표 벤치마크 논문이다. 후속 탐지 연구의 실험 조건을 해석하기 위한 필수 읽기 자료다.",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/1901.08971v3",
+          "label": "저자 공개 원문·서지 정보"
+        },
+        {
+          "url": "https://doi.org/10.1109/ICCV.2019.00009",
+          "label": "학술 발표 버전"
+        }
+      ],
+      "citation": {
+        "count": 2729,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1109/ICCV.2019.00009",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2019
+    },
+    {
+      "id": "manual:5d39689454a587183ada",
+      "source": "manual",
+      "title": "Cryptanalysis of Skipjack Reduced to 31 Rounds Using Impossible Differentials",
+      "authors": [
+        "Eli Biham",
+        "Alex Biryukov",
+        "Adi Shamir"
+      ],
+      "abstract": "In this paper we present a new cryptanalytic technique, based on impossible differentials, and use it to show that Skipjack reduced from 32 to 31 rounds can be broken by an attack which is faster than exhaustive search.",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48910-X_2",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/3-540-48910-X_2.pdf",
+      "published": "1999-01-01T00:00:00+00:00",
+      "publishedPrecision": "year",
+      "doi": "10.1007/3-540-48910-X_2",
+      "journal_ref": "EUROCRYPT 1999",
+      "categories": [],
+      "topic_id": "cryptanalysis",
+      "essential": true,
+      "coreBasis": "불능차분 공격 원전",
+      "coreRationale": "불가능한 차분으로 키 후보를 제거하는 공격을 Skipjack에 적용한 초기 기반 연구다. 고확률 차분을 찾는 공격과 다른 논리를 비교할 필수 읽기 자료다.",
+      "evidence": [
+        {
+          "url": "https://link.springer.com/chapter/10.1007/3-540-48910-X_2",
+          "label": "출판사 원문·서지 정보"
+        },
+        {
+          "url": "https://api.crossref.org/works/10.1007/3-540-48910-X_2",
+          "label": "Crossref 인용 기록"
+        }
+      ],
+      "citation": {
+        "count": 376,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/3-540-48910-X_2",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 1999
+    },
+    {
+      "id": "eprint:2021/719",
+      "source": "eprint",
+      "title": "Enhancing Differential-Neural Cryptanalysis",
+      "journal_ref": "ASIACRYPT 2022",
+      "doi": "10.1007/978-3-031-22963-3_11",
+      "authors": [
+        "Zhenzhen Bao",
+        "Jian Guo",
+        "Meicheng Liu",
+        "Li Ma",
+        "Yi Tu"
+      ],
+      "abstract": "In CRYPTO 2019, Gohr shows that well-trained neural networks can perform cryptanalytic distinguishing tasks superior to traditional differential distinguishers. Moreover, applying an unorthodox key guessing strategy, an 11-round key-recovery attack on a modern block cipher Speck32/64 improves upon the published state-of-the-art result. This calls into the next questions. To what extent is the advantage of machine learning (ML) over traditional methods, and whether the advantage generally exists in the cryptanalysis of modern ciphers? To answer the first question, we devised ML-based key-recovery attacks on more extended round-reduced Speck32/64. We achieved an improved 12-round and the first practical 13-round attacks. The essential for the new results is enhancing a classical component in the ML-based attacks, that is, the neutral bits. To answer the second question, we produced various neural distinguishers on round-reduced Simon32/64 and provided comparisons with their pure differential-based counterparts.",
+      "url": "https://eprint.iacr.org/2021/719",
+      "pdfUrl": "https://eprint.iacr.org/2021/719.pdf",
+      "published": "2021-05-31T06:45:13+00:00",
+      "categories": [],
+      "topic_id": "ai-cryptanalysis",
+      "essential": true,
+      "coreBasis": "기반 기법의 공격 확장",
+      "coreRationale": "neutral bits와 neural distinguisher를 이용해 Speck 키 복구 공격을 확장하고 Simon과 비교한다. 인용수 100회 미만이지만 분야 survey에서 다루는 직접 공격 확장 연구로 선정했다.",
+      "evidence": [
+        {
+          "url": "https://eprint.iacr.org/2021/719",
+          "label": "IACR 원문·학술 발표 정보"
+        },
+        {
+          "url": "https://eprint.iacr.org/2024/1300",
+          "label": "Neural differential cryptanalysis 분야 survey"
+        }
+      ],
+      "citation": {
+        "count": 45,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/978-3-031-22963-3_11",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2022
+    },
+    {
+      "id": "arxiv:1809.00888",
+      "title": "MesoNet: a Compact Facial Video Forgery Detection Network",
+      "abstract": "This paper presents a method to automatically and efficiently detect face tampering in videos, and particularly focuses on two recent techniques used to generate hyper-realistic forged videos: Deepfake and Face2Face. Traditional image forensics techniques are usually not well suited to videos due to the compression that strongly degrades the data. Thus, this paper follows a deep learning approach and presents two networks, both with a low number of layers to focus on the mesoscopic properties of images. We evaluate those fast networks on both an existing dataset and a dataset we have constituted from online videos. The tests demonstrate a very successful detection rate with more than 98% for Deepfake and 95% for Face2Face.",
+      "journal_ref": "WIFS 2018",
+      "publication_note": "accepted to WIFS 2018",
+      "doi": "10.1109/WIFS.2018.8630761",
+      "published": "2018-09-04T10:59:22Z",
+      "updated": "2018-09-04T10:59:22Z",
+      "authors": [
+        "Darius Afchar",
+        "Vincent Nozick",
+        "Junichi Yamagishi",
+        "Isao Echizen"
+      ],
+      "url": "https://arxiv.org/abs/1809.00888v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/1809.00888v1",
+      "categories": [
+        "cs.CV",
+        "eess.IV"
+      ],
+      "topic_id": "ai-digital-forensics",
+      "essential": true,
+      "coreBasis": "고인용 초기 탐지 모델",
+      "coreRationale": "mesoscopic feature를 이용하는 작은 얼굴 영상 위조 탐지 네트워크를 제안한 초기 기반 연구다. 대형 모델 이전의 탐지 접근과 압축 조건을 비교할 기준으로 선정했다.",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/1809.00888v1",
+          "label": "저자 공개 원문·서지 정보"
+        },
+        {
+          "url": "https://doi.org/10.1109/WIFS.2018.8630761",
+          "label": "학술 발표 버전"
+        }
+      ],
+      "citation": {
+        "count": 1528,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1109/WIFS.2018.8630761",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2018
+    },
+    {
+      "id": "manual:cf168ef7c911b4f838dd",
+      "source": "manual",
+      "title": "The Boomerang Attack",
+      "authors": [
+        "David Wagner"
+      ],
+      "abstract": "This paper describes a new differential-style attack, which we call the boomerang attack. This attack has several interesting applications. First, we disprove the oft-repeated claim that eliminating all high-probability differentials for the whole cipher is suffcient to guarantee security against differential attacks. Second, we show how to break COCONUT98, a cipher designed using decorrelation techniques to ensure provable security against differential attacks, with an advanced differential-style attack that needs just 2^{16} adaptively chosen texts. Also, to illustrate the power of boomerang techniques, we give new attacks on Khufu-16, FEAL-6, and 16 rounds of CAST-256.",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48519-8_12",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/3-540-48519-8_12.pdf",
+      "published": "1999-01-01T00:00:00+00:00",
+      "publishedPrecision": "year",
+      "doi": "10.1007/3-540-48519-8_12",
+      "journal_ref": "FSE 1999",
+      "categories": [],
+      "topic_id": "cryptanalysis",
+      "essential": true,
+      "coreBasis": "부메랑 공격 원전",
+      "coreRationale": "두 짧은 차분을 결합하는 boomerang attack을 도입한 원전이다. 현대 부메랑·rectangle 공격의 출발점을 이해하기 위해 선정했다.",
+      "evidence": [
+        {
+          "url": "https://link.springer.com/chapter/10.1007/3-540-48519-8_12",
+          "label": "출판사 원문·서지 정보"
+        },
+        {
+          "url": "https://api.crossref.org/works/10.1007/3-540-48519-8_12",
+          "label": "Crossref 인용 기록"
+        }
+      ],
+      "citation": {
+        "count": 415,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1007/3-540-48519-8_12",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 1999
+    },
+    {
+      "id": "eprint:2024/1300",
+      "source": "eprint",
+      "title": "Survey: Six Years of Neural Differential Cryptanalysis",
+      "journal_ref": "Communications in Cryptology 2026",
+      "doi": "10.62056/a69qxruc2",
+      "authors": [
+        "David Gerault",
+        "Anna Hambitzer",
+        "Moritz Huppert",
+        "Stjepan Picek"
+      ],
+      "abstract": "At CRYPTO 2019, A. Gohr introduced Neural Differential Cryptanalysis and used deep learning to improve the state of the art in cryptanalysis of 11-round SPECK32.  As of February 2025, Gohr’s article has been cited 238 times on Google Scholar. The variety of targeted cryptographic primitives, techniques, settings, and evaluation methodologies that appear in these follow-up works provides a basis for a careful survey, which we provide in this paper. More specifically, we propose a taxonomy of these 238 publications and systematically review the 71 papers focusing on neural differential distinguishers, pointing out promising directions and recent advances in explainability and key-recovery attacks. We then highlight future challenges in the field, particularly the need for improved comparability of neural distinguishers and advancements in scaling. This holistic survey helps researchers and engineers to identify the leading neural differential attacks, compare their performance, and highlight the outstanding open problems in AI-assisted cryptanalysis.",
+      "url": "https://eprint.iacr.org/2024/1300",
+      "pdfUrl": "https://eprint.iacr.org/2024/1300.pdf",
+      "published": "2024-08-20T06:09:35+00:00",
+      "categories": [],
+      "topic_id": "ai-cryptanalysis",
+      "essential": true,
+      "coreBasis": "분야 체계화 · survey 예외",
+      "coreRationale": "neural differential distinguisher의 설정·비교 조건·해석 가능성·키 복구를 체계화한 분야 안내서다. 최신 survey라 인용수 기준의 예외로, 원전과 후속 연구를 연결하는 용도로 선정했다.",
+      "evidence": [
+        {
+          "url": "https://eprint.iacr.org/2024/1300",
+          "label": "IACR 원문·학술 발표 정보"
+        },
+        {
+          "url": "https://eprint.iacr.org/2024/1300",
+          "label": "Neural differential cryptanalysis 분야 survey"
+        }
+      ],
+      "citation": {
+        "count": 1,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.62056/a69qxruc2",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2026
+    },
+    {
+      "id": "arxiv:1806.02877",
+      "title": "In Ictu Oculi: Exposing AI Generated Fake Face Videos by Detecting Eye Blinking",
+      "abstract": "The new developments in deep generative networks have significantly improve the quality and efficiency in generating realistically-looking fake face videos. In this work, we describe a new method to expose fake face videos generated with neural networks. Our method is based on detection of eye blinking in the videos, which is a physiological signal that is not well presented in the synthesized fake videos. Our method is tested over benchmarks of eye-blinking detection datasets and also show promising performance on detecting videos generated with DeepFake.",
+      "journal_ref": "WIFS 2018",
+      "publication_note": "",
+      "doi": "10.1109/WIFS.2018.8630787",
+      "published": "2018-06-07T19:36:09Z",
+      "updated": "2018-06-11T19:28:49Z",
+      "authors": [
+        "Yuezun Li",
+        "Ming-Ching Chang",
+        "Siwei Lyu"
+      ],
+      "url": "https://arxiv.org/abs/1806.02877v2",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/1806.02877v2",
+      "categories": [
+        "cs.CV"
+      ],
+      "topic_id": "ai-digital-forensics",
+      "essential": true,
+      "coreBasis": "고인용 초기 단서 기반 탐지",
+      "coreRationale": "eye blinking이라는 시간적·생리적 단서를 이용한 초기 AI 생성 얼굴 영상 탐지 연구다. 특정 생성 아티팩트에 의존하는 탐지기의 가정과 일반화 한계를 읽기 위해 선정했다.",
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/1806.02877v2",
+          "label": "저자 공개 원문·서지 정보"
+        },
+        {
+          "url": "https://doi.org/10.1109/WIFS.2018.8630787",
+          "label": "학술 발표 버전"
+        }
+      ],
+      "citation": {
+        "count": 909,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1109/WIFS.2018.8630787",
+        "checkedAt": "2026-10-09"
+      },
+      "publicationYear": 2018
+    }
+  ]
+}

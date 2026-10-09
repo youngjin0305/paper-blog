@@ -5,6 +5,7 @@ __pycache__/
 .gemini/
 data/*
 !data/paper-queue.json
+!data/core-papers.json
 site/
 *.log
 drafts/

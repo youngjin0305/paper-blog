@@ -99,6 +99,29 @@ Gemini는 웹 조사에서 `login-gemini.cmd`로 로그인하고, 원문 기반 
 
 ## 대기 목록과 실패 작업 관리
 
+관심 분야는 `config.json`의 `topics[].group`으로 상위 카테고리에 묶습니다. 현재 Cryptography 아래 CryptAnalysis·AI CryptAnalysis·PQC Migration, Digital Forensics 아래 AI Digital Forensics·Quantum Forensics가 있습니다. `enabled`는 자동 수집 여부이고, 꺼도 기존 글과 직접 지정한 논문을 분류할 수 있습니다. AI Digital Forensics 자동 수집은 중지했습니다.
+
+AI CryptAnalysis는 neural distinguisher, 신경망 기반 차분·선형 구별과 실제 키 복구 등 암호 자체에 AI를 적용하는 연구를 수집합니다. LLM 보안 지식 평가·모델 개인정보 유출·일반 보안 벤치마크·구현 부채널만 다루는 연구는 범위에서 제외합니다. 일반 CryptAnalysis는 AI를 사용하지 않는 암호분석을 따로 수집합니다. 전문 파이프라인은 `pipeline.topic_filters`(그룹 사이 AND, 그룹 안 OR), `topic_exclusions`와 활성 분야의 조사 지침을 함께 적용합니다. 웹의 초록 조사에는 각 분야의 `query`를 적용하므로 두 설정을 함께 관리하세요.
+
+공개 사이트와 로컬 화면의 **정리 대기 목록**은 현재 처리할 큐를 분야별로 보여줍니다. **★ 필수 논문**은 완료된 논문까지 보관하는 별도 읽기 목록으로, 분야·제목·저자·선정 근거로 검색할 수 있습니다. 정리가 완료되면 원문 옆에 요약 글 링크가 생기고, 게시글에도 별표가 표시됩니다.
+
+검증한 서지·원문·PDF·분류·선정 이유·근거 링크는 `data/core-papers.json`에 보관합니다(`pipeline.core_catalog_path`로 경로 지정). 초기 목록은 세 분야 각각 4편, 총 12편입니다. 원전·기반 방법·공용 벤치마크 중 **Crossref 등록 인용 100회 이상**을 우선 선정했고, 분야 survey에서 다루는 직접 공격 확장 연구와 포괄적 survey는 명시적인 예외로 포함했습니다. Crossref 인용수는 2026-10-09 조회한 값이며 Google Scholar 전체 인용수와 다릅니다. 별표는 근거를 기록한 편집 선정으로, 모든 후속 논문이 인용한다는 보장은 아닙니다.
+
+```powershell
+# 파일·큐를 수정하지 않고 핵심 논문 추가 결과 확인
+.\.venv\Scripts\python.exe -B paper_pipeline.py seed-core --reset-pending --dry-run
+
+# 기존 대기 항목을 종료하고 검증된 핵심 논문을 우선 읽기 큐에 넣기
+.\.venv\Scripts\python.exe -B paper_pipeline.py seed-core --reset-pending
+
+# 기존 대기는 유지하면서 새 핵심 논문만 추가
+.\.venv\Scripts\python.exe -B paper_pipeline.py seed-core
+```
+
+`--reset-pending`은 기존 candidate·pinned·failed를 expired로 바꾸며 게시글·done·seen 이력은 보존합니다. 초기화 직전 큐의 로컬 백업은 `data/papers/queue-before-reset-*.json`에 남습니다. 핵심 논문은 pinned로 들어가 후보 점수보다 먼저 처리되고 자동 만료되지 않습니다. 분야를 번갈아 읽도록 목록 순서가 구성돼 있고, 완료된 논문은 다시 대기 상태로 만들지 않습니다. 이 명령은 모델을 호출하거나 글을 생성하지 않습니다. 일간 정리는 기존 `daily --resume-draft`를 그대로 사용합니다.
+
+오래된 논문의 날짜가 연도·월까지만 확인될 때는 큐의 ISO 날짜에 해당 연도·월의 첫날을 사용하고 `publishedPrecision`을 함께 기록합니다. 읽기 목록은 발표 연도만 표시합니다. 고전 논문의 학회 개최 연도와 논문집 출판 연도가 다를 수 있습니다(예: EUROCRYPT 1993 논문집은 1994 출판).
+
 | 작업 | 방법 |
 | --- | --- |
 | 최근 논문 수집·평가 | `.\.venv\Scripts\python.exe -B paper_pipeline.py weekly` |
@@ -146,6 +169,7 @@ Disable-ScheduledTask -TaskName 'PaperBlog-daily'
 | `config.json` | 모델·관심 분야·파이프라인 설정 |
 | `content/` | 게시글 Markdown과 글별 메타데이터 |
 | `data/paper-queue.json` | 논문 대기 목록과 처리 상태 |
+| `data/core-papers.json` | 필수 논문 서지·선정 근거·인용수 조회 기록 |
 | `data/garden.sqlite3` | 로컬 웹 조사 글의 인덱스와 실행 기록 |
 | `drafts/`, `logs/`, `data/papers/` | 실패 초안·오류 기록·추출한 원문 |
 

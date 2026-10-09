@@ -127,7 +127,7 @@ def validate_config(config):
             raise ValueError("분야 ID가 중복되었습니다.")
         ids.add(topic["id"])
         item = {"id": topic["id"]}
-        for key, maximum in (("name", 80), ("description", 300), ("query", 1000), ("instructions", 5000)):
+        for key, maximum in (("name", 80), ("description", 300), ("query", 1000), ("instructions", 5000), ("group", 80)):
             value = topic.get(key, "")
             required = key == "name" or (key == "query" and topic.get("enabled"))
             if not isinstance(value, str) or len(value) > maximum or (required and not value.strip()):
@@ -147,6 +147,13 @@ def validate_config(config):
         from paper_config import validate_pipeline
         result["pipeline"] = validate_pipeline(config["pipeline"])
     return result
+
+
+def grouped_topics(topics):
+    groups = {}
+    for topic in topics:
+        groups.setdefault(topic.get("group") or "Other", []).append(topic)
+    return [{"name": name, "topics": items} for name, items in groups.items()]
 
 
 class Arxiv:
@@ -408,7 +415,9 @@ class Garden:
                     "source": json.dumps({"url": metadata["source"], "basis": "fulltext"})}
             except (ValueError, KeyError, OSError):
                 continue
-        rows = sorted(posts.values(), key=lambda p: (summary_sort_time(p), p["id"]), reverse=True)
+        from paper_catalog import annotate_posts, load_catalog
+        annotated = annotate_posts(list(posts.values()), load_catalog(self.root, self.config().get("pipeline", {})))
+        rows = sorted(annotated, key=lambda p: (summary_sort_time(p), p["id"]), reverse=True)
         rows.sort(key=lambda p: bool(p["demo"]))
         terms = normalize_search(query).split()
         return [dict(row) for row in rows if (not topic or row["topic_id"] == topic)

@@ -14,10 +14,18 @@
     <a href="{{ root_url }}" class="brand"><span class="brand-icon">pb<span>✳</span></span><span>{{ config.title }}<small>YOUR RESEARCH JOURNAL</small></span></a>
     <div class="nav-caption">LIBRARY</div>
     <nav aria-label="분야 탐색">
-      <a class="nav-item {{ 'active' if not selected and request.path == '/' else '' }}" href="{{ root_url }}"><span>▤ &nbsp; 전체 논문</span><span class="count">{{ total }}</span></a>
+      <a class="nav-item {{ 'active' if not selected and not reading_view|default(false) and request.path == '/' else '' }}" href="{{ root_url }}"><span>▤ &nbsp; 전체 논문</span><span class="count">{{ total }}</span></a>
+      <a class="nav-item {{ 'active' if essential_view|default(false) else '' }}" href="{{ essential_href }}"><span>★ &nbsp; 필수 논문</span><span class="count">{{ essential_count }}</span></a>
+      <a class="nav-item {{ 'active' if reading_view|default(false) and not essential_view|default(false) else '' }}" href="{{ reading_href }}"><span>☷ &nbsp; 정리 대기 목록</span><span class="count">{{ pending_count }}</span></a>
       <div class="nav-caption sub-caption">RESEARCH FIELDS</div>
-      {% for topic in topics %}
-      <a class="nav-item {{ 'active' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}"><span><i class="topic-dot tone-{{ loop.index0 % 4 }}"></i>{{ topic.name }}</span><span class="count">{{ counts[topic.id] }}</span></a>
+      {% for group in topic_groups %}
+      <details class="nav-group" open><summary>{{ group.name }}</summary>
+        <div class="nav-children">
+        {% for topic in group.topics %}
+        <a class="nav-item nav-child {{ 'active' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}"><span><i class="topic-dot tone-{{ loop.index0 % 4 }}"></i>{{ topic.name }}</span><span class="count">{{ counts[topic.id] }}</span></a>
+        {% endfor %}
+        </div>
+      </details>
       {% endfor %}
       {% if not static_mode %}<a class="add-field" href="/settings">＋ 분야 관리</a>{% endif %}
     </nav>
@@ -29,7 +37,7 @@
   <div class="workspace">
     <header class="topbar"><span>작은 발견이 쌓이는 곳 <span class="top-separator">/</span> <strong>Research journal</strong></span><span class="edition">{{ 'STATIC ARCHIVE' if static_mode else 'PERSONAL EDITION' }} <span class="tiny-star">✳</span></span></header>
     <main>{% block content %}{% endblock %}</main>
-    <footer>{{ config.title }} <span>읽고, 연결하고, 새로운 생각으로.</span><span>arXiv × AI</span></footer>
+    <footer>{{ config.title }} <span>읽고, 연결하고, 새로운 생각으로.</span><span>RESEARCH NOTES</span></footer>
   </div>
   {% if not static_mode %}<div id="toast" class="toast" role="status" hidden></div>{% endif %}
 </body>

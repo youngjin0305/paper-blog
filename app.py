@@ -15,8 +15,9 @@ from flask import Flask, Response, abort, jsonify, render_template, request
 import markdown
 from markupsafe import Markup
 
-from garden import Garden, ROOT, atomic_write, atomic_write_bytes
+from garden import Garden, ROOT, atomic_write, atomic_write_bytes, grouped_topics, normalize_search
 from paper_math import math_spans
+from paper_catalog import reading_library
 
 
 def rendered_markdown(document):
@@ -76,7 +77,11 @@ def create_app(garden=None):
         config = garden.config()
         all_posts = garden.posts()
         counts = {topic["id"]: sum(p["topic_id"] == topic["id"] for p in all_posts) for topic in config["topics"]}
+        reading, _ = reading_library(garden.root, config, all_posts)
+        essentials, _ = reading_library(garden.root, config, all_posts, essentials=True)
         return dict(config=config, topics=config["topics"], counts=counts, total=len(all_posts),
+                    topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
+                    reading_href="/reading-list", essential_href="/essentials",
                     token=token, static_mode=False, root_url="/", asset_url="/static/",
                     topic_href=lambda identifier: f"/topics/{identifier}",
                     post_href=lambda identifier: f"/posts/{identifier}")
@@ -104,6 +109,21 @@ def create_app(garden=None):
         except FileNotFoundError:
             return "Markdown 파일을 찾을 수 없습니다. content 폴더의 원본을 복원하세요.", 404
         return render_template("post.html", post=post, body=body, source=json.loads(post["source"]), selected=None)
+
+    @app.get("/reading-list")
+    @app.get("/essentials")
+    def reading_page():
+        essentials = request.path == "/essentials"
+        config = garden.config()
+        papers, criteria = reading_library(garden.root, config, garden.posts(), essentials)
+        query, category = request.args.get("q", ""), request.args.get("category", "")
+        if category and category not in {t["id"] for t in config["topics"]}:
+            abort(404)
+        terms = normalize_search(query).split()
+        papers = [p for p in papers if (not category or p["topic_id"] == category)
+                  and all(term in normalize_search(" ".join([p["title"], *p.get("authors", []), p.get("coreRationale", ""), p["abstract"]])) for term in terms)]
+        return render_template("reading.html", selected=None, papers=papers, essential_view=essentials,
+                               criteria=criteria, query=query, category=category, reading_view=True)
 
     @app.get("/posts/<identifier>/markdown")
     def download(identifier):
@@ -168,15 +188,22 @@ def export_site(app, garden):
     all_posts = garden.posts()
     config = garden.config()
     counts = {t["id"]: sum(p["topic_id"] == t["id"] for p in all_posts) for t in config["topics"]}
+    reading, criteria = reading_library(garden.root, config, all_posts)
+    essentials, _ = reading_library(garden.root, config, all_posts, essentials=True)
     with app.test_request_context("/"):
         def page(template, depth=0, **kwargs):
             prefix = "../" * depth
             return render_template(template, config=config, topics=config["topics"], counts=counts,
                                    total=len(all_posts), token="", static_mode=True, root_url=prefix + "index.html",
+                                   topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
+                                   reading_href=prefix + "reading-list.html", essential_href=prefix + "essentials.html",
                                    asset_url=prefix + "assets/", query="",
                                    topic_href=lambda i: prefix + f"topics/{i}.html",
                                    post_href=lambda i: prefix + f"posts/{i}.html", **kwargs)
         atomic_write(output / "index.html", page("index.html", posts=all_posts, selected=None))
+        for name, papers, essential_view in (("reading-list", reading, False), ("essentials", essentials, True)):
+            atomic_write(output / (name + ".html"), page("reading.html", papers=papers, criteria=criteria,
+                         essential_view=essential_view, selected=None, category="", reading_view=True))
         for topic in config["topics"]:
             atomic_write(output / "topics" / f"{topic['id']}.html", page("index.html", depth=1,
                          posts=[p for p in all_posts if p["topic_id"] == topic["id"]], selected=topic))
@@ -185,6 +212,8 @@ def export_site(app, garden):
                          source=json.loads(post["source"]), body=rendered_markdown(garden.markdown(post)), selected=None))
         atomic_write(output / "assets/style.css", (ROOT / "static/style.css").read_text(encoding="utf-8"))
         search_index = {post["id"]: garden.search_text(post) for post in all_posts}
+        search_index.update({"reading:" + p["id"]: normalize_search(" ".join([p["title"], *p.get("authors", []),
+                            p.get("coreRationale", ""), p["abstract"]])) for p in [*reading, *essentials]})
         search_json = json.dumps(search_index, ensure_ascii=False, separators=(",", ":"))
         search_json = search_json.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
         atomic_write(output / "assets/search-data.js", "window.paperSearchIndex = " + search_json + ";\n")

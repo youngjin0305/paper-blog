@@ -17,7 +17,7 @@
   <div class="section-heading"><div><div class="eyebrow">THE COLLECTION</div><h2>{{ '분야별 기록' if selected else '모아둔 논문' }} <span id="post-count">{{ posts|length }}</span></h2></div>
     <form class="search" method="get" role="search"><span aria-hidden="true">⌕</span><input type="search" name="q" value="{{ query }}" placeholder="제목·저자·본문 검색" aria-label="논문 검색"><button type="submit">검색</button></form>
   </div>
-  <div class="filter-row"><a class="chip {{ 'selected' if not selected else '' }}" href="{{ root_url }}">전체 분야</a>{% for topic in topics %}<a class="chip {{ 'selected' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}">{{ topic.name }}</a>{% endfor %}</div>
+  <div class="filter-row"><a class="chip {{ 'selected' if not selected else '' }}" href="{{ root_url }}">전체 분야</a>{% for group in topic_groups %}<div class="filter-group"><span>{{ group.name }}</span>{% for topic in group.topics %}<a class="chip {{ 'selected' if selected and selected.id == topic.id else '' }}" href="{{ topic_href(topic.id) }}">{{ topic.name }}</a>{% endfor %}</div>{% endfor %}</div>
   {% if posts %}<div class="post-grid">
     {% for post in posts %}
     <article class="post-card" data-post-id="{{ post.id }}">
@@ -26,6 +26,7 @@
       {% if post.authors %}<p class="card-authors" title="{{ post.authors|join(', ') }}">{{ post.authors|join(', ') }}</p>{% endif %}
       <p class="card-description" title="{{ post.summary }}">{{ '블로그 화면을 확인하는 데모 글입니다. 최신 조사 결과가 아닙니다.' if post.demo else post.summary }}</p>
       <div class="card-facts">
+        {% if post.essential %}<a class="essential-badge" href="{{ essential_href }}" title="{{ post.coreRationale }}">★ 필수 논문</a>{% endif %}
         <span class="venue-tag" title="{{ post.publication_label }} · {{ post.archive_label }}">{{ post.publication_short }}</span>
         {% if post.demo %}<span class="demo-label">DEMO</span>{% else %}
         <span class="model-tag" title="{{ post.summary_model_provenance|default(post.summary_model_caption|default('모델 미기록', true), true) }}{% if post.summary_model %} · {{ post.summary_model }}{% endif %}">{{ post.summary_model_caption|default('모델 미기록', true) }}</span>
