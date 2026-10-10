@@ -2250,9 +2250,6 @@
       "id": "arxiv:1901.08971",
       "title": "FaceForensics++: Learning to Detect Manipulated Facial Images",
       "abstract": "The rapid progress in synthetic image generation and manipulation has now come to a point where it raises significant concerns for the implications towards society. At best, this leads to a loss of trust in digital content, but could potentially cause further harm by spreading false information or fake news. This paper examines the realism of state-of-the-art image manipulations, and how difficult it is to detect them, either automatically or by humans. To standardize the evaluation of detection methods, we propose an automated benchmark for facial manipulation detection. In particular, the benchmark is based on DeepFakes, Face2Face, FaceSwap and NeuralTextures as prominent representatives for facial manipulations at random compression level and size. The benchmark is publicly available and contains a hidden test set as well as a database of over 1.8 million manipulated images. This dataset is over an order of magnitude larger than comparable, publicly available, forgery datasets. Based on this data, we performed a thorough analysis of data-driven forgery detectors. We show that the use of additional domainspecific knowledge improves forgery detection to unprecedented accuracy, even in the presence of strong compression, and clearly outperforms human observers.",
-      "journal_ref": "ICCV 2019",
-      "publication_note": "Video: https://youtu.be/x2g48Q2I2ZQ",
-      "doi": "10.1109/ICCV.2019.00009",
       "published": "2019-01-25T16:38:21Z",
       "updated": "2019-08-26T17:59:54Z",
       "authors": [
@@ -2290,14 +2287,39 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000005+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/ai-digital-forensics/2019-01-25-654369b74d2f5a936723.md",
+      "publication_note": "Video: https://youtu.be/x2g48Q2I2ZQ",
+      "doi": "10.1109/ICCV.2019.00009",
+      "journal_ref": "ICCV 2019",
+      "graphReferences": [
+        {
+          "citedId": "arxiv:1805.04953",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/1901.08971v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": ", Vlad I. Morariu, and Larry S. Davis. Learning rich features for image manipulation detection. In _CVPR_, 2018. 3 [68] Michael Zollh¨ofer, Justus Thies,",
+            "checkedAt": "2026-10-10T03:08:30+00:00"
+          }
+        },
+        {
+          "citedId": "arxiv:1809.00888",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/1901.08971v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": ", Junichi Yamagishi, and Isao Echizen. Mesonet: a compact facial video forgery detection network. _arXiv_ _preprint_ _arXiv:1809.00888_, 2018. 3, 6, 7, 13,",
+            "checkedAt": "2026-10-10T03:08:30+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "manual:5d39689454a587183ada",
