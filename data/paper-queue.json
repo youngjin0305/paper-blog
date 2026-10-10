@@ -2034,8 +2034,6 @@
       "id": "eprint:2019/037",
       "source": "eprint",
       "title": "Improving Attacks on Round-Reduced Speck32/64 using Deep Learning",
-      "journal_ref": "CRYPTO 2019",
-      "doi": "10.1007/978-3-030-26951-7_6",
       "authors": [
         "Aron Gohr"
       ],
@@ -2065,22 +2063,21 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000001+00:00",
-      "status": "pinned",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "CRYPTO 2019",
+      "doi": "10.1007/978-3-030-26951-7_6"
     },
     {
       "id": "arxiv:1805.04953",
       "title": "Learning Rich Features for Image Manipulation Detection",
       "abstract": "Image manipulation detection is different from traditional semantic object detection because it pays more attention to tampering artifacts than to image content, which suggests that richer features need to be learned. We propose a two-stream Faster R-CNN network and train it endto- end to detect the tampered regions given a manipulated image. One of the two streams is an RGB stream whose purpose is to extract features from the RGB image input to find tampering artifacts like strong contrast difference, unnatural tampered boundaries, and so on. The other is a noise stream that leverages the noise features extracted from a steganalysis rich model filter layer to discover the noise inconsistency between authentic and tampered regions. We then fuse features from the two streams through a bilinear pooling layer to further incorporate spatial co-occurrence of these two modalities. Experiments on four standard image manipulation datasets demonstrate that our two-stream framework outperforms each individual stream, and also achieves state-of-the-art performance compared to alternative methods with robustness to resizing and compression.",
-      "journal_ref": "CVPR 2018",
-      "publication_note": "CVPR 2018 Camera Ready",
-      "doi": "10.1109/CVPR.2018.00116",
       "published": "2018-05-13T21:29:38Z",
       "updated": "2018-05-13T21:29:38Z",
       "authors": [
@@ -2116,14 +2113,18 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000002+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/ai-digital-forensics/2018-05-13-9bc2c2afeda78233093d.md",
+      "publication_note": "CVPR 2018 Camera Ready",
+      "journal_ref": "CVPR 2018",
+      "doi": "10.1109/CVPR.2018.00116",
+      "graphReferences": []
     },
     {
       "id": "manual:4772153072351b952954",
