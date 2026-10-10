@@ -116,24 +116,38 @@ def parse_references(source):
     if not heading:
         return {}
     tail = source[heading.end():]
-    ending = re.search(r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:appendix\b|[A-Z][. ]+Appendix\b|"
+    ending = re.search(r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:appendix\b|annex\b|[A-Z][. ]+Appendix\b|"
                        r"supplementary (?:material|information)\b|supplement\b|acknowledg(?:e)?ments\b)", tail)
     if ending:
         tail = tail[:ending.start()]
-    found = list(re.finditer(r"(?m)^\s*(?:\[(\d+)\]|(\d+)\.)[ \t]+", tail))
+    # PDF Markdown can wrap the marker in bold, italics, or code. Unknown OCR
+    # labels still delimit entries, but never guess a number for them.
+    found = list(re.finditer(r"(?m)^[ \t]*[*_`]*(?:\[([A-Za-z0-9]+)\]|(\d+)\.)[*_`]*[ \t]*", tail))
+    if ending and found:
+        # Some PDFs place an Annex caption below its table, on the next page.
+        # A page footer after the final bibliography marker bounds that table.
+        footer = re.search(r"(?m)\n[ \t]*\n[ \t]*(?:\*\*)?\d{1,3}(?:\*\*)?[ \t]*(?=\n[ \t]*\n)",
+                           tail[found[-1].end():])
+        if footer:
+            tail = tail[:found[-1].end() + footer.start()]
     markers = []
     previous = 0
     for marker in found:
-        identifier = int(marker[1] or marker[2])
+        label = marker[1] or marker[2]
+        identifier = int(label) if label.isdigit() else None
         # Unbracketed numbered bibliographies proceed 1,2,... . Wrapped years/pages such
         # as '2025. pp. ...' are content of the current entry, not new citation numbers.
         if marker[2] and identifier != previous + 1:
             continue
         markers.append(marker)
-        previous = identifier
+        if identifier is not None:
+            previous = identifier
     result = {}
     for i, marker in enumerate(markers):
-        identifier = int(marker[1] or marker[2])
+        label = marker[1] or marker[2]
+        if not label.isdigit():
+            continue
+        identifier = int(label)
         end = markers[i + 1].start() if i + 1 < len(markers) else len(tail)
         if identifier in result:
             return {}  # Ambiguous extraction must not fabricate an association.

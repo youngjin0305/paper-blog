@@ -269,6 +269,16 @@ class ValidationTests(unittest.TestCase):
         refs = parse_references("References\n1. Author. Conference,\n2025. pp. 1-4.\n2. Another author.\n## Appendix\n1. Experiment")
         self.assertEqual(refs, {1: "Author. Conference,\n2025. pp. 1-4.", 2: "Another author."})
 
+    def test_reference_formatting_and_ocr_labels_bound_entries(self):
+        source = ("**References**\n**[1]** First.\n_**[2]**_ Second.\n"
+                  "**`[S]`** Ambiguous OCR entry.\n[4]Fourth.\n## Annex\nnot a citation")
+        self.assertEqual(parse_references(source), {1: "First.", 2: "Second.", 4: "Fourth."})
+
+    def test_annex_caption_below_table_does_not_enter_bibliography(self):
+        source = ("References\n[1] Author. Title.\nJournal 1993.\n\n397\n\n"
+                  "3   probability = $\n4   another row\nAnnex. Best probabilities.")
+        self.assertEqual(parse_references(source), {1: "Author. Title.\nJournal 1993."})
+
     def test_rubric_schema_rejects_missing_and_out_of_range(self):
         self.assertEqual(parse_rank(json.dumps(FIXTURE["rank"])), FIXTURE["rank"])
         from jsonschema import ValidationError
