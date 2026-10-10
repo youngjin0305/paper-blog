@@ -56,6 +56,10 @@ NUMBER_PATTERN = re.compile(r"(?:(?<![A-Za-z0-9_.])[-+]?|(?<=[A-Za-z])-)(?:\d+(?
 
 def normalized_numeric_text(text):
     text = unicodedata.normalize("NFKC", text).replace("−", "-")
+    # A minus attached to a closing operand is subtraction, not the sign of
+    # the following literal: NS(a,b)-32 and NS(a,b) - 32 contain the same 32.
+    # Leave unary negatives such as (-32), 2^{-32}, and a standalone -32 intact.
+    text = re.sub(r"(?<=[)\]}])-(?=\d)", "- ", text)
     # English decade suffixes carry the same year as Korean '1970년대'.
     # Keep ASCII identifier boundaries so hashes remain nonnumeric.
     text = re.sub(r"(?<![A-Za-z0-9_])((?:18|19|20)\d0)['’]?s(?![A-Za-z0-9_])", r"\1", text, flags=re.I)

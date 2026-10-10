@@ -178,6 +178,16 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(unsupported_numbers("정확도 95.61%", source), [])
         self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
 
+    def test_subtraction_after_operand_is_not_a_negative_literal(self):
+        source = "NS(a,b) - 32"
+        for expression in ("NS(a,b)-32", "NS(a,b)−32", "[NS(a,b)]-32", "{NS(a,b)}-32"):
+            self.assertEqual(numbers(expression), numbers(source))
+            self.assertEqual(unsupported_numbers(expression, source), [])
+        self.assertEqual(unsupported_numbers("NS(a,b)-33", source), ["33"])
+        for expression in ("(-32)", "2^{-32}", "value -32", "(bias) -32"):
+            self.assertIn("-32", numbers(expression))
+            self.assertIn("-32", unsupported_numbers(expression, source))
+
     def test_decade_translation_preserves_source_year(self):
         from paper_validation import abstract_number_errors
         self.assertEqual(numbers("mid 1970s"), numbers("1970년대 중반"))
