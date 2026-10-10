@@ -2162,14 +2162,27 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000003+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 2,
+      "postPath": "content/cryptanalysis/1994-01-01-24ef321e548333d673d0.md",
+      "note": "",
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/3-540-48285-7_33.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "**[l]** E.Biham and A.Shamir, “Differential Cryptanalysis of DESlike Cryptosystems,” _**Journal**_ _**`of`**_ **`Cryptology,Vol.4,pp.3-72,(`*",
+            "checkedAt": "2026-10-10T02:36:28+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "eprint:2021/287",
