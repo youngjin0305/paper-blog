@@ -2188,8 +2188,6 @@
       "id": "eprint:2021/287",
       "source": "eprint",
       "title": "A Deeper Look at Machine Learning-Based Cryptanalysis",
-      "journal_ref": "EUROCRYPT 2021",
-      "doi": "10.1007/978-3-030-77870-5_28",
       "authors": [
         "Adrien Benamira",
         "David Gerault",
@@ -2198,7 +2196,7 @@
       ],
       "abstract": "At CRYPTO'19, Gohr proposed a new cryptanalysis strategy based on the utilisation of machine learning algorithms. Using deep neural networks, he managed to build a neural based distinguisher that surprisingly surpassed state-of-the-art cryptanalysis efforts on one of the versions of the well studied NSA block cipher speck (this distinguisher could in turn be placed in a larger key recovery attack). While this work opens new possibilities for machine learning-aided cryptanalysis, it remains unclear how this distinguisher actually works and what information is the machine learning algorithm deducing. The attacker is left with a black-box that does not tell much about the nature of the possible weaknesses of the algorithm tested, while hope is thin as interpretability of deep neural networks is a well-known difficult task.\n\nIn this article, we propose a detailed analysis and thorough explanations of the inherent workings of this new neural distinguisher. First, we studied the classified sets and tried to find some patterns that could guide us to better understand Gohr's results. We show with experiments that the neural distinguisher generally relies on the differential distribution on the ciphertext pairs, but also on the differential distribution in penultimate and antepenultimate rounds. In order to validate our findings, we construct a distinguisher for speck cipher based on pure cryptanalysis, without using any neural network, that achieves basically the same accuracy as Gohr's neural distinguisher and with the same efficiency (therefore improving over previous non-neural based distinguishers).\n\nMoreover, as another approach, we provide a machine learning-based distinguisher that strips down Gohr's deep neural network to a bare minimum. We are able to remain very close to Gohr's distinguishers' accuracy using simple standard machine learning tools. In particular, we show that Gohr's neural distinguisher is in fact inherently building a very good approximation of the Differential Distribution Table (DDT) of the cipher during the learning phase, and using that information to directly classify ciphertext pairs. This result allows a full interpretability of the distinguisher and represents on its own an interesting contribution towards interpretability of deep neural networks.\n\nFinally, we propose some method to improve over Gohr's work and possible new neural distinguishers settings. All our results are confirmed with experiments we have been conducted on speck block cipher (source code available online).",
       "url": "https://eprint.iacr.org/2021/287",
-      "pdfUrl": "https://eprint.iacr.org/2021/287.pdf",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/978-3-030-77870-5_28",
       "published": "2021-03-07T02:24:29+00:00",
       "categories": [],
       "topic_id": "ai-cryptanalysis",
@@ -2222,14 +2220,31 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000004+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 2,
+      "postPath": "content/ai-cryptanalysis/2021-03-07-d6c457de5465d7c0e737.md",
+      "studyType": "empirical",
+      "localPdf": "data/papers/61cca26736c5f5bd3afc/original.pdf",
+      "note": "",
+      "journal_ref": "EUROCRYPT 2021",
+      "doi": "10.1007/978-3-030-77870-5_28",
+      "graphReferences": [
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/978-3-030-77870-5_28",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Based Cryptanalysis 835 11. Gohr, A.: Improving attacks on round-reduced speck32/64 using deep learning. In: Boldyreva, A., Micciancio, D. (eds.) CRYPTO 2019, Part",
+            "checkedAt": "2026-10-10T02:52:58+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:1901.08971",
