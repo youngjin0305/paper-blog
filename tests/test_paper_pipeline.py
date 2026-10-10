@@ -273,6 +273,8 @@ class ValidationTests(unittest.TestCase):
         source = ("**References**\n**[1]** First.\n_**[2]**_ Second.\n"
                   "**`[S]`** Ambiguous OCR entry.\n[4]Fourth.\n## Annex\nnot a citation")
         self.assertEqual(parse_references(source), {1: "First.", 2: "Second.", 4: "Fourth."})
+        self.assertEqual(parse_references("References\n1. First.\n1.5 volume.\n2. Second."),
+                         {1: "First.\n1.5 volume.", 2: "Second."})
 
     def test_annex_caption_below_table_does_not_enter_bibliography(self):
         source = ("References\n[1] Author. Title.\nJournal 1993.\n\n397\n\n"

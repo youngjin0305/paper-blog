@@ -122,7 +122,7 @@ def parse_references(source):
         tail = tail[:ending.start()]
     # PDF Markdown can wrap the marker in bold, italics, or code. Unknown OCR
     # labels still delimit entries, but never guess a number for them.
-    found = list(re.finditer(r"(?m)^[ \t]*[*_`]*(?:\[([A-Za-z0-9]+)\]|(\d+)\.)[*_`]*[ \t]*", tail))
+    found = list(re.finditer(r"(?m)^[ \t]*[*_`]*(?:\[([A-Za-z0-9]+)\]|(\d+)\.(?=[ \t*_`]))[*_`]*[ \t]*", tail))
     if ending and found:
         # Some PDFs place an Annex caption below its table, on the next page.
         # A page footer after the final bibliography marker bounds that table.
