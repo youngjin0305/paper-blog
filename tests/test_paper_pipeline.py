@@ -178,6 +178,12 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(unsupported_numbers("정확도 95.61%", source), [])
         self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
 
+    def test_flattened_pdf_scientific_exponent_matches_tex(self):
+        source = "0.929 ± 5.13 × 10−4; 0.514 ± 1.00 × 10−3"
+        self.assertEqual(unsupported_numbers(r"$5.13\\times10^{-4}$; $1.00\\times10^{-3}$", source), [])
+        self.assertIn("-5", unsupported_numbers(r"$5.13\\times10^{-5}$", source))
+        self.assertNotIn("-4", numbers("10−4; 12-4; (-3)"))
+
     def test_subtraction_after_operand_is_not_a_negative_literal(self):
         source = "NS(a,b) - 32"
         for expression in ("NS(a,b)-32", "NS(a,b)−32", "[NS(a,b)]-32", "{NS(a,b)}-32"):
@@ -356,6 +362,25 @@ class PipelineTests(unittest.TestCase):
             result = self.pipeline.daily()
         self.assertTrue(result["valid"], result["errors"])
         self.assertEqual(calls, ["A", "B", "B", "C", "D", "references"])
+
+    def test_later_groups_receive_remaining_quote_budget(self):
+        pin(self.pipeline.queue, PAPER)
+        self.pipeline.config["max_quote_words"] = 2
+        baseline = FixtureBackend(FIXTURE)
+        calls = []
+        def generate(prompt, options):
+            kind = options["kind"]
+            calls.append(kind)
+            if kind == "A":
+                self.assertIn("최대 인용 단어 수: 2", prompt)
+                return baseline.generate(prompt, options) + '\n"one two"'
+            if kind in ("B", "C", "D"):
+                self.assertIn("최대 인용 단어 수: 0", prompt)
+            return baseline.generate(prompt, options)
+        with patch.object(self.pipeline.backend, "generate", side_effect=generate):
+            result = self.pipeline.daily()
+        self.assertTrue(result["valid"], result["errors"])
+        self.assertEqual(calls, ["A", "B", "C", "D", "references"])
 
     def test_conceptual_pipeline_skips_experiments_and_uses_source_prompt(self):
         paper = {**PAPER, "studyType": "conceptual"}

@@ -55,6 +55,9 @@ NUMBER_PATTERN = re.compile(r"(?:(?<![A-Za-z0-9_.])[-+]?|(?<=[A-Za-z])-)(?:\d+(?
 
 
 def normalized_numeric_text(text):
+    # PDF text flattens a scientific exponent (5.13 × 10−4). Preserve the
+    # exponent's unary sign so it matches TeX 5.13 \\times 10^{-4}.
+    text = re.sub(r"(\d+(?:\.\d+)?[ \t]*×[ \t]*10)−(\d+)\b", r"\1^{-\2}", text)
     text = unicodedata.normalize("NFKC", text).replace("−", "-")
     # A minus attached to a closing operand is subtraction, not the sign of
     # the following literal: NS(a,b)-32 and NS(a,b) - 32 contain the same 32.

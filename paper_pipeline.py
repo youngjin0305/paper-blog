@@ -343,10 +343,13 @@ class Pipeline:
         self.save_queue()
         return self.list()
 
-    def group(self, group, paper, markdown, feedback=""):
+    def group(self, group, paper, markdown, feedback="", quote_budget=None):
         conceptual = {"A": CONCEPTUAL_OVERVIEW, "B": CONCEPTUAL_METHOD, "D": CONCEPTUAL_DISCUSSION}
         prompt = COMMON + (conceptual[group] if paper.get("studyType") == "conceptual" and group in conceptual else DETAIL[group])
         prompt += "\n허용 헤더: " + ", ".join(GROUPS[group])
+        if quote_budget is not None:
+            prompt += (f"\n이 그룹에서 허용되는 최대 인용 단어 수: {quote_budget}. 앞서 생성한 그룹과 합산한 제한이다. "
+                       "직접 인용을 피하고 한국어로 풀어 설명한다. 용어나 연구 질문을 강조하기 위한 큰따옴표·인용 블록도 쓰지 않는다.")
         prompt += f"\n방법론 최소 {self.config['method_min_chars']}자."
         if paper.get("studyType") != "conceptual":
             prompt += f" 실험 최소 {self.config['experiment_min_chars']}자."
@@ -436,7 +439,9 @@ class Pipeline:
                 feedback = "\n".join(draft_failures.get(group, []))
                 for attempt in range(2):
                     self.log(f"Generating group {group}, attempt {attempt + 1}/2")
-                    groups[group] = self.group(group, paper, markdown, feedback)
+                    quote_budget = max(0, self.config["max_quote_words"] - sum(
+                        quote_words(text) for key, text in groups.items() if key != group))
+                    groups[group] = self.group(group, paper, markdown, feedback, quote_budget=quote_budget)
                     failures = validate_group(group, groups[group], evidence, self.config)
                     if group == "A" and self.config["abstract_mode"] == "korean":
                         failures += abstract_number_errors(sections(groups[group]).get("초록", ""), paper["abstract"])
