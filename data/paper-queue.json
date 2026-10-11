@@ -2359,14 +2359,26 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000006+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/cryptanalysis/1999-01-01-43afe4bb8f68574735ce.md",
+      "graphReferences": [
+        {
+          "citedId": "manual:4772153072351b952954",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/3-540-48910-X_2.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "일치한 제목: Linear Cryptanalysis Method for DES Cipher",
+            "checkedAt": "2026-10-11T00:00:06+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "eprint:2021/719",
