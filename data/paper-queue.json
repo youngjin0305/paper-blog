@@ -2384,8 +2384,6 @@
       "id": "eprint:2021/719",
       "source": "eprint",
       "title": "Enhancing Differential-Neural Cryptanalysis",
-      "journal_ref": "ASIACRYPT 2022",
-      "doi": "10.1007/978-3-031-22963-3_11",
       "authors": [
         "Zhenzhen Bao",
         "Jian Guo",
@@ -2395,7 +2393,7 @@
       ],
       "abstract": "In CRYPTO 2019, Gohr shows that well-trained neural networks can perform cryptanalytic distinguishing tasks superior to traditional differential distinguishers. Moreover, applying an unorthodox key guessing strategy, an 11-round key-recovery attack on a modern block cipher Speck32/64 improves upon the published state-of-the-art result. This calls into the next questions. To what extent is the advantage of machine learning (ML) over traditional methods, and whether the advantage generally exists in the cryptanalysis of modern ciphers? To answer the first question, we devised ML-based key-recovery attacks on more extended round-reduced Speck32/64. We achieved an improved 12-round and the first practical 13-round attacks. The essential for the new results is enhancing a classical component in the ML-based attacks, that is, the neutral bits. To answer the second question, we produced various neural distinguishers on round-reduced Simon32/64 and provided comparisons with their pure differential-based counterparts.",
       "url": "https://eprint.iacr.org/2021/719",
-      "pdfUrl": "https://eprint.iacr.org/2021/719.pdf",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/978-3-031-22963-3_11",
       "published": "2021-05-31T06:45:13+00:00",
       "categories": [],
       "topic_id": "ai-cryptanalysis",
@@ -2419,14 +2417,41 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000007+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 1,
+      "postPath": "content/ai-cryptanalysis/2021-05-31-d0b86f2bdc4a21d2a27f.md",
+      "studyType": "empirical",
+      "localPdf": "data/papers/d8641aab5e44d1335780/original.pdf",
+      "note": "",
+      "journal_ref": "ASIACRYPT 2022",
+      "doi": "10.1007/978-3-031-22963-3_11",
+      "graphReferences": [
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/978-3-031-22963-3_11",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "_9) 12. Gohr, A.: Implementation of the Improving Attacks on Round-Reduced [Speck32/64 Using Deep Learning. GitHub Repository (2019). https://github.com/](https://git",
+            "checkedAt": "2026-10-11T14:52:15+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/978-3-031-22963-3_11",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "A., Gerault, D., Peyrin, T., Tan, Q.Q.: A deeper look at machine learning-based cryptanalysis. In: Canteaut, A., Standaert, F.-X. (eds.) EUROCRYPT 2021.",
+            "checkedAt": "2026-10-11T14:52:15+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:1809.00888",
