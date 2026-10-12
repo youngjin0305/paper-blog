@@ -2457,9 +2457,6 @@
       "id": "arxiv:1809.00888",
       "title": "MesoNet: a Compact Facial Video Forgery Detection Network",
       "abstract": "This paper presents a method to automatically and efficiently detect face tampering in videos, and particularly focuses on two recent techniques used to generate hyper-realistic forged videos: Deepfake and Face2Face. Traditional image forensics techniques are usually not well suited to videos due to the compression that strongly degrades the data. Thus, this paper follows a deep learning approach and presents two networks, both with a low number of layers to focus on the mesoscopic properties of images. We evaluate those fast networks on both an existing dataset and a dataset we have constituted from online videos. The tests demonstrate a very successful detection rate with more than 98% for Deepfake and 95% for Face2Face.",
-      "journal_ref": "WIFS 2018",
-      "publication_note": "accepted to WIFS 2018",
-      "doi": "10.1109/WIFS.2018.8630761",
       "published": "2018-09-04T10:59:22Z",
       "updated": "2018-09-04T10:59:22Z",
       "authors": [
@@ -2496,14 +2493,18 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000008+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/ai-digital-forensics/2018-09-04-fe2a3d2668adefb349ec.md",
+      "doi": "10.1109/WIFS.2018.8630761",
+      "publication_note": "accepted to WIFS 2018",
+      "journal_ref": "WIFS 2018",
+      "graphReferences": []
     },
     {
       "id": "manual:cf168ef7c911b4f838dd",
@@ -2646,9 +2647,142 @@
       "lastRankedAt": null,
       "failCount": 0,
       "postPath": null
+    },
+    {
+      "id": "eprint:2026/2382",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2382",
+      "pdfUrl": "https://eprint.iacr.org/2026/2382.pdf",
+      "title": "Differential-Neural Cryptanalysis of ChaCha and Related ARX Stream Ciphers",
+      "authors": [
+        "Nimai Parsa",
+        "Nitin Kumar Sharma"
+      ],
+      "abstract": "The paper presents the first-ever differential neural cryptanalysis of the Latin Dances family of Salsa, ChaCha, and Forró. First, we provide a systematic differential-neural study of the ARX stream cipher ChaCha. We train and compare six neural architectures, viz.: Gohr's residual network, DBitNet, an Inception network, an MLP-ResNet, an SE-ResNet, and a self-attention network on a 3-round reduced version of ChaCha. We train in both the classical single-pair setting and a multi-pair setting that combines up to sixteen ciphertext pairs through a log-odds rule. We extend the study for breadth to other ARX ciphers, Salsa, *ChaCha, and Forró. We provide the first-ever distinguisher for 4.5 rounds of Salsa with accuracy of 0.53 for one pair and 0.60 for 16 pairs. Also, for Forró the first-ever distinguisher for 1.25 rounds of Salsa with accuracy of 1 for single and multiple pairs. We also introduce a family of experimental round-1-XOR variants (\\emph{XOR-1}) that isolate the contribution of the first round's diffusion to distinguishability. Finally, we investigate the trained 3-round ChaCha distinguisher with four explainability experiments and show that, although the output difference is its dominant feature, it is not a pure differential distinguisher: its decision is interpretable as a learned mixture of round-1 truncated differentials, five of which already account for $99\\%$ of the high-confidence ciphertext pairs.",
+      "published": "2026-10-06T13:44:36+00:00",
+      "categories": [],
+      "addedAt": "2026-10-11T23:00:01+00:00",
+      "status": "candidate",
+      "score": 4.3,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "neural",
+            "differential neural",
+            "neural cryptanalysis",
+            "cryptanalysis",
+            "stream cipher",
+            "ChaCha",
+            "PRESENT"
+          ],
+          "categories": [],
+          "score": 5.0,
+          "topic": "ai-cryptanalysis",
+          "topicMatches": {
+            "ai-cryptanalysis": [
+              "neural",
+              "differential neural",
+              "neural cryptanalysis",
+              "cryptanalysis",
+              "stream cipher",
+              "ChaCha",
+              "PRESENT"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "ARX 스트림 암호(ChaCha, Salsa, Forró)에 대한 신경망 구별자 연구로 ai-cryptanalysis 범위에 정확히 부합한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "Latin Dances 계열 최초의 differential-neural 분석과 Salsa 4.5라운드·Forró 구별자를 최초로 제시한다고 명시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "6종 신경망 구조 비교, single-pair/16-pair log-odds 결합, XOR-1 변형, 4종 설명가능성 실험과 구체적 라운드·정확도 수치를 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "메타데이터에 코드·데이터·학습 하이퍼파라미터 공개 언급이 없어 아키텍처와 라운드 설정 서술에만 의존한다."
+          },
+          "rationale": "관심사와 직접 일치하는 신경망 구별자 논문으로 대상 암호·학습 설정·구별 이점이 구체적이다. 다만 공개 자료 언급이 없어 재현성만 낮게 둔다. 초록 내 서술(예: Forró 항목에서 Salsa를 언급하는 부분)에 표기 불일치가 있다."
+        }
+      },
+      "rationale": "관심사와 직접 일치하는 신경망 구별자 논문으로 대상 암호·학습 설정·구별 이점이 구체적이다. 다만 공개 자료 언급이 없어 재현성만 낮게 둔다. 초록 내 서술(예: Forró 항목에서 Salsa를 언급하는 부분)에 표기 불일치가 있다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-11T23:00:01+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "ai-cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2381",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2381",
+      "pdfUrl": "https://eprint.iacr.org/2026/2381.pdf",
+      "title": "The Lattice Isomorphism Problem with Hints",
+      "authors": [
+        "Mélissa Rossi"
+      ],
+      "abstract": "The Lattice Isomorphism Problem (LIP) is a relatively new problem that has gained increasing attention in the field of lattice-based cryptography. It is the underlying hard problem of the Hawk signature scheme, which has been submitted to the second NIST call for post-quantum signatures. In this paper, we propose to study the security of LIP in the presence of partial information on the secret solution, which can be obtained through side-channel attacks or by design. We propose a new cryptanalysis approach for LIP that embeds it into a shortest vector problem (SVP) based on a different lattice than the one considered in the specifications of Hawk, allowing to integrate hints. We also introduce conversion techniques that transform hints expressed on arbitrary linear combinations of the secret key coefficients into hints on the target lattice, enabling the integration of a broader class of linear leakages on sensitive values. We implement our attack and predictions using the LeakyLWEEstimator tool (Crypto 2020) and obtain concrete security estimates for Hawk in the key-recovery setting. We also observe that Hawk signatures carry intrinsic information about the secret key and show that this can be exploited as a source of hints, yielding a refined key-recovery complexity, thereby eroding the original security estimates. For example, we estimate a security loss of around 11 bits for Hawk-1024. Finally, we apply our framework to side-channel analysis results on Hawk, solving an open problem raised in a recent analysis (TCHES 2024) and discuss further attack paths enabled by fault-injection techniques.\nWe believe that this new cryptanalysis approach for LIP and the integration of hints provide new insights towards a better understanding of its security.",
+      "published": "2026-10-06T13:16:54+00:00",
+      "categories": [],
+      "addedAt": "2026-10-11T23:00:01+00:00",
+      "status": "candidate",
+      "score": 3.35,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "key recovery",
+            "lattice"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "key recovery",
+              "lattice"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "Hawk/LIP에 대한 키 복구 암호분석으로 classical cryptanalysis에 해당하지만, 힌트 출처가 부채널·결함 주입이고 신경망 구별자와는 무관하다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "LIP를 다른 격자 기반 SVP로 임베딩해 힌트를 통합하는 새 접근과 서명 자체에서 유래하는 내재 힌트 활용을 제시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "힌트 변환 기법, SVP 임베딩, LeakyLWEEstimator 기반 구체 보안 추정(Hawk-1024 약 11비트 손실)을 제시한다."
+          },
+          "reproducibility": {
+            "score": 3,
+            "reason": "공개 도구 LeakyLWEEstimator로 공격을 구현했다고 밝히나, 자체 코드·데이터 공개 여부는 메타데이터에 없다."
+          },
+          "rationale": "암호 자체의 키 복구 복잡도를 정량화하는 견실한 격자 암호분석이지만, 부채널 유출을 힌트로 쓰는 축이 커 AI 기반 공격 관심사와는 거리가 있다. 공개 추정 도구 사용이 부분적 재현성을 준다."
+        }
+      },
+      "rationale": "암호 자체의 키 복구 복잡도를 정량화하는 견실한 격자 암호분석이지만, 부채널 유출을 힌트로 쓰는 축이 커 AI 기반 공격 관심사와는 거리가 있다. 공개 추정 도구 사용이 부분적 재현성을 준다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-11T23:00:01+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "cryptanalysis"
     }
   ],
   "seen": [
+    "arxiv:1805.04953",
+    "arxiv:1806.02877",
+    "arxiv:1809.00888",
+    "arxiv:1901.08971",
     "arxiv:2609.18751",
     "arxiv:2609.18783",
     "arxiv:2609.21344",
@@ -2673,23 +2807,21 @@
     "arxiv:2609.39651",
     "arxiv:2610.00649",
     "arxiv:2610.01788",
+    "eprint:2019/037",
+    "eprint:2021/287",
+    "eprint:2021/719",
+    "eprint:2024/1300",
     "eprint:2026/2095",
     "eprint:2026/2097",
     "eprint:2026/2127",
     "eprint:2026/2224",
+    "eprint:2026/2381",
+    "eprint:2026/2382",
     "manual:16661c9151450f07fa3b",
     "manual:27d827b6e7accfdbd227",
-    "eprint:2019/037",
-    "arxiv:1805.04953",
     "manual:4772153072351b952954",
-    "eprint:2021/287",
-    "arxiv:1901.08971",
     "manual:5d39689454a587183ada",
-    "eprint:2021/719",
-    "arxiv:1809.00888",
-    "manual:cf168ef7c911b4f838dd",
-    "eprint:2024/1300",
-    "arxiv:1806.02877"
+    "manual:cf168ef7c911b4f838dd"
   ],
-  "lastWeeklyAt": "2026-10-04T23:00:03+00:00"
+  "lastWeeklyAt": "2026-10-11T23:00:01+00:00"
 }
