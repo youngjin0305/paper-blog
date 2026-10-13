@@ -138,6 +138,53 @@ with tempfile.TemporaryDirectory() as directory:
             before = page.evaluate('scrollY')
             page.mouse.move(190, 550); page.mouse.wheel(0, 600)
             page.wait_for_function('(before) => scrollY > before', arg=before)
+            # A complete citation chain draws only consecutive steps. Keep
+            # independent branches in the original fixture above intact.
+            chain_nodes = [node('chain-' + str(i), 2010 + i) for i in range(4)]
+            chain_nodes[0]['summaryId'] = 'fixture-root'
+            chain_nodes[3]['summaryId'] = 'fixture-summary'
+            chain = {'nodes': chain_nodes, 'edges': [citation(chain_nodes[i]['id'], chain_nodes[j]['id'])
+                     for i in range(4) for j in range(i + 1, 4)], 'settings': {'max_nodes': 60}}
+            page.set_viewport_size({'width': 1440, 'height': 1000})
+            atomic_write(site / 'assets/research-graph-data.js', graph_script(chain))
+            page.goto(url + '?case=chain', wait_until='networkidle')
+            expect(page.locator('.lineage-edge')).to_have_count(3)
+            expect(page.locator('#lineage-count')).to_contain_text('중복 연결 3개 생략')
+            assert page.locator('.lineage-edge[data-source="chain-0"][data-target="chain-3"]').count() == 0
+            page.locator('[data-node-id="chain-3"] .lineage-info').click()
+            expect(page.locator('#lineage-details li')).to_have_count(3)
+            page.keyboard.press('Escape')
+            page.locator('#lineage-show-all').check()
+            expect(page.locator('.lineage-edge')).to_have_count(6)
+            page.locator('#lineage-show-all').uncheck()
+            page.locator('#flow-reviewed').check()
+            expect(page.locator('.lineage-card')).to_have_count(2)
+            expect(page.locator('.lineage-edge')).to_have_count(1)
+            assert page.locator('.lineage-edge[data-source="chain-0"][data-target="chain-3"]').count() == 1
+            # An explicit exception preserves an existing direct citation only.
+            chain['settings']['lineage_keep_edges'] = [{'source': 'chain-0', 'target': 'chain-3', 'reason': 'Fixture important direct comparison'}]
+            atomic_write(site / 'assets/research-graph-data.js', graph_script(chain))
+            page.goto(url + '?case=exception', wait_until='networkidle')
+            expect(page.locator('.lineage-edge')).to_have_count(4)
+            expect(page.locator('.lineage-edge.preserved')).to_have_count(1)
+            expect(page.locator('#lineage-exception-legend')).to_be_visible()
+            page.locator('[data-node-id="chain-3"] .lineage-info').click()
+            page.locator('#lineage-details li button').first.click()
+            expect(page.locator('.lineage-keep-reason')).to_contain_text('Fixture important direct comparison')
+            page.keyboard.press('Escape')
+            # An inferred alternate path cannot hide a verified direct citation.
+            mixed = {'nodes': chain_nodes[:3], 'edges': [citation('chain-0', 'chain-2'),
+                     {'source': 'chain-0', 'target': 'chain-1', 'kind': 'related', 'similarity': .4, 'reason': 'Fixture inference'},
+                     citation('chain-1', 'chain-2')], 'settings': {'max_nodes': 60}}
+            atomic_write(site / 'assets/research-graph-data.js', graph_script(mixed))
+            page.goto(url + '?case=mixed', wait_until='networkidle')
+            assert page.locator('.lineage-edge.citation[data-source="chain-0"][data-target="chain-2"]').count() == 1
+            # Keep cyclic relations intact rather than silently losing reachability.
+            chain['settings'].pop('lineage_keep_edges')
+            chain['edges'].append(citation('chain-3', 'chain-0'))
+            atomic_write(site / 'assets/research-graph-data.js', graph_script(chain))
+            page.goto(url + '?case=cycle', wait_until='networkidle')
+            expect(page.locator('.lineage-edge')).to_have_count(7)
             # Real local route runs with the existing restrictive CSP.
             local = f"http://127.0.0.1:{server.effective_port}"
             page.route(local + '/research-flow/data.js', lambda route: route.fulfill(body=graph_script(data), content_type='application/javascript'))
@@ -150,6 +197,6 @@ with tempfile.TemporaryDirectory() as directory:
             assert not errors, errors
             assert not csp, csp
             browser.close()
-            print('Timeline browser checks passed: one graph per field, shared year rows, all citations, mouse/keyboard evidence, safe titles, filters, summary links, mobile scrolling, local CSP.')
+            print('Timeline checks passed: reduced chains, branch preservation, exceptions, filtered bridges, citation provenance, cycles, year rows, navigation, mobile, local CSP.')
     finally:
         server.close()

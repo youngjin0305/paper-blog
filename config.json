@@ -191,6 +191,7 @@
     "similarity_threshold": 0.12,
     "max_related_parents": 2,
     "max_nodes": 60,
+    "lineage_keep_edges": [],
     "concepts": [
       {
         "id": "differential",

@@ -10,6 +10,7 @@
   const neighbors = document.getElementById('flow-neighbors');
   const details = document.getElementById('lineage-details');
   const dialog = document.getElementById('lineage-dialog');
+  const showAll = document.getElementById('lineage-show-all');
   const byId = new Map(data.nodes.map(node => [node.id, node]));
   let selected = null, drawing = 0, layoutWidth = 0;
   neighbors.disabled = true;
@@ -39,6 +40,39 @@
   const relatedEdges = id => data.edges.filter(edge => edge.source === id || edge.target === id);
   const chronological = (a, b) => a.year - b.year || (a.timeOrder || 0) - (b.timeOrder || 0) || a.id.localeCompare(b.id);
   const edgeLabel = edge => edge.kind === 'citation' ? '확인된 인용' : '주제 연결 · 추정';
+  const preservationReason = edge => (data.settings.lineage_keep_edges || [])
+    .find(rule => rule.source === edge.source && rule.target === edge.target)?.reason || '';
+
+  function flowEdges(edges) {
+    // Reduce only the currently displayed field. Hidden intermediate papers
+    // must never be used to remove a direct connection.
+    const reachability = pool => {
+      const outgoing = new Map();
+      for (const edge of pool) {
+        if (!outgoing.has(edge.source)) outgoing.set(edge.source, []);
+        outgoing.get(edge.source).push(edge);
+      }
+      return (source, target, skip = null) => {
+        const pending = [source], seen = new Set([source]);
+        while (pending.length) {
+          for (const edge of outgoing.get(pending.pop()) || []) {
+            if (edge === skip) continue;
+            if (edge.target === target) return true;
+            if (!seen.has(edge.target)) { seen.add(edge.target); pending.push(edge.target); }
+          }
+        }
+        return false;
+      };
+    };
+    const allPaths = reachability(edges);
+    const citationPaths = reachability(edges.filter(edge => edge.kind === 'citation'));
+    // Transitive reduction is unambiguous for a DAG. Keep a cyclic field
+    // intact rather than simultaneously removing its routes into a cycle.
+    const cyclic = edges.some(edge => allPaths(edge.target, edge.source));
+    return edges.filter(edge => showAll.checked || preservationReason(edge) || cyclic
+      || !(edge.kind === 'citation' ? citationPaths : allPaths)(edge.source, edge.target, edge))
+      .map(edge => ({...edge, keepReason: preservationReason(edge)}));
+  }
 
   function heading(text) {
     const title = html('h2', text); title.id = 'lineage-detail-title';
@@ -49,6 +83,8 @@
     const source = byId.get(edge.source), target = byId.get(edge.target);
     heading(edgeLabel(edge));
     details.append(html('p', source.title + ' → ' + target.title));
+    const keepReason = preservationReason(edge);
+    if (keepReason) details.append(html('p', '표시 예외: ' + keepReason, 'lineage-keep-reason'));
     if (edge.kind === 'citation') {
       details.append(html('p', '화살표 끝의 논문이 시작점의 논문을 참고문헌에서 인용합니다. 인용 사실만 확인하며 방법을 직접 계승·개선했다는 뜻은 아닙니다.'),
         html('p', `대조: ${edge.evidence.match} · 출처: ${edge.evidence.origin === 'crossref-references' ? 'Crossref 등록 참고문헌' : 'PDF References'} · 확인 ${new Date(edge.evidence.checkedAt).toLocaleDateString('sv-SE', {timeZone: 'Asia/Seoul'})}`));
@@ -157,8 +193,8 @@
             : point[1] > box.top + 1 && point[1] < box.bottom - 1 && Math.max(prev[0], point[0]) > box.left + 1 && Math.min(prev[0], point[0]) < box.right - 1;
         });
       });
-      const edges = data.edges.filter(edge => positions.has(edge.source) && positions.has(edge.target)
-        && (links.value !== 'citation' || edge.kind === 'citation'));
+      const edges = flowEdges(data.edges.filter(edge => positions.has(edge.source) && positions.has(edge.target)
+        && (links.value !== 'citation' || edge.kind === 'citation')));
       edges.forEach((edge, index) => {
         const a = positions.get(edge.source), b = positions.get(edge.target);
         const sourceYear = byId.get(edge.source).year, targetYear = byId.get(edge.target).year;
@@ -182,7 +218,7 @@
           }
         }
         const path = points.map((point, i) => `${i ? 'L' : 'M'} ${point[0]} ${point[1]}`).join(' ');
-        const visible = shape('path', {d: path, class: 'lineage-edge ' + edge.kind,
+        const visible = shape('path', {d: path, class: 'lineage-edge ' + edge.kind + (edge.keepReason ? ' preserved' : ''),
           'data-source': edge.source, 'data-target': edge.target,
           'marker-end': `url(#lineage-arrow-${canvas.dataset.field}-${edge.kind})`});
         const hit = shape('path', {d: path, class: 'lineage-edge-hit', tabindex: 0, role: 'button',
@@ -206,7 +242,10 @@
     });
     forest.replaceChildren(); document.getElementById('lineage-empty').hidden = nodes.length !== 0;
     const within = edges.filter(edge => byId.get(edge.source).topic === byId.get(edge.target).topic);
-    document.getElementById('lineage-count').textContent = `${nodes.length}편 · ${topics.length}개 분야 · 인용 ${within.filter(edge => edge.kind === 'citation').length} · 주제 연결 ${within.filter(edge => edge.kind === 'related').length}`
+    const shown = topics.flatMap(topic => flowEdges(within.filter(edge => byId.get(edge.source).topic === topic)));
+    document.getElementById('lineage-exception-legend').hidden = !shown.some(edge => edge.keepReason);
+    document.getElementById('lineage-count').textContent = `${nodes.length}편 · ${topics.length}개 분야 · 인용 ${shown.filter(edge => edge.kind === 'citation').length} · 주제 연결 ${shown.filter(edge => edge.kind === 'related').length}`
+      + (within.length > shown.length ? ` · 중복 연결 ${within.length - shown.length}개 생략` : '')
       + (edges.length > within.length ? ` · 분야 간 연결 ${edges.length - within.length} (카드 근거에서 확인)` : '')
       + (total > nodes.length ? ` · ${total - nodes.length}편은 검색/분야를 좁혀 확인` : '');
     topics.forEach((topic, index) => {
@@ -227,7 +266,7 @@
       for (const year of years) {
         const bucket = items.filter(node => node.year === year);
         const desired = node => {
-          const parents = edges.filter(edge => edge.target === node.id && placed.has(edge.source));
+          const parents = shown.filter(edge => edge.target === node.id && placed.has(edge.source));
           return parents.length ? parents.reduce((sum, edge) => sum + placed.get(edge.source), 0) / parents.length : (columns - 1) / 2;
         };
         bucket.sort((a, b) => desired(a) - desired(b) || Number(b.core) - Number(a.core) || chronological(a, b));
@@ -259,14 +298,16 @@
     if ([...control.options].some(option => option.value === params.get(key))) control.value = params.get(key);
   }
   search.value = params.get('q') || ''; reviewed.checked = params.get('reviewed') === '1';
+  showAll.checked = params.get('expand') === '1';
   function filter() {
     const url = new URL(location.href);
     url.searchParams.set('field', field.value); url.searchParams.set('quality', quality.value); url.searchParams.set('links', links.value);
     if (search.value) url.searchParams.set('q', search.value); else url.searchParams.delete('q');
     if (reviewed.checked) url.searchParams.set('reviewed', '1'); else url.searchParams.delete('reviewed');
+    if (showAll.checked) url.searchParams.set('expand', '1'); else url.searchParams.delete('expand');
     history.replaceState(null, '', url); draw();
   }
-  for (const control of [quality, links, reviewed, neighbors]) control.addEventListener('change', filter);
+  for (const control of [quality, links, reviewed, neighbors, showAll]) control.addEventListener('change', filter);
   field.addEventListener('change', () => { selected = null; neighbors.checked = false; neighbors.disabled = true; filter(); });
   let debounce;
   search.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(filter, 130); });

@@ -147,6 +147,14 @@ class GraphTests(unittest.TestCase):
         config.pop("research_graph")
         self.assertIn("research_graph", garden.save_config(config))
 
+    def test_lineage_exceptions_require_explicit_ids_and_reason(self):
+        rule = {"source": self.a["id"], "target": self.b["id"], "reason": "직접 비교한 원전을 보존"}
+        self.assertEqual(validate_graph_settings({"lineage_keep_edges": [rule]})["lineage_keep_edges"], [rule])
+        for value in (None, {}, [rule, rule], [{**rule, "reason": " "}], [{**rule, "target": rule["source"]}],
+                      [{**rule, "unexpected": True}], [{"source": rule["source"], "target": rule["target"]}]):
+            with self.assertRaises(ValueError):
+                validate_graph_settings({"lineage_keep_edges": value})
+
     def test_evidence_sync_dry_run_does_not_write_and_keeps_reference_origin(self):
         class Response:
             def raise_for_status(self): pass

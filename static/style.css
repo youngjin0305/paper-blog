@@ -81,6 +81,7 @@
 .flow-views a[aria-current] { border-color: #829c74; background: #eaf0df; color: #305a41; font-weight: 650; }
 .lineage-summary { padding: 16px 20px; margin: 20px 0 26px; border: 1px solid var(--line); border-radius: 8px; background: #f0f5e9; }
 #lineage-count { font-size: 13px; color: #3e6149; font-weight: 600; }.lineage-summary p { font-size: 11px; color: var(--muted); margin: 7px 0 0; }
+.lineage-summary-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }.lineage-expand { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 11px; font-weight: 400; }
 .lineage-field { margin-bottom: 32px; border: 1px solid var(--line); background: #fff; border-radius: 12px; overflow: hidden; }
 .lineage-field-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--line); background: #f6f8f2; }
 .lineage-field-heading h2 { margin: 0; font-size: 14px; font-weight: 600; color: #4e6a50; }.lineage-field-heading span { color: #8b9982; font-size: 11px; }
@@ -101,6 +102,8 @@
 .lineage-card-actions a { font-size: 11px; color: #426d4d; font-weight: 600; }.lineage-info { font-size: 10px; padding: 3px 0; border: 0; background: none; color: #75886b; }
 .lineage-connectors { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }.lineage-edge { fill: none; stroke: #496959; stroke-width: 1.6; }.lineage-edge.related { stroke: #9aa89d; stroke-dasharray: 5 5; }
 .lineage-edge-hit { fill: none; stroke: transparent; stroke-width: 12; cursor: pointer; pointer-events: stroke; }.lineage-edge-hit:hover, .lineage-edge-hit:focus { stroke: #a6bba5; opacity: .5; outline: none; }
+.lineage-edge.preserved { stroke: #a5823b; stroke-width: 2.2; }
+.flow-legend .legend-preserved { border-color: #a5823b; }.lineage-keep-reason { padding: 10px 12px; border-left: 3px solid #a5823b; background: #f7efd8; }
 .lineage-dialog { border: 1px solid #cbd8c4; border-radius: 12px; background: #f5f8ef; width: min(640px, calc(100% - 32px)); max-height: 85vh; padding: 20px; color: var(--ink); }
 .lineage-dialog::backdrop { background: #1c302b80; }.lineage-dialog form { display: flex; justify-content: flex-end; }.lineage-dialog .flow-details { border: 0; padding: 12px 4px; margin: 0; background: transparent; }.lineage-dialog .flow-detail-actions { flex-wrap: wrap; }
 @media (max-width: 600px) {

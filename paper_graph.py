@@ -12,7 +12,8 @@ from urllib.parse import urlparse
 
 
 DEFAULTS = {"evidence_path": "data/paper-graph-evidence.json", "recommended_score": 3.5,
-            "recommended_relevance": 4, "similarity_threshold": 0.12, "max_related_parents": 2, "max_nodes": 60, "concepts": []}
+            "recommended_relevance": 4, "similarity_threshold": 0.12, "max_related_parents": 2, "max_nodes": 60,
+            "lineage_keep_edges": [], "concepts": []}
 STOP = set("the and for with from that this which into using based paper propose proposed method methods model models learning neural deep study results research analysis approach show images image cipher cryptanalysis detection data our are can has have use used new these their through not performance training network networks security attack attacks".split())
 
 
@@ -34,6 +35,15 @@ def validate_graph_settings(value):
         raise ValueError("Graph parent/relevance limits must be integers")
     if not isinstance(config["concepts"], list):
         raise ValueError("Graph concepts must be a list")
+    if not isinstance(config["lineage_keep_edges"], list):
+        raise ValueError("Graph lineage exceptions must be a list")
+    pairs = set()
+    for rule in config["lineage_keep_edges"]:
+        if (not isinstance(rule, dict) or set(rule) != {"source", "target", "reason"}
+                or any(not isinstance(rule.get(key), str) or not rule[key].strip() for key in ("source", "target", "reason"))
+                or rule["source"] == rule["target"] or (rule["source"], rule["target"]) in pairs):
+            raise ValueError("Invalid graph lineage exception: require unique source/target and reason")
+        pairs.add((rule["source"], rule["target"]))
     ids = set()
     for concept in config["concepts"]:
         if (not isinstance(concept, dict) or not isinstance(concept.get("id"), str) or concept["id"] in ids
