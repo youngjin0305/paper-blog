@@ -1,4 +1,4 @@
-"""Offline browser checks for branching, provenance, links, and mobile scrolling."""
+"""Offline checks for a continuous field timeline, year rows and full relations."""
 import json
 from pathlib import Path
 import sys
@@ -78,24 +78,42 @@ with tempfile.TemporaryDirectory() as directory:
             url = site.joinpath("research-lineage.html").as_uri()
             page.goto(url)
             expect(page.locator('.lineage-card')).to_have_count(7)
-            expect(page.locator('.lineage-edge')).to_have_count(4)
+            expect(page.locator('.lineage-field')).to_have_count(1)
+            expect(page.locator('.lineage-edge')).to_have_count(7)
+            expect(page.locator('.lineage-year-label')).to_have_count(6)
+            expect(page.locator('.lineage-year-row[data-year="2021"] .lineage-card')).to_have_count(2)
+            expect(page.locator('.lineage-card .lineage-year')).to_have_count(0)
+            assert page.locator('.sidebar a[href*="research-lineage"]').count() == 0
             assert page.locator('img').count() == 0, "Titles must be literal text"
             assert page.locator('.lineage-edge[data-source="c"][data-target="d"]').count() == 1
-            assert page.locator('.lineage-edge[data-source="b"][data-target="d"]').count() == 0
-            assert page.locator('.lineage-edge[data-source="e"][data-target="f"]').count() == 0
+            assert page.locator('.lineage-edge[data-source="b"][data-target="d"]').count() == 1
+            assert page.locator('.lineage-edge[data-source="e"][data-target="f"]').count() == 1
             cards = page.locator('.lineage-card').evaluate_all("els => Object.fromEntries(els.map(e => [e.dataset.nodeId, {top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom}]))")
             for source, target in (("a", "b"), ("a", "c"), ("c", "d"), ("d", "e")):
                 assert cards[source]["bottom"] < cards[target]["top"], "Every branch must point down"
             assert_clear_connectors(page)
+            page.locator('.lineage-edge-hit').first.scroll_into_view_if_needed()
+            point = page.locator('.lineage-edge-hit').first.evaluate("""path => {
+              const point = path.getPointAtLength(path.getTotalLength() / 2);
+              const box = path.ownerSVGElement.getBoundingClientRect();
+              return {x:box.left + point.x, y:box.top + point.y};
+            }""")
+            page.mouse.click(point['x'], point['y'])
+            expect(page.locator('#lineage-dialog')).to_be_visible()
+            expect(page.locator('#lineage-details blockquote')).to_have_text('Verbatim fixture reference.')
+            page.keyboard.press('Escape')
             page.locator('[data-node-id="d"] .lineage-info').click()
             expect(page.locator('#lineage-dialog')).to_be_visible()
             expect(page.locator('#lineage-details li')).to_have_count(3)
             page.locator('#lineage-details li button').first.click()
             expect(page.locator('#lineage-details blockquote')).to_have_text('Verbatim fixture reference.')
             page.keyboard.press('Escape')
+            page.locator('#flow-links').select_option('citation')
+            expect(page.locator('.lineage-edge')).to_have_count(6)
             page.locator('#flow-links').select_option('all')
             expect(page.locator('.lineage-edge.related')).to_have_count(1)
-            page.locator('.lineage-parent-link.related').click()
+            page.locator('.lineage-edge-hit[aria-label^="주제 연결"]').focus()
+            page.keyboard.press('Enter')
             expect(page.locator('#lineage-detail-title')).to_have_text('주제 연결 · 추정')
             page.keyboard.press('Escape')
             page.locator('#flow-quality').select_option('all')
@@ -114,7 +132,7 @@ with tempfile.TemporaryDirectory() as directory:
             expect(page.locator('.lineage-card')).to_have_count(7)
             page.set_viewport_size({"width": 390, "height": 844})
             page.locator('[data-node-id="a"]').scroll_into_view_if_needed()
-            page.wait_for_function("document.querySelector('.lineage-edge[data-source=\"a\"][data-target=\"c\"]').getAttribute('d').includes('H 12')")
+            page.wait_for_function("document.querySelector('.lineage-cells').dataset.columns === '1'")
             assert_clear_connectors(page)
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), "Mobile must not overflow"
             before = page.evaluate('scrollY')
@@ -132,6 +150,6 @@ with tempfile.TemporaryDirectory() as directory:
             assert not errors, errors
             assert not csp, csp
             browser.close()
-            print('Lineage browser checks passed: branches, multiple parents, unknown dates, inference, safe titles, filters, summary links, mobile scrolling, local CSP.')
+            print('Timeline browser checks passed: one graph per field, shared year rows, all citations, mouse/keyboard evidence, safe titles, filters, summary links, mobile scrolling, local CSP.')
     finally:
         server.close()
