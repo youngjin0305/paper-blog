@@ -83,7 +83,7 @@ def create_app(garden=None):
         return dict(config=config, topics=config["topics"], counts=counts, total=len(all_posts),
                     topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
                     reading_href="/reading-list", essential_href="/essentials",
-                    graph_href="/research-flow",
+                    graph_href="/research-flow", lineage_href="/research-lineage",
                     token=token, static_mode=False, root_url="/", asset_url="/static/",
                     topic_href=lambda identifier: f"/topics/{identifier}",
                     post_href=lambda identifier: f"/posts/{identifier}")
@@ -130,6 +130,11 @@ def create_app(garden=None):
     @app.get("/research-flow")
     def graph_page():
         return render_template("graph.html", selected=None, graph_view=True, graph_data_url="/research-flow/data.js")
+
+    @app.get("/research-lineage")
+    def lineage_page():
+        return render_template("lineage.html", selected=None, graph_view=True, lineage_view=True,
+                               graph_data_url="/research-flow/data.js")
 
     @app.get("/research-flow/data.js")
     def graph_data():
@@ -208,15 +213,18 @@ def export_site(app, garden):
                                    total=len(all_posts), token="", static_mode=True, root_url=prefix + "index.html",
                                    topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
                                    reading_href=prefix + "reading-list.html", essential_href=prefix + "essentials.html",
-                                   graph_href=prefix + "research-flow.html",
+                                   graph_href=prefix + "research-flow.html", lineage_href=prefix + "research-lineage.html",
                                    asset_url=prefix + "assets/", query="",
                                    topic_href=lambda i: prefix + f"topics/{i}.html",
                                    post_href=lambda i: prefix + f"posts/{i}.html", **kwargs)
         atomic_write(output / "index.html", page("index.html", posts=all_posts, selected=None))
         atomic_write(output / "research-flow.html", page("graph.html", selected=None, graph_view=True,
                      graph_data_url="assets/research-graph-data.js"))
+        atomic_write(output / "research-lineage.html", page("lineage.html", selected=None, graph_view=True,
+                     lineage_view=True, graph_data_url="assets/research-graph-data.js"))
         atomic_write(output / "assets/research-graph-data.js", graph_script(build_graph(garden.root, config, all_posts)))
         atomic_write(output / "assets/research-graph.js", (ROOT / "static/research-graph.js").read_text(encoding="utf-8"))
+        atomic_write(output / "assets/research-lineage.js", (ROOT / "static/research-lineage.js").read_text(encoding="utf-8"))
         for name, papers, essential_view in (("reading-list", reading, False), ("essentials", essentials, True)):
             atomic_write(output / (name + ".html"), page("reading.html", papers=papers, criteria=criteria,
                          essential_view=essential_view, selected=None, category="", reading_view=True))

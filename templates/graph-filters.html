@@ -1,0 +1,8 @@
+<section class="flow-controls" aria-label="연구 흐름 필터">
+  <label>분야<select id="flow-field"><option value="all">전체 분야</option>{% for group in topic_groups %}<option value="group:{{ group.name }}">{{ group.name }} 전체</option><optgroup label="{{ group.name }}">{% for topic in group.topics %}<option value="topic:{{ topic.id }}" {{ 'selected' if topic.id == (config.pipeline|default({})).category|default('') else '' }}>{{ topic.name }}</option>{% endfor %}</optgroup>{% endfor %}</select></label>
+  <label>논문 범위<select id="flow-quality"><option value="recommended">핵심·선별 논문</option><option value="venues">필수·게재 확인 논문</option><option value="core">필수 논문만</option><option value="all">전체 수집·정리 논문</option></select></label>
+  <label>연결<select id="flow-links"><option value="all">인용 + 주제 연결</option><option value="citation" {{ 'selected' if lineage_view|default(false) else '' }}>확인된 인용만</option></select></label>
+  <label>논문 찾기<input id="flow-search" type="search" placeholder="제목·저자·개념 검색"></label>
+  <label class="flow-check"><input id="flow-reviewed" type="checkbox">정리 완료만</label>
+  <label class="flow-check"><input id="flow-neighbors" type="checkbox">선택 논문 주변만</label>
+</section>

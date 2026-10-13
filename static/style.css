@@ -73,3 +73,39 @@
 #flow-viewport.compact { height: 360px; }
 @media (max-width: 780px) { .flow-entry { flex-direction: column; align-items: flex-start; }.flow-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }#flow-viewport { height: 470px; }.flow-toolbar { flex-wrap: wrap; }.flow-header h1 { font-size: 26px; }.flow-details { padding: 18px; } }
 @media (max-width: 600px) { #flow-viewport.compact { height: 410px; } }
+
+/* The scrollable lineage is a second view of the existing evidence graph. */
+.flow-entry-actions { display: flex; flex-wrap: wrap; gap: 9px; flex-shrink: 0; }
+.flow-views { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+.flow-views a { padding: 10px 16px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: #63725e; font-size: 13px; }
+.flow-views small { margin-left: 10px; color: #929d89; font-size: 10px; }
+.flow-views a[aria-current] { border-color: #829c74; background: #eaf0df; color: #305a41; font-weight: 650; }
+.lineage-summary { padding: 16px 20px; margin: 20px 0 30px; border: 1px solid var(--line); border-radius: 8px; background: #f0f5e9; }
+#lineage-count { font-size: 13px; color: #3e6149; font-weight: 600; }.lineage-summary p { font-size: 11px; color: var(--muted); margin: 7px 0 0; }
+.lineage-family { margin-bottom: 32px; border: 1px solid var(--line); background: #fff; border-radius: 12px; overflow: hidden; }
+.lineage-family-heading { display: flex; align-items: center; gap: 12px; padding: 15px 22px; border-bottom: 1px solid var(--line); background: #f6f8f2; }
+.lineage-family-heading h2 { margin: 0; font-size: 13px; font-weight: 600; color: #5c7357; }.lineage-family-number { font: 20px Georgia, serif; color: #a3b792; }
+.lineage-canvas { position: relative; overflow-x: auto; }.lineage-canvas:focus-visible { outline-offset: -3px; }
+.lineage-tree, .lineage-children { display: flex; justify-content: center; align-items: flex-start; width: max-content; min-width: 100%; list-style: none; margin: 0; }
+.lineage-tree { padding: 34px 32px; }.lineage-children { padding: 84px 0 0; gap: 36px; }
+.lineage-branch { display: flex; flex-direction: column; align-items: center; flex: 1 0 auto; }
+.lineage-node { position: relative; z-index: 1; }.lineage-card { width: 258px; border: 1px solid #b8cbb6; border-top: 3px solid #78966c; border-radius: 9px; background: #f8fbf5; padding: 16px 18px; }
+.lineage-card.core { background: #fffaf0; border-color: #dfcd97; border-top-color: #b39856; }.lineage-card.focused { outline: 3px solid #658b61; outline-offset: 3px; }
+.lineage-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }.lineage-year { font-size: 21px; font-family: Georgia, serif; color: #7c784e; }
+.lineage-badge { font-size: 10px; color: #8b7943; }.lineage-topic { color: #798b72; font-size: 10px; margin: 5px 0 13px; }
+.lineage-card h3 { font-size: 16px; font-weight: 600; line-height: 1.55; margin: 0 0 12px; color: #2e4938; overflow-wrap: anywhere; }
+.lineage-title:hover, .lineage-title:focus-visible { color: #397a51; text-decoration: underline; text-underline-offset: 3px; }
+.lineage-authors { font-size: 10px; color: #8a9281; line-height: 1.7; margin: 0 0 14px; }
+.lineage-card-actions { border-top: 1px solid #e8ebdf; padding-top: 10px; display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.lineage-card-actions a { font-size: 11px; color: #426d4d; font-weight: 600; }.lineage-info { font-size: 10px; padding: 3px 0; border: 0; background: none; color: #75886b; }
+.lineage-parent-link { position: absolute; bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%); border: 1px solid #dce5d5; border-radius: 20px; background: #f9fbf6; white-space: nowrap; font-size: 10px; padding: 3px 10px; color: #5d795c; }
+.lineage-parent-link.related { border-style: dashed; color: #879080; }.lineage-parent-link:hover { background: #e8f0df; }
+.lineage-connectors { position: absolute; top: 0; left: 0; pointer-events: none; }.lineage-edge { fill: none; stroke: #496959; stroke-width: 1.6; }.lineage-edge.related { stroke: #9aa89d; stroke-dasharray: 5 5; }
+.lineage-dialog { border: 1px solid #cbd8c4; border-radius: 12px; background: #f5f8ef; width: min(640px, calc(100% - 32px)); max-height: 85vh; padding: 20px; color: var(--ink); }
+.lineage-dialog::backdrop { background: #1c302b80; }.lineage-dialog form { display: flex; justify-content: flex-end; }.lineage-dialog .flow-details { border: 0; padding: 12px 4px; margin: 0; background: transparent; }
+.lineage-dialog .flow-detail-actions { flex-wrap: wrap; }
+@media (max-width: 600px) {
+  .flow-views a { padding: 9px 12px; }.flow-views small { display: block; margin: 2px 0 0; }.lineage-family-heading { padding: 14px; }
+  .lineage-family-heading h2 { font-size: 12px; }.lineage-tree { padding: 30px 25px; }.lineage-card { width: 240px; }
+  .lineage-children { flex-direction: column; align-items: center; gap: 74px; }.lineage-summary { padding: 14px; }.lineage-dialog { padding: 16px; }
+}

@@ -208,7 +208,16 @@
   const params = new URL(location.href).searchParams;
   if ([...field.options].some(o => o.value === params.get('field'))) field.value = params.get('field');
   if ([...quality.options].some(o => o.value === params.get('quality'))) quality.value = params.get('quality');
+  if ([...links.options].some(o => o.value === params.get('links'))) links.value = params.get('links');
+  reviewed.checked = params.get('reviewed') === '1';
   search.value = params.get('q') || '';
+  for (const tab of document.querySelectorAll('[data-flow-view]')) tab.addEventListener('click', () => {
+    const target = new URL(tab.href); target.search = location.search;
+    target.searchParams.set('field', field.value); target.searchParams.set('quality', quality.value);
+    target.searchParams.set('links', links.value);
+    if (reviewed.checked) target.searchParams.set('reviewed', '1'); else target.searchParams.delete('reviewed');
+    tab.href = target.href;
+  });
   function filter() {
     const url = new URL(location.href);
     url.searchParams.set('field', field.value); url.searchParams.set('quality', quality.value);

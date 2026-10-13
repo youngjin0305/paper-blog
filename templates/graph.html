@@ -2,15 +2,9 @@
 {% block title %}연구 흐름 · {{ config.title }}{% endblock %}
 {% block scripts %}<script src="{{ graph_data_url }}" defer></script><script src="{{ asset_url }}research-graph.js" defer></script>{% endblock %}
 {% block content %}
+{% include "graph-views.html" %}
 <section class="flow-header"><div class="eyebrow">RESEARCH PATHS</div><h1>연구는 어디에서 시작해<br>어디로 이어졌을까요.</h1><p>★ 필수 논문을 뼈대로, 수집한 논문과 정리 글을 연결합니다. 제목을 누르면 요약 글 또는 원문으로 이동하고, ⓘ와 연결선을 누르면 근거를 볼 수 있습니다.</p></section>
-<section class="flow-controls" aria-label="연구 흐름 필터">
-  <label>분야<select id="flow-field"><option value="all">전체 분야</option>{% for group in topic_groups %}<option value="group:{{ group.name }}">{{ group.name }} 전체</option><optgroup label="{{ group.name }}">{% for topic in group.topics %}<option value="topic:{{ topic.id }}" {{ 'selected' if topic.id == (config.pipeline|default({})).category|default('') else '' }}>{{ topic.name }}</option>{% endfor %}</optgroup>{% endfor %}</select></label>
-  <label>논문 범위<select id="flow-quality"><option value="recommended">핵심·선별 논문</option><option value="venues">필수·게재 확인 논문</option><option value="core">필수 논문만</option><option value="all">전체 수집·정리 논문</option></select></label>
-  <label>연결<select id="flow-links"><option value="all">인용 + 주제 연결</option><option value="citation">확인된 인용만</option></select></label>
-  <label>논문 찾기<input id="flow-search" type="search" placeholder="제목·저자·개념 검색"></label>
-  <label class="flow-check"><input id="flow-reviewed" type="checkbox">정리 완료만</label>
-  <label class="flow-check"><input id="flow-neighbors" type="checkbox">선택 논문 주변만</label>
-</section>
+{% include "graph-filters.html" %}
 <div class="flow-legend"><span><i class="legend-citation"></i>확인된 인용 · 인용된 논문 → 인용한 논문</span><span><i class="legend-related"></i>주제 연결(추정) · 인용/계승 확인 아님</span><span>★ 필수 논문</span><span>가로축: 발표 연도 순서 · 간격은 균등</span></div>
 <div class="flow-layout">
   <section class="flow-canvas-panel">

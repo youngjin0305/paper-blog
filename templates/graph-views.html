@@ -1,0 +1,4 @@
+<nav class="flow-views" aria-label="연구 흐름 보기 방식">
+  <a href="{{ graph_href }}" data-flow-view {{ 'aria-current=page' if not lineage_view|default(false) else '' }}>연결 그래프 <small>가로 탐색</small></a>
+  <a href="{{ lineage_href }}" data-flow-view {{ 'aria-current=page' if lineage_view|default(false) else '' }}>논문 계보 <small>위에서 아래로</small></a>
+</nav>
