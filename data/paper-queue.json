@@ -2542,14 +2542,26 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000009+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/cryptanalysis/1999-01-01-051ebd775c2b0c3da1f8.md",
+      "graphReferences": [
+        {
+          "citedId": "manual:5d39689454a587183ada",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/3-540-48519-8_12.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "S98] E. Biham, A. Biryukov, A. Shamir. “Cryptanalysis of Skipjack Reduced to 31 Rounds using Impossible Differentials,” _EUROCRYPT’99_, to appear. [BBS99] E. Biham, A. Biryukov",
+            "checkedAt": "2026-10-13T00:00:07+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "eprint:2024/1300",
