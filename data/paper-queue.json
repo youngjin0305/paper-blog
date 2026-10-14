@@ -2884,15 +2884,48 @@
         "checkedAt": "2026-10-14"
       },
       "addedAt": "2026-10-14T04:06:43+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null,
-      "note": "★ 입력 차분·데이터셋 구성 핵심 논문. IEEE 등록 PDF 다운로드가 HTTP 418로 제한됨; 자동 요약 전 원문 PDF 확보 필요."
+      "postPath": "content/ai-cryptanalysis/2024-04-29-e46f618533a003c0a9ce.md",
+      "note": "★ 입력 차분·데이터셋 구성 핵심 논문. 사용자가 제공한 IEEE 최종 출판 PDF의 제목·저자·DOI 대조 완료.",
+      "localPdf": "data/papers/d288af7de7dc88c0af52/original.pdf",
+      "graphReferences": [
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://xplorestaging.ieee.org/ielx7/8858/10843954/10510376.pdf?arnumber=10510376",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "hms_, 2019, pp. 969–978. [8] A. Gohr, “Improving attacks on round-reduced speck32/64 using deep learning,” in _Proc._ _39th_ _Annu._ _Int._ _Cryptol._ _Conf._, Sant",
+            "checkedAt": "2026-10-14T05:47:59+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://xplorestaging.ieee.org/ielx7/8858/10843954/10510376.pdf?arnumber=10510376",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "D. Gerault, T. Peyrin, and Q. Q. Tan, “A deeper look at machine learning-based cryptanalysis,” in _Proc._ _40th_ _Annu._ _Int._ _Conf._ _Theory_ _Appl._",
+            "checkedAt": "2026-10-14T05:47:59+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/719",
+          "evidence": {
+            "url": "https://xplorestaging.ieee.org/ielx7/8858/10843954/10510376.pdf?arnumber=10510376",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Bao, J. Guo, M. Liu, L. Ma, and Y. Tu, “Enhancing differential-neural cryptanalysis,” in _Proc. 28th Int. Conf. Theory Appl. Cryptol. Inf. Secu",
+            "checkedAt": "2026-10-14T05:47:59+00:00"
+          }
+        }
+      ]
     }
   ],
   "seen": [
