@@ -536,6 +536,8 @@ class Pipeline:
                 "model": model, "modelSource": model_source, "items": [
                     {key: value for key, value in item.items() if key not in ("sourceText", "tableMarkdown")}
                     for item in visuals["items"]]}
+        else:
+            paper.pop("visualReview", None)
         paper["status"], paper["postPath"] = "done", path
         if self.dry_run:
             self.log("DRY RUN validated; would publish " + path)

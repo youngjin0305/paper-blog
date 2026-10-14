@@ -120,7 +120,8 @@ def prepare_visuals(root, paper, config, pdf, dry_run=False):
             page_text = page.get_text(sort=True)
             for label in item["label"].split(", "):
                 kind, number = label.split()
-                if not re.search(r"\b" + kind + r"\s+" + number + r"\s*:", page_text):
+                caption_kind = r"(?:Figure|Fig\.)" if kind == "Figure" else "Table"
+                if not re.search(r"\b" + caption_kind + r"\s+" + number + r"\s*:", page_text, re.I):
                     raise ValueError("Visual label does not match the PDF page")
             item["sourceText"] = page_text
             item["pdfSha256"] = digest

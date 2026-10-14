@@ -99,6 +99,16 @@ class VisualTests(unittest.TestCase):
         self.assertEqual(len(bundle['images']), 1)
         self.assertEqual(bundle['items'][0]['page'], 1)
 
+    def test_abbreviated_figure_caption_can_be_inspected_without_a_plan(self):
+        (self.root / self.config['visual_plans_path']).unlink()
+        with pymupdf.open() as doc:
+            page = doc.new_page()
+            page.insert_text((72, 100), 'Fig. 1: Test pipeline.')
+            self.pdf = doc.tobytes()
+        bundle = self.bundle()
+        self.assertEqual(bundle['items'][0]['label'], 'Figure 1')
+        self.assertEqual(bundle['assets'], {})
+
     def test_dry_run_writes_no_files(self):
         before = {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
         self.assertTrue(self.bundle(dry_run=True)['assets'])
