@@ -115,4 +115,5 @@
 }
 
 /* Source figures preserve aspect ratio; wide source tables scroll horizontally. */
-.prose img{display:block;max-width:100%;height:auto;margin:20px auto;border:1px solid var(--line);border-radius:6px;background:#fff}.prose table{max-width:100%;font-size:12px}.prose h3[id^='원문-시각자료']{margin-top:30px}
+.prose img{display:block;max-width:100%;height:auto;margin:20px auto;border:1px solid var(--line);border-radius:6px;background:#fff}.prose table{max-width:100%;font-size:12px}
+.prose .visual-sources{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--muted)}.prose .visual-sources h2{margin:0 0 10px;padding:0;border:0;font-size:12px;color:inherit}.prose .visual-sources ul{margin:0;padding-left:18px}.prose .visual-sources li{margin:7px 0}.prose .visual-sources a{color:inherit}

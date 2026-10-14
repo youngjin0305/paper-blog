@@ -142,6 +142,29 @@ class VisualTests(unittest.TestCase):
         self.assertNotIn('src="https://', html)
         self.assertNotIn('onerror', str(rendered_markdown('<img src=x onerror="alert(1)">')))
 
+    def test_visual_credits_move_after_conclusion_without_duplicate_controls(self):
+        bundle = self.bundle()
+        assemble_visuals(bundle, validate_visual_answer(self.answer(), bundle))
+        block = bundle['blocks']['figure-1']
+        self.assertNotIn('이미지 크게 보기', block)
+        asset = bundle['items'][0]['asset']
+        # Existing posts retain the older linked-image/control format.
+        image = f'![Figure 1](../{asset})'
+        block = block.replace(image, f'[{image}](../{asset})\n\n[이미지 크게 보기](../{asset})')
+        document = '## 제시한 방법론\n\n' + block + '\n\n## 결론\n\n본문 결론.\n'
+        html = str(rendered_markdown(document))
+        self.assertNotIn('이미지 크게 보기', html)
+        self.assertNotIn('원문 시각자료', html)
+        self.assertIn('<h3>Figure 1</h3>', html)
+        self.assertIn('<img ', html)
+        self.assertNotIn('<a href="../static/', html)
+        self.assertEqual(html.count('class="visual-sources"'), 1)
+        self.assertGreater(html.index('class="visual-sources"'), html.index('본문 결론.'))
+        self.assertEqual(html.count('Fixture Author'), 1)
+        self.assertIn('paper.pdf#page=1', html)
+        self.assertIn('CC BY 4.0', html)
+        self.assertIn('출처: 일반 본문', str(rendered_markdown('출처: 일반 본문')))
+
     def test_table_cells_remain_in_their_reviewed_rows_columns_and_units(self):
         with pymupdf.open() as doc:
             page = doc.new_page()

@@ -19,13 +19,14 @@ from garden import Garden, ROOT, atomic_write, atomic_write_bytes, grouped_topic
 from paper_math import math_spans
 from paper_catalog import reading_library
 from paper_graph import build_graph, sync_graph_evidence
-from paper_visuals import ASSET
+from paper_visuals import ASSET, visual_presentation
 
 
 def rendered_markdown(document):
     if document.startswith("---\n"):
         parts = document.split("\n---\n", 1)
         document = parts[1] if len(parts) == 2 else document
+    document, visual_credits = visual_presentation(document)
     spans, _ = math_spans(document)
     marker_prefix = "MATHPLACEHOLDER" + uuid.uuid4().hex.upper() + "X"
     markers = {}
@@ -48,6 +49,11 @@ def rendered_markdown(document):
     safe = bleach.clean(html, tags=tags, attributes=attributes, protocols=["https", "http"], strip=True)
     for marker, original in markers.items():
         safe = safe.replace(marker, escape(original, quote=True))
+    if visual_credits:
+        credits_html = markdown.markdown("\n".join("- " + credit for credit in visual_credits))
+        credits_html = bleach.clean(credits_html, tags=set(bleach.sanitizer.ALLOWED_TAGS) | {"p"},
+                                    attributes={"a": ["href", "title"]}, protocols=["https", "http"], strip=True)
+        safe += '<aside class="visual-sources" aria-label="도표 출처"><h2>도표 출처</h2>' + credits_html + '</aside>'
     return Markup(safe)
 
 

@@ -16,6 +16,24 @@ HEADING = "### 원문 시각자료 · "
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 
 
+def visual_presentation(text):
+    """Keep auditable source blocks in Markdown; present credits once at the end."""
+    credits = []
+    def present(match):
+        block = match.group()
+        block = block.replace(HEADING, "### ", 1)
+        def credit(line):
+            credits.append(line[1])
+            return ""
+        block = re.sub(r"(?m)^출처: (.+)$", credit, block)
+        block = re.sub(r"(?m)^\[이미지 크게 보기\]\(\.\./(" + ASSET.pattern + r")\)\s*$", "", block)
+        # Remove the image's duplicate full-size link as well as its text control.
+        block = re.sub(r"\[(!\[[^\]\n]*\]\(\.\./(" + ASSET.pattern + r")\))\]\(\.\./\2\)", r"\1", block)
+        return block.rstrip() + "\n\n"
+    body = re.sub(r"(?ms)^### 원문 시각자료 · [^\n]+\n.*?(?=^### 원문 시각자료 · |^## |\Z)", present, text)
+    return body, credits
+
+
 def strip_visuals(text):
     return re.sub(r"(?ms)^### 원문 시각자료 · .*?(?=^## |\Z)", "", text).rstrip()
 
@@ -215,8 +233,7 @@ def assemble_visuals(bundle, answers):
         source = paper["pdfUrl"] + "#page=" + str(item["page"])
         block = HEADING + item["label"] + "\n\n"
         if item.get("asset"):
-            block += f"[![{item['label']}](../{item['asset']})](../{item['asset']})\n\n"
-            block += f"[이미지 크게 보기](../{item['asset']})\n\n"
+            block += f"![{item['label']}](../{item['asset']})\n\n"
         if item.get("tableMarkdown"):
             block += "원문 셀의 행·열 순서를 보존한 표입니다.\n\n" + item["tableMarkdown"] + "\n\n"
         block += answers[item["id"]] + "\n\n"
