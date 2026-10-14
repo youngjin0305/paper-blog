@@ -131,7 +131,7 @@ class Pipeline:
         self.dry_run = dry_run
         self.fixture = fixture
         self.backend = backend or (FixtureBackend(fixture) if fixture else create_backend(self.config))
-        self.source = source or Sources(self.config, root=self.root)
+        self.source = source or Sources(self.config, root=self.root, log=self.log, cache_writes=not dry_run)
         self.queue_path = self.root / self.config["queue_path"]
         self.queue = json.loads(self.queue_path.read_text(encoding="utf-8")) if self.queue_path.exists() else empty_queue()
         if not isinstance(self.queue.get("papers"), list) or not isinstance(self.queue.get("seen"), list):

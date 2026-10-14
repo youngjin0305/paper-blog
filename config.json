@@ -160,6 +160,7 @@
     "timeout": 300,
     "http_timeout": 60,
     "max_pdf_bytes": 52428800,
+    "publisher_fallback": true,
     "rule_weight": 0.3,
     "llm_weight": 0.7,
     "abstract_mode": "korean",

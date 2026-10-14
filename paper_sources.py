@@ -1,5 +1,6 @@
 """Public metadata and PDF retrieval. Never extract or save figures."""
 from datetime import datetime, timedelta
+import json
 from email.utils import parsedate_to_datetime
 from hashlib import sha256
 from html.parser import HTMLParser
@@ -7,12 +8,13 @@ from ipaddress import ip_address
 from pathlib import Path
 import re
 import time
+import unicodedata
 from urllib.parse import urlparse, unquote
 import xml.etree.ElementTree as ET
 
 import requests
 
-from garden import Arxiv, ATOM, UTC, now
+from garden import Arxiv, ATOM, UTC, now, atomic_write, atomic_write_bytes
 from paper_queue import canonical_id
 
 
@@ -44,11 +46,30 @@ def identify(value):
     return "manual", "manual:" + sha256(value.encode()).hexdigest()[:20]
 
 
+def citation_key(value):
+    value = unicodedata.normalize("NFKD", value).casefold()
+    return "".join(character for character in value if character.isalnum())
+
+
+def public_https(value):
+    parsed = urlparse(value)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        return False
+    try:
+        address = ip_address(parsed.hostname)
+    except ValueError:
+        address = None
+    return not (parsed.hostname == "localhost" or parsed.hostname.endswith((".local", ".localhost"))
+                or (address and not address.is_global))
+
+
 class Sources:
-    def __init__(self, config, root=None):
+    def __init__(self, config, root=None, log=None, cache_writes=True):
         self.config = config
         self.root = Path(root) if root is not None else None
         self.last_arxiv = 0.0
+        self.log = log or (lambda message: None)
+        self.cache_writes = cache_writes
 
     def get(self, url, **kwargs):
         response = requests.get(url, timeout=self.config["http_timeout"],
@@ -172,6 +193,91 @@ class Sources:
                 raise ValueError("Local PDF has no pages")
         return data
 
+    def verify_publisher_pdf(self, data, paper):
+        import pymupdf
+        with pymupdf.open(stream=data, filetype="pdf") as document:
+            first = citation_key(" ".join(document[index].get_text() for index in range(min(2, len(document)))))
+        if not citation_key(paper["title"]) or citation_key(paper["title"]) not in first:
+            raise ValueError("Publisher PDF title does not match the selected paper")
+        if not paper.get("authors") or any(citation_key(name) not in first for name in paper["authors"]):
+            raise ValueError("Publisher PDF authors do not match the selected paper")
+
+    def publisher_pdf(self, paper):
+        """Follow deposited DOI links only after checking the citation identity."""
+        doi = paper.get("doi", "").strip()
+        if not re.fullmatch(r"10\.\d{4,9}/[^\s?#]+", doi):
+            raise ValueError("No verified DOI is available for a publisher PDF")
+        record = self.get("https://api.crossref.org/works/" + doi).json()["message"]
+        if not any(citation_key(title) == citation_key(paper["title"]) for title in record.get("title", [])):
+            raise ValueError("DOI title does not match the selected paper")
+        registered = {citation_key(author.get("given", "") + " " + author.get("family", ""))
+                      for author in record.get("author", [])}
+        if not paper.get("authors") or {citation_key(name) for name in paper["authors"]} != registered:
+            raise ValueError("DOI authors do not match the selected paper")
+        candidates = [link["URL"] for link in record.get("link") or []
+                      if public_https(link.get("URL", "")) and "/pdf/" in link["URL"]]
+        # Journals such as IACR CiC deposit a landing page, not a PDF link.
+        if not candidates:
+            landing = record.get("resource", {}).get("primary", {}).get("URL", "")
+            if public_https(landing):
+                parser = CitationMetadata()
+                parser.feed(self.get(landing).text)
+                values = parser.values
+                if (doi.casefold() in {value.casefold() for value in values.get("citation_doi", [])}
+                        and any(citation_key(title) == citation_key(paper["title"]) for title in values.get("citation_title", []))):
+                    candidates = [url for url in values.get("citation_pdf_url", []) if public_https(url)]
+        if not candidates:
+            raise ValueError("The DOI publisher has no verified public PDF link")
+        # One alternate download; no retry loops or access-control workarounds.
+        url = candidates[0]
+        data = self.download_pdf(url)
+        self.verify_publisher_pdf(data, paper)
+        return data, url
+
+    def paper_pdf(self, paper):
+        cache = None
+        if self.root is not None:
+            cache = self.root / self.config["archive_dir"] / sha256(paper["id"].encode()).hexdigest()[:20]
+            manifest = cache / "publisher-pdf.json"
+            if manifest.exists():
+                saved = json.loads(manifest.read_text(encoding="utf-8"))
+                if (saved.get("id") == paper["id"] and saved.get("title") == paper["title"]
+                        and saved.get("doi") == paper.get("doi") and public_https(saved.get("url", ""))):
+                    data = self.read_local_pdf(cache / "publisher.pdf")
+                    if sha256(data).hexdigest() != saved.get("sha256"):
+                        raise ValueError("Cached publisher PDF checksum mismatch")
+                    self.verify_publisher_pdf(data, paper)
+                    paper["pdfUrl"] = saved["url"]
+                    self.log("Using verified cached publisher PDF")
+                    return data
+        try:
+            return self.download_pdf(paper["pdfUrl"])
+        except (requests.HTTPError, requests.Timeout, requests.ConnectionError) as exc:
+            status = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
+            host = urlparse(paper["pdfUrl"]).hostname
+            detail = f"HTTP {status}" if status is not None else type(exc).__name__
+            self.log(f"PDF download failed: {detail} at {host}")
+            if status == 429:
+                raise RuntimeError(f"PDF source returned HTTP 429 at {host}; stopped without retry") from None
+            if (not self.config.get("publisher_fallback", True) or not paper.get("doi")
+                    or (status is not None and status not in (403, 404, 410) and status < 500)):
+                raise RuntimeError(f"PDF download failed ({detail} at {host}); no publisher fallback") from None
+            self.log("Checking DOI publisher metadata for an alternate public PDF")
+            try:
+                data, url = self.publisher_pdf(paper)
+            except requests.HTTPError as fallback_error:
+                code = fallback_error.response.status_code if fallback_error.response is not None else "unknown"
+                raise RuntimeError(f"PDF download failed ({detail} at {host}); publisher lookup/download returned HTTP {code}") from None
+            except (requests.Timeout, requests.ConnectionError) as fallback_error:
+                raise RuntimeError(f"PDF download failed ({detail} at {host}); publisher lookup/download failed ({type(fallback_error).__name__})") from None
+            paper["pdfUrl"] = url
+            if cache is not None and self.cache_writes:
+                atomic_write_bytes(cache / "publisher.pdf", data)
+                atomic_write(cache / "publisher-pdf.json", json.dumps({"id": paper["id"], "title": paper["title"],
+                    "doi": paper["doi"], "url": url, "sha256": sha256(data).hexdigest(), "checkedAt": now()}, indent=2) + "\n")
+            self.log("Verified publisher PDF title and authors; using alternate source")
+            return data
+
     def local_metadata(self, metadata):
         """Require verified public citation metadata for an attached PDF."""
         if not isinstance(metadata, dict):
@@ -180,14 +286,7 @@ class Sources:
             if not isinstance(metadata.get(key), str) or not metadata[key].strip():
                 raise ValueError(f"Local PDF metadata requires {key}")
         for key in ("url", "pdfUrl"):
-            parsed = urlparse(metadata[key])
-            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
-                raise ValueError(f"Local PDF {key} must be a public HTTPS URL")
-            try:
-                address = ip_address(parsed.hostname)
-            except ValueError:
-                address = None
-            if parsed.hostname == "localhost" or parsed.hostname.endswith((".local", ".localhost")) or (address and not address.is_global):
+            if not public_https(metadata[key]):
                 raise ValueError(f"Local PDF {key} must be a public HTTPS URL")
             identify(metadata[key])
         published = datetime.fromisoformat(metadata["published"].replace("Z", "+00:00"))
@@ -223,7 +322,7 @@ class Sources:
                 raise ValueError("Local PDF cache path is outside archive_dir")
             data = self.read_local_pdf(path)
         else:
-            data = self.download_pdf(paper["pdfUrl"])
+            data = self.paper_pdf(paper)
         with pymupdf.open(stream=data, filetype="pdf") as document:
             markdown = pymupdf4llm.to_markdown(document, write_images=False, embed_images=False,
                                                ignore_images=True, show_progress=False)

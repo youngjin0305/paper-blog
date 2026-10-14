@@ -20,6 +20,7 @@ DEFAULTS = {
     "agy_path": "agy", "codex_path": "codex", "claude_path": "claude",
     "agy_work_dir": "~/.paper-blog/agy-work", "model": "", "timeout": 300, "http_timeout": 60,
     "max_pdf_bytes": 52428800, "rule_weight": 0.3, "llm_weight": 0.7,
+    "publisher_fallback": True,
     "abstract_mode": "korean", "max_quote_words": 25,
     "arxiv_api": "https://export.arxiv.org/api/query",
     "eprint_rss": "https://eprint.iacr.org/rss/rss.xml", "fetch_limit": 200,
