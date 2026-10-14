@@ -409,6 +409,7 @@ class Pipeline:
             reusable = {}
             draft_failures = {}
             reused_model = None
+            generated_any = False
             if resume_draft:
                 draft_path, _ = assemble(paper, {}, {}, [], self.config, topic_ids=self.topic_ids)
                 draft = self.root / self.config["draft_dir"] / Path(draft_path).name
@@ -441,6 +442,7 @@ class Pipeline:
                     self.log(f"Generating group {group}, attempt {attempt + 1}/2")
                     quote_budget = max(0, self.config["max_quote_words"] - sum(
                         quote_words(text) for key, text in groups.items() if key != group))
+                    generated_any = True
                     groups[group] = self.group(group, paper, markdown, feedback, quote_budget=quote_budget)
                     failures = validate_group(group, groups[group], evidence, self.config)
                     if group == "A" and self.config["abstract_mode"] == "korean":
@@ -460,6 +462,7 @@ class Pipeline:
                           "\n<references>" + json.dumps(references, ensure_ascii=False) + "</references>")
                 for attempt in range(2):
                     try:
+                        generated_any = True
                         selected = json.loads(self.backend.generate(prompt, {"kind": "references"}))
                         if not isinstance(selected, list) or any(type(i) is not int or i not in references for i in selected):
                             raise ValueError("Only existing reference numbers are allowed")
@@ -472,7 +475,10 @@ class Pipeline:
                         prompt += "\n검증 실패: 허용 번호의 JSON 정수 배열만 출력하라."
             model = recorded_model(self.backend, self.config["model"])
             model_source = "reported" if getattr(self.backend, "used_models", None) else "configured"
-            if reused_model:
+            if reused_model and not generated_any:
+                model = reused_model
+                model_source = metadata.get("summary_model_source", "configured")
+            elif reused_model:
                 if reused_model != model:
                     model = f"{reused_model} + {model}"
                 model_source = "mixed"

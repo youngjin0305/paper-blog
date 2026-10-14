@@ -308,6 +308,13 @@ class ValidationTests(unittest.TestCase):
                   "3   probability = $\n4   another row\nAnnex. Best probabilities.")
         self.assertEqual(parse_references(source), {1: "Author. Title.\nJournal 1993."})
 
+    def test_wrapped_numeric_url_is_not_a_reference_marker(self):
+        link = "`[8690](https://dl.acm.org/doi/10.5555/2968618.2968690)` ."
+        source = "References\n[AA16] Author. Title.\n" + link + "\n[BG21] Another author."
+        self.assertEqual(parse_references(source), {})
+        numbered = "References\n[1] Author. Title.\n" + link + "\n[2] Another author."
+        self.assertEqual(parse_references(numbered), {1: "Author. Title.\n" + link, 2: "Another author."})
+
     def test_rubric_schema_rejects_missing_and_out_of_range(self):
         self.assertEqual(parse_rank(json.dumps(FIXTURE["rank"])), FIXTURE["rank"])
         from jsonschema import ValidationError
@@ -493,6 +500,22 @@ class PipelineTests(unittest.TestCase):
                 self.pipeline.daily()
         self.assertEqual(generate.call_count, 1)
         self.assertEqual(self.pipeline.queue, before)
+
+    def test_fully_reused_draft_preserves_model_without_any_llm_call(self):
+        from paper_validation import split_document
+        pin(self.pipeline.queue, PAPER)
+        path, document = assemble(PAPER, FIXTURE["groups"], {}, [], CONFIG,
+                                  summary_model="actual-model", model_source="reported")
+        atomic_write(self.root / "drafts" / Path(path).name, document)
+        self.pipeline.fixture["markdown"] = self.pipeline.fixture["markdown"].split("References")[0]
+        self.pipeline.fixture["source_text"] = self.pipeline.fixture["source_text"].split("References")[0]
+        with patch.object(self.pipeline.backend, "generate") as generate:
+            result = self.pipeline.daily(resume_draft=True)
+        self.assertTrue(result["valid"])
+        generate.assert_not_called()
+        metadata, _ = split_document(result["document"])
+        self.assertEqual(metadata["summary_model"], "actual-model")
+        self.assertEqual(metadata["summary_model_source"], "reported")
 
     def test_empty_queue_success(self):
         self.assertIsNone(self.pipeline.daily())

@@ -125,7 +125,11 @@ def parse_references(source):
         tail = tail[:ending.start()]
     # PDF Markdown can wrap the marker in bold, italics, or code. Unknown OCR
     # labels still delimit entries, but never guess a number for them.
-    found = list(re.finditer(r"(?m)^[ \t]*[*_`]*(?:\[([A-Za-z0-9]+)\]|(\d+)\.(?=[ \t*_`]))[*_`]*[ \t]*", tail))
+    found = [marker for marker in re.finditer(
+        r"(?m)^[ \t]*[*_`]*(?:\[([A-Za-z0-9]+)\]|(\d+)\.(?=[ \t*_`]))[*_`]*[ \t]*", tail)
+        if not tail[marker.end():].startswith("(")]
+    # Wrapped PDF URLs such as `[8690](https://...2968690)` are link
+    # fragments, not numbered entries. Author-year bibliographies remain unsupported.
     if ending and found:
         # Some PDFs place an Annex caption below its table, on the next page.
         # A page footer after the final bibliography marker bounds that table.
