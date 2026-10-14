@@ -475,6 +475,7 @@ class Pipeline:
                             groups[item["group"]] += "\n\n" + visuals["blocks"][item["id"]]
                         break
                     except (ValueError, TypeError) as exc:
+                        self.log("Visual response needs correction: " + str(exc))
                         feedback = "\n검증 실패: " + str(exc)
                         if attempt == 1:
                             errors.append("Visual source validation failed twice: " + str(exc))
