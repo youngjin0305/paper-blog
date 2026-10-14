@@ -143,7 +143,7 @@ AI CryptAnalysis는 neural distinguisher, 신경망 기반 차분·선형 구별
 
 검증한 서지·원문·PDF·분류·선정 이유·근거 링크는 `data/core-papers.json`에 보관합니다(`pipeline.core_catalog_path`로 경로 지정). 초기 목록 12편에 입력 차분·데이터셋 구성의 핵심 연구인 Seok·Lee의 *A Novel Approach to Construct a Good Dataset for Differential-Neural Cryptanalysis*를 추가했습니다. 원전·기반 방법·공용 벤치마크 중 **Crossref 등록 인용 100회 이상**을 우선 선정했고, 분야 survey에서 다루는 직접 공격 확장·세부 주제의 방법론 연구와 포괄적 survey는 명시적인 예외로 포함했습니다. Crossref 인용수의 조회일은 논문별 `citation.checkedAt`에 기록하며 Google Scholar 전체 인용수와 다릅니다. 별표는 근거를 기록한 편집 선정으로, 모든 후속 논문이 인용한다는 보장은 아닙니다.
 
-2026-10-14에 AI Digital Forensics의 미처리 대기 항목을 종료했습니다. 해당 분야의 자동 수집은 계속 꺼져 있습니다. `seed-core`는 수집 활성화 여부와 별개로 목록 전체를 다시 고정하는 수동 명령이므로, 전체 목록을 재등록하려는 경우에만 실행하세요. Seok·Lee 논문의 IEEE 등록 PDF는 이 날짜에 HTTP 418로 다운로드가 제한됐습니다. 대기 목록과 연구 흐름에는 검증한 서지·인용 근거로 표시하며, 전문 요약을 실행하려면 접근 가능한 원문 PDF가 필요합니다. 저자의 연결된 GitHub 저장소는 현재 README만 있어 코드 재현 가능성은 선정 근거에 포함하지 않았습니다.
+2026-10-14에 AI Digital Forensics의 미처리 대기 항목을 종료했습니다. 해당 분야의 자동 수집은 계속 꺼져 있습니다. `seed-core`는 수집 활성화 여부와 별개로 목록 전체를 다시 고정하는 수동 명령이므로, 전체 목록을 재등록하려는 경우에만 실행하세요. Seok·Lee 논문의 IEEE 등록 PDF는 이 날짜에 HTTP 418로 다운로드가 제한돼, 사용자가 제공한 최종 출판 PDF의 제목·저자·DOI를 대조한 뒤 `add <local.pdf> --metadata-file <citation.json>`으로 연결했습니다. 후속 `daily`는 해당 파일의 보관본을 읽습니다. 보관 PDF는 저장소에 올리지 않으며 공개 PDF 링크는 출판사 등록 주소를 유지합니다. 저자의 연결된 GitHub 저장소는 현재 README만 있어 코드 재현 가능성은 선정 근거에 포함하지 않았습니다.
 
 ```powershell
 # 파일·큐를 수정하지 않고 핵심 논문 추가 결과 확인
