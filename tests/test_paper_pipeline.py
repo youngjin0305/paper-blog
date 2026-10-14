@@ -129,6 +129,27 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(document.count("## 초록\n"), 1)
         self.assertEqual(validate_document(document, PAPER, FIXTURE["markdown"], config), [])
 
+    def test_summary_author_initials_are_not_sentence_boundaries(self):
+        for author in ("A. Gohr", "A. B. Smith"):
+            groups = deepcopy(FIXTURE["groups"])
+            groups["A"] = groups["A"].replace(
+                "고정된 검색 조건에서 후보 필터가 검색 결과에 미치는 영향을 합성 데이터로 비교한다.",
+                author + "의 방법을 비교한다. 수치 2.5를 검토한다.")
+            self.assertEqual(validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG), [])
+            groups["A"] = groups["A"].replace("수치 2.5를 검토한다.", "수치 2.5를 검토한다. 한계도 설명한다.")
+            self.assertIn("한눈에 보기 must contain only 1 or 2 sentences",
+                          validate_document(self.document(groups), PAPER, FIXTURE["markdown"], CONFIG))
+
+    def test_translated_month_is_exempt_only_in_matching_date(self):
+        from paper_validation import abstract_number_errors
+        original = "As of February 2025, this work has been cited 238 times."
+        self.assertEqual(abstract_number_errors("2025년 2월 기준 인용 238회다.", original), [])
+        for wrong in ("2025년 3월 기준 인용 238회다.", "2024년 2월 기준 인용 238회다.",
+                      "2025년 2월 기준 인용 238회이며 모델은 2개다."):
+            self.assertTrue(abstract_number_errors(wrong, original))
+        self.assertTrue(abstract_number_errors("2025년 5월 모델 238개다.", "We may evaluate 238 models in 2025."))
+        self.assertEqual(abstract_number_errors("2025년 2월 3일, 값 238이다.", "On February 3, 2025, the value is 238."), [])
+
     def test_summary_provenance_and_legacy_frontmatter(self):
         from paper_validation import split_document
         config = {**CONFIG, "model": "claude/opus"}

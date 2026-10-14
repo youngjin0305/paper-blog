@@ -175,6 +175,17 @@ def spelled_out_numbers(text):
 
 
 def abstract_number_errors(translated, original):
+    # English month names can become Korean numeric months. Exempt only the
+    # matching year/month date token, never unrelated occurrences of its number.
+    months = ("January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December")
+    month_pattern = r"\b(" + "|".join(months) + r")\s+(?:\d{1,2},?\s+)?((?:19|20)\d{2})\b"
+    dates = {(match[2], str(months.index(match[1].title()) + 1))
+             for match in re.finditer(month_pattern, original, re.I)}
+    translated = re.sub(
+        r"(?<!\d)((?:19|20)\d{2})년\s*(\d{1,2})월",
+        lambda match: match[1] + "년" if (match[1], str(int(match[2]))) in dates else match[0],
+        translated)
     source_values = numbers(original)
     translated_values = numbers(translated)
     missing = sorted(source_values - translated_values)
@@ -206,7 +217,11 @@ def validate_group(group, text, source, config):
         summary = present.get("한눈에 보기", "")
         if not re.search(r"[가-힣]", summary) or len(summary) > 400:
             errors.append("한눈에 보기 requires a short Korean topic summary (up to 400 characters)")
-        if len(re.split(r"(?<=[.!?。])\s+", summary.strip())) > 2:
+        # Author initials before a surname (A. Gohr, A. B. Smith) are not
+        # sentence boundaries. Keep real sentence punctuation unchanged.
+        sentence_text = re.sub(r"(?<![A-Za-z])([A-Z])\.(?=\s+(?:[A-Z]\.\s+)*[A-Z][a-z])",
+                               r"\1", summary.strip())
+        if len(re.split(r"(?<=[.!?。])\s+", sentence_text)) > 2:
             errors.append("한눈에 보기 must contain only 1 or 2 sentences")
         if config["abstract_mode"] == "korean" and not re.search(r"[가-힣]", present.get("초록", "")):
             errors.append("초록 must be translated into Korean")
