@@ -3,7 +3,7 @@
 {% block scripts %}<script src="{{ graph_data_url }}" defer></script><script src="{{ asset_url }}research-graph.js" defer></script>{% endblock %}
 {% block content %}
 {% include "graph-views.html" %}
-<section class="flow-header"><div class="eyebrow">RESEARCH PATHS</div><h1>연구는 어디에서 시작해<br>어디로 이어졌을까요.</h1><p>★ 필수 논문을 뼈대로, 수집한 논문과 정리 글을 연결합니다. 제목을 누르면 요약 글 또는 원문으로 이동하고, ⓘ와 연결선을 누르면 근거를 볼 수 있습니다.</p></section>
+<section class="flow-header"><div class="eyebrow">RESEARCH PATHS</div><h1>연구 흐름</h1><p>★ 필수 논문을 뼈대로, 수집한 논문과 정리 글을 연결합니다. 제목을 누르면 요약 글 또는 원문으로 이동하고, ⓘ와 연결선을 누르면 근거를 볼 수 있습니다.</p></section>
 {% include "graph-filters.html" %}
 <div class="flow-legend"><span><i class="legend-citation"></i>확인된 인용 · 인용된 논문 → 인용한 논문</span><span><i class="legend-related"></i>주제 연결(추정) · 인용/계승 확인 아님</span><span>★ 필수 논문</span><span>가로축: 발표 연도 순서 · 간격은 균등</span></div>
 <div class="flow-layout">

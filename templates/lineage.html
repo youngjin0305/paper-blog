@@ -3,7 +3,7 @@
 {% block scripts %}<script src="{{ graph_data_url }}" defer></script><script src="{{ asset_url }}research-lineage.js" defer></script>{% endblock %}
 {% block content %}
 {% include "graph-views.html" %}
-<section class="flow-header lineage-header"><div class="eyebrow">RESEARCH TIMELINE</div><h1>분야의 흐름을,<br>연도에 따라 내려 읽기.</h1><p>같은 분야의 논문을 하나의 그래프에 모았습니다. 왼쪽의 연도 눈금을 따라 내려가며 연결을 읽어보세요. 같은 해의 논문은 같은 점선 아래에 나란히 놓입니다.</p></section>
+<section class="flow-header lineage-header"><div class="eyebrow">RESEARCH TIMELINE</div><h1>연구 흐름</h1><p>같은 분야의 논문을 하나의 그래프에 모았습니다. 왼쪽의 연도 눈금을 따라 내려가며 연결을 읽어보세요. 같은 해의 논문은 같은 점선 아래에 나란히 놓입니다.</p></section>
 {% include "graph-filters.html" %}
 <div class="flow-legend"><span><i class="legend-citation"></i>확인된 인용</span><span><i class="legend-related"></i>주제 연결(추정)</span><span id="lineage-exception-legend" hidden><i class="legend-preserved"></i>중요 연결 · 표시 예외</span><span>★ 필수 논문</span><span>세로축: 발표 연도 · 간격은 균등</span></div>
 <div class="lineage-summary"><div class="lineage-summary-top"><span id="lineage-count" aria-live="polite"></span><label class="lineage-expand"><input id="lineage-show-all" type="checkbox">모든 연결선 보기</label></div><p>중간 논문을 거쳐 이어지는 중복 인용선은 생략합니다. 다른 가지의 연결과 별도 지정한 중요 연결은 유지하며, 모든 인용 근거는 카드에서 확인할 수 있습니다.</p></div>
