@@ -2610,8 +2610,6 @@
       "studyType": "empirical",
       "localPdf": "data/papers/c53653a5b13f09f16daa/original.pdf",
       "note": "",
-      "journal_ref": "Communications in Cryptology 2026",
-      "doi": "10.62056/a69qxruc2",
       "graphReferences": [
         {
           "citedId": "manual:27d827b6e7accfdbd227",
@@ -2620,7 +2618,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": ")` . [BS90] Eli Biham and Adi Shamir. Differential cryptanalysis of des-like cryptosystems. In Alfred Menezes and Scott A. Vanstone, editors, _Advance",
-            "checkedAt": "2026-10-14T03:50:29+00:00"
+            "checkedAt": "2026-10-14T03:52:59+00:00"
           }
         },
         {
@@ -2630,7 +2628,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": ".2024.10831564)` . [Goh19] Aron Gohr. Improving attacks on round-reduced speck32/64 using deep learning. In Alexandra Boldyreva and Daniele Micciancio, editors, _A",
-            "checkedAt": "2026-10-14T03:50:29+00:00"
+            "checkedAt": "2026-10-14T03:52:59+00:00"
           }
         },
         {
@@ -2640,7 +2638,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": "no21] AnonymousSubmissionEuroCrypt2021. A deeper look at machine-learningbased cryptanalysis (implementation). `[https://github.com/AnonymousSu](https:/",
-            "checkedAt": "2026-10-14T03:50:29+00:00"
+            "checkedAt": "2026-10-14T03:52:59+00:00"
           }
         },
         {
@@ -2650,10 +2648,13 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": "an Guo, Meicheng Liu, Li Ma, and Yi Tu. Enhancing differential-neural cryptanalysis. In Shweta Agrawal and Dongdai Lin, editors, _Advances_ _in",
-            "checkedAt": "2026-10-14T03:50:29+00:00"
+            "checkedAt": "2026-10-14T03:52:59+00:00"
           }
         }
-      ]
+      ],
+      "replacePostPath": "content/ai-cryptanalysis/2024-08-20-844cbc284b7bc5f28a6a.md",
+      "journal_ref": "Communications in Cryptology 2026",
+      "doi": "10.62056/a69qxruc2"
     },
     {
       "id": "arxiv:1806.02877",
