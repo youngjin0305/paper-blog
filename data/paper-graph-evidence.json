@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "checkedAt": "2026-10-09T18:54:42+00:00",
+  "checkedAt": "2026-10-14T04:06:43+00:00",
   "edges": [
     {
       "source": "arxiv:1805.04953",
@@ -107,7 +107,7 @@
         "origin": "crossref-references",
         "match": "DOI",
         "excerpt": "Improving Attacks on Round-Reduced Speck32/64 Using Deep Learning",
-        "checkedAt": "2026-10-09T18:54:42+00:00"
+        "checkedAt": "2026-10-14T04:06:43+00:00"
       }
     },
     {
@@ -119,7 +119,7 @@
         "origin": "crossref-references",
         "match": "DOI",
         "excerpt": "A Deeper Look at Machine Learning-Based Cryptanalysis",
-        "checkedAt": "2026-10-09T18:54:42+00:00"
+        "checkedAt": "2026-10-14T04:06:43+00:00"
       }
     },
     {
@@ -131,7 +131,19 @@
         "origin": "crossref-references",
         "match": "DOI",
         "excerpt": "Enhancing Differential-Neural Cryptanalysis",
-        "checkedAt": "2026-10-09T18:54:42+00:00"
+        "checkedAt": "2026-10-14T04:06:43+00:00"
+      }
+    },
+    {
+      "source": "manual:055d293f4c53fadaf731",
+      "target": "eprint:2024/1300",
+      "kind": "citation",
+      "evidence": {
+        "url": "https://api.crossref.org/works/10.62056/a69qxruc2",
+        "origin": "crossref-references",
+        "match": "DOI",
+        "excerpt": "A Novel Approach to Construct a Good Dataset for Differential-Neural Cryptanalysis",
+        "checkedAt": "2026-10-14T04:06:43+00:00"
       }
     },
     {
@@ -143,7 +155,43 @@
         "origin": "crossref-references",
         "match": "title",
         "excerpt": "Differential Cryptanalysis of DES-like Cryptosystems",
-        "checkedAt": "2026-10-09T18:54:42+00:00"
+        "checkedAt": "2026-10-14T04:06:43+00:00"
+      }
+    },
+    {
+      "source": "eprint:2019/037",
+      "target": "manual:055d293f4c53fadaf731",
+      "kind": "citation",
+      "evidence": {
+        "url": "https://api.crossref.org/works/10.1109/TDSC.2024.3387662",
+        "origin": "crossref-references",
+        "match": "DOI",
+        "excerpt": "DOI: 10.1007/978-3-030-26951-7_6",
+        "checkedAt": "2026-10-14T04:06:43+00:00"
+      }
+    },
+    {
+      "source": "eprint:2021/287",
+      "target": "manual:055d293f4c53fadaf731",
+      "kind": "citation",
+      "evidence": {
+        "url": "https://api.crossref.org/works/10.1109/TDSC.2024.3387662",
+        "origin": "crossref-references",
+        "match": "DOI",
+        "excerpt": "DOI: 10.1007/978-3-030-77870-5_28",
+        "checkedAt": "2026-10-14T04:06:43+00:00"
+      }
+    },
+    {
+      "source": "eprint:2021/719",
+      "target": "manual:055d293f4c53fadaf731",
+      "kind": "citation",
+      "evidence": {
+        "url": "https://api.crossref.org/works/10.1109/TDSC.2024.3387662",
+        "origin": "crossref-references",
+        "match": "DOI",
+        "excerpt": "DOI: 10.1007/978-3-031-22963-3_11",
+        "checkedAt": "2026-10-14T04:06:43+00:00"
       }
     },
     {

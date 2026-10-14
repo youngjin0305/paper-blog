@@ -2697,14 +2697,16 @@
         "checkedAt": "2026-10-09"
       },
       "addedAt": "2026-10-09T12:16:27.000011+00:00",
-      "status": "pinned",
+      "status": "expired",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": null,
+      "expirationReason": "AI Digital Forensics removed from pending reading list by user",
+      "expiredAt": "2026-10-14T04:06:43+00:00"
     },
     {
       "id": "eprint:2026/2382",
@@ -2834,6 +2836,63 @@
       "failCount": 0,
       "postPath": null,
       "topic_id": "cryptanalysis"
+    },
+    {
+      "id": "manual:055d293f4c53fadaf731",
+      "source": "manual",
+      "title": "A Novel Approach to Construct a Good Dataset for Differential-Neural Cryptanalysis",
+      "authors": [
+        "Byoungjin Seok",
+        "Changhoon Lee"
+      ],
+      "abstract": "Recently, differential-neural cryptanalysis, which combines deep learning with differential cryptanalysis, has gained attention as a powerful and practical cryptanalysis method. This approach offers the advantage of enabling deep learning to analyze cryptographic properties, traditionally demanding substantial time and expertise. Nevertheless, the black-box nature of deep learning models poses challenges for cryptanalysts in comprehending the construction of the differential dataset. In particular, since the differential dataset serves as the foundation for generating the neural distinguisher, there is a pressing need for an effective methodology to construct a high-quality differential dataset. In this paper, we propose a novel approach to construct a good differential dataset for differential-neural cryptanalysis. First, we conducted an analysis to find the difference between well-trainable differential datasets and other differential datasets using Principal Component Analysis (PCA) and K-means clustering. Building upon our analysis results, we proposed the exploring algorithm for the generation of well-trainable differential dataset. This proposed algorithm assesses the input differences within the differential dataset by identifying significant principal components. If such components are found, a cluster evaluation is performed on the differential dataset. In our experiments, the proposed algorithm successfully identified favorable input differences, leading to improved accuracy in neural distinguisher training for SPECK and SIMON. Compared to the performance of the existing Gohr's neural input difference algorithm, our proposed algorithm was more effective in finding good input differences with higher accuracy. From the perspective of execution time, it showed an improvement of approximately 30%.",
+      "url": "https://ieeexplore.ieee.org/document/10510376/",
+      "pdfUrl": "https://xplorestaging.ieee.org/ielx7/8858/10843954/10510376.pdf?arnumber=10510376",
+      "published": "2024-04-29T00:00:00+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "journal_ref": "IEEE Transactions on Dependable and Secure Computing 2025",
+      "doi": "10.1109/TDSC.2024.3387662",
+      "publication_note": "온라인 공개 2024-04-29; 권호 출판 2025년",
+      "topic_id": "ai-cryptanalysis",
+      "publicationYear": 2025,
+      "essential": true,
+      "coreBasis": "데이터셋 구성 · 세부 주제 핵심",
+      "coreRationale": "PCA와 K-means로 학습하기 좋은 차분 데이터셋의 구조를 분석하고 입력 차분 탐색으로 연결한 연구다. 분야 survey의 The Input Data 절에서 별도로 다루므로 입력 차분·데이터셋 구성 축의 핵심 읽기 논문으로 선정했다. 고인용 100회 기준의 예외이며 분야 전체의 원전이라는 의미는 아니다.",
+      "evidence": [
+        {
+          "url": "https://ieeexplore.ieee.org/document/10510376/",
+          "label": "IEEE 출판사 서지·초록·온라인 공개일"
+        },
+        {
+          "url": "https://pure.seoultech.ac.kr/en/publications/a-novel-approach-to-construct-a-good-dataset-for-differential-neu/",
+          "label": "저자 소속 대학의 서지·초록"
+        },
+        {
+          "url": "https://cic.iacr.org/p/3/2/21/pdf",
+          "label": "분야 survey의 The Input Data 절 및 SL25 참고문헌"
+        },
+        {
+          "url": "https://api.crossref.org/works/10.1109/TDSC.2024.3387662",
+          "label": "Crossref 등록 인용수·참고문헌"
+        }
+      ],
+      "citation": {
+        "count": 14,
+        "source": "Crossref",
+        "url": "https://api.crossref.org/works/10.1109/TDSC.2024.3387662",
+        "checkedAt": "2026-10-14"
+      },
+      "addedAt": "2026-10-14T04:06:43+00:00",
+      "status": "pinned",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": null,
+      "note": "★ 입력 차분·데이터셋 구성 핵심 논문. IEEE 등록 PDF 다운로드가 HTTP 418로 제한됨; 자동 요약 전 원문 PDF 확보 필요."
     }
   ],
   "seen": [
@@ -2879,7 +2938,8 @@
     "manual:27d827b6e7accfdbd227",
     "manual:4772153072351b952954",
     "manual:5d39689454a587183ada",
-    "manual:cf168ef7c911b4f838dd"
+    "manual:cf168ef7c911b4f838dd",
+    "manual:055d293f4c53fadaf731"
   ],
   "lastWeeklyAt": "2026-10-11T23:00:01+00:00"
 }
