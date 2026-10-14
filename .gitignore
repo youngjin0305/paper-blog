@@ -7,6 +7,7 @@ data/*
 !data/paper-queue.json
 !data/core-papers.json
 !data/paper-graph-evidence.json
+!data/paper-visual-plans.json
 site/
 *.log
 drafts/

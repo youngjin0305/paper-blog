@@ -1,9 +1,12 @@
 """Scoped Git publishing with a durable outbox for commit/push recovery."""
 import json
+import base64
+from hashlib import sha256
 from pathlib import Path
 import subprocess
 
-from garden import atomic_write
+from garden import atomic_write, atomic_write_bytes
+from paper_visuals import ASSET
 
 
 class Publisher:
@@ -26,7 +29,7 @@ class Publisher:
         if self.git("diff", "--cached", "--name-only").stdout.strip():
             raise RuntimeError("Git index already has staged changes; leave them untouched")
 
-    def prepare(self, post_path, queue_path, document, queue, replace_existing=False):
+    def prepare(self, post_path, queue_path, document, queue, replace_existing=False, assets=None):
         self.preflight()
         target = (self.root / post_path).resolve()
         if not target.is_relative_to((self.root / "content").resolve()) or target.suffix.lower() != ".md":
@@ -36,7 +39,21 @@ class Publisher:
         if replace_existing:
             if not target.is_file() or self.git("ls-files", "--error-unmatch", "--", post_path, check=False).returncode:
                 raise ValueError("Replacement must be an existing tracked post")
+        encoded = {}
+        new_assets = []
+        for name, data in (assets or {}).items():
+            asset = (self.root / name).resolve()
+            if (not ASSET.fullmatch(name) or not asset.is_relative_to(self.root.resolve())
+                    or not isinstance(data, bytes) or Path(name).stem != sha256(data).hexdigest()
+                    or not data.startswith(b"\x89PNG\r\n\x1a\n")):
+                raise ValueError("Invalid visual asset path or checksum")
+            if asset.exists() and asset.read_bytes() != data:
+                raise RuntimeError("Visual asset was edited; refusing to overwrite it")
+            encoded[name] = base64.b64encode(data).decode("ascii")
+            if self.git("ls-files", "--error-unmatch", "--", name, check=False).returncode:
+                new_assets.append(name)
         payload = {"postPath": post_path, "queuePath": queue_path, "document": document,
+                   "assets": encoded, "commitPaths": [post_path, queue_path, *new_assets],
                    "queue": queue, "headBefore": self.git("rev-parse", "HEAD").stdout.strip(),
                    "postBefore": target.read_text(encoding="utf-8") if replace_existing else None,
                    "queueBefore": (self.root / queue_path).read_text(encoding="utf-8") if (self.root / queue_path).exists() else None,
@@ -48,7 +65,13 @@ class Publisher:
         if not self.outbox.exists():
             return False
         payload = json.loads(self.outbox.read_text(encoding="utf-8"))
-        paths = [payload["postPath"], payload["queuePath"]]
+        assets = {}
+        for name, encoded in payload.get("assets", {}).items():
+            data = base64.b64decode(encoded, validate=True)
+            if not ASSET.fullmatch(name) or Path(name).stem != sha256(data).hexdigest() or not data.startswith(b"\x89PNG\r\n\x1a\n"):
+                raise ValueError("Invalid pending visual asset")
+            assets[name] = data
+        paths = [payload["postPath"], payload["queuePath"], *assets]
         for path in paths:
             if not (self.root / path).resolve().is_relative_to(self.root.resolve()):
                 raise ValueError("Invalid publish outbox path")
@@ -60,14 +83,29 @@ class Publisher:
                 expected_queue = json.dumps(payload["queue"], ensure_ascii=False, indent=2) + "\n"
                 for commit in commits:
                     names = set(self.git("diff-tree", "--no-commit-id", "--name-only", "-r", commit).stdout.splitlines())
-                    if names == set(paths) and self.git("show", f"{commit}:{paths[0]}").stdout == payload["document"] and self.git("show", f"{commit}:{paths[1]}").stdout == expected_queue:
+                    if names == set(payload.get("commitPaths", paths)) and self.git("show", f"{commit}:{paths[0]}").stdout == payload["document"] and self.git("show", f"{commit}:{paths[1]}").stdout == expected_queue:
+                        # Binary assets are content addressed. Verify their committed bytes,
+                        # including assets already present in the parent commit.
+                        valid_assets = True
+                        for name, data in assets.items():
+                            blob = subprocess.run(["git", "show", f"{commit}:{name}"], cwd=self.root,
+                                capture_output=True, timeout=self.config["timeout"], shell=False)
+                            if blob.returncode or blob.stdout != data:
+                                valid_assets = False
+                                break
+                        if not valid_assets:
+                            continue
                         committed = True
                         break
                 if not committed:
                     staged = set(self.git("diff", "--cached", "--name-only").stdout.splitlines())
                     if staged - set(paths):
                         raise RuntimeError("Unrelated staged files; publish is pending")
-                    for path, content in zip(paths, (payload["document"], expected_queue)):
+                    for name, data in assets.items():
+                        target = self.root / name
+                        if target.exists() and target.read_bytes() != data:
+                            raise RuntimeError("Pending visual asset was edited; refusing to overwrite it")
+                    for path, content in zip(paths[:2], (payload["document"], expected_queue)):
                         target = self.root / path
                         if path == paths[0] and target.exists() and target.read_text(encoding="utf-8") not in (content, payload.get("postBefore")):
                             raise RuntimeError("Pending post was edited; refusing to overwrite it")
@@ -76,6 +114,8 @@ class Publisher:
                         if path == paths[1] and target.exists() and target.read_text(encoding="utf-8") not in (content, payload.get("queueBefore")):
                             raise RuntimeError("Pending queue was edited; refusing to overwrite it")
                         atomic_write(target, content)
+                    for name, data in assets.items():
+                        atomic_write_bytes(self.root / name, data)
                     self.git("add", "--", *paths)
                     self.git("commit", "-m", payload["message"], "--", *paths)
                 payload["phase"] = "committed"

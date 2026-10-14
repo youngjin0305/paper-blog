@@ -19,6 +19,7 @@ from garden import Garden, ROOT, atomic_write, atomic_write_bytes, grouped_topic
 from paper_math import math_spans
 from paper_catalog import reading_library
 from paper_graph import build_graph, sync_graph_evidence
+from paper_visuals import ASSET
 
 
 def rendered_markdown(document):
@@ -37,8 +38,14 @@ def rendered_markdown(document):
             offset = span.end
         document = "".join(chunks) + document[offset:]
     html = markdown.markdown(document, extensions=["tables", "fenced_code", "sane_lists"])
-    tags = set(bleach.sanitizer.ALLOWED_TAGS) | {"p", "h1", "h2", "h3", "h4", "br", "hr", "pre", "code", "table", "thead", "tbody", "tr", "th", "td"}
-    safe = bleach.clean(html, tags=tags, attributes={"a": ["href", "title"]}, protocols=["https", "http"], strip=True)
+    tags = set(bleach.sanitizer.ALLOWED_TAGS) | {"p", "h1", "h2", "h3", "h4", "br", "hr", "pre", "code", "table", "thead", "tbody", "tr", "th", "td", "img"}
+    def attributes(tag, name, value):
+        if tag == "a":
+            return name in ("href", "title")
+        if tag == "img":
+            return name == "alt" or (name == "src" and value.startswith("../") and bool(ASSET.fullmatch(value[3:])))
+        return False
+    safe = bleach.clean(html, tags=tags, attributes=attributes, protocols=["https", "http"], strip=True)
     for marker, original in markers.items():
         safe = safe.replace(marker, escape(original, quote=True))
     return Markup(safe)
@@ -246,6 +253,10 @@ def export_site(app, garden):
         for asset in (ROOT / "static/vendor/katex").rglob("*"):
             if asset.is_file():
                 atomic_write_bytes(output / "assets/vendor/katex" / asset.relative_to(ROOT / "static/vendor/katex"), asset.read_bytes())
+        for asset in (garden.root / "static/paper-figures").rglob("*.png"):
+            relative = asset.relative_to(garden.root).as_posix()
+            if not asset.is_symlink() and ASSET.fullmatch(relative):
+                atomic_write_bytes(output / relative, asset.read_bytes())
         atomic_write(output / ".nojekyll", "")
     return output
 

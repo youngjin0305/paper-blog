@@ -113,3 +113,6 @@
   .lineage-cells { column-gap: 16px; }.lineage-cells[data-columns="1"] { grid-template-columns: 228px; }.lineage-cells[data-columns="2"] { grid-template-columns: repeat(2, 228px); }.lineage-cells[data-columns="3"] { grid-template-columns: repeat(3, 228px); }
   .lineage-year-label { left: 4px; top: 13px; font-size: 18px; }.lineage-year-guide { left: 52px; }.lineage-summary { padding: 14px; }.lineage-dialog { padding: 16px; }
 }
+
+/* Source figures preserve aspect ratio; wide source tables scroll horizontally. */
+.prose img{display:block;max-width:100%;height:auto;margin:20px auto;border:1px solid var(--line);border-radius:6px;background:#fff}.prose table{max-width:100%;font-size:12px}.prose h3[id^='원문-시각자료']{margin-top:30px}

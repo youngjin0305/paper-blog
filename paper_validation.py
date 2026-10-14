@@ -258,7 +258,7 @@ def validate_group(group, text, source, config):
     return errors
 
 
-def validate_document(document, paper, source, config):
+def validate_document(document, paper, source, config, visuals=None):
     errors = []
     try:
         metadata, body = split_document(document)
@@ -297,6 +297,9 @@ def validate_document(document, paper, source, config):
             errors.append("Incorrect fulltext frontmatter")
     except (ValueError, TypeError, KeyError) as exc:
         return [f"Frontmatter parse/shape error: {exc}"]
+    from paper_visuals import strip_visuals, visual_document_errors
+    errors.extend(visual_document_errors(body, visuals))
+    body = strip_visuals(body)
     if not re.search(r"(?m)^# \S", body):
         errors.append("Missing title header")
     present = sections(body)

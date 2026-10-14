@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "papers": {
+    "eprint:2024/1300": {
+      "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+      "license": "CC-BY-4.0",
+      "licenseEvidence": "https://cic.iacr.org/p/3/2/21/pdf",
+      "reviewedAt": "2026-10-14",
+      "reviewNote": "PDF 첫 쪽의 CC BY 4.0 공지와 각 도표의 별도 권리 표시 여부, 범례·축·캡션·각주·표 열 경계를 화면으로 확인함.",
+      "items": [
+        {
+          "id": "figure-1",
+          "page": 2,
+          "label": "Figure 1",
+          "group": "B",
+          "reuse": true,
+          "rightsReviewed": true,
+          "bbox": [
+            102,
+            150,
+            494,
+            231
+          ]
+        },
+        {
+          "id": "figure-2",
+          "page": 3,
+          "label": "Figure 2",
+          "group": "B",
+          "reuse": true,
+          "rightsReviewed": true,
+          "bbox": [
+            102,
+            100,
+            494,
+            334
+          ]
+        },
+        {
+          "id": "figure-3",
+          "page": 11,
+          "label": "Figure 3",
+          "group": "B",
+          "reuse": true,
+          "rightsReviewed": true,
+          "bbox": [
+            115,
+            103,
+            472,
+            305
+          ]
+        },
+        {
+          "id": "table-1",
+          "page": 12,
+          "label": "Table 1",
+          "group": "C",
+          "reuse": true,
+          "rightsReviewed": true,
+          "bbox": [
+            102,
+            642,
+            494,
+            742
+          ],
+          "table": {
+            "bbox": [
+              160,
+              677,
+              437,
+              737
+            ],
+            "columns": [
+              160,
+              330,
+              388,
+              437
+            ],
+            "headers": [
+              "Research direction",
+              "# Works",
+              "Section"
+            ]
+          }
+        },
+        {
+          "id": "table-3",
+          "page": 20,
+          "label": "Table 3",
+          "group": "C",
+          "reuse": true,
+          "rightsReviewed": true,
+          "bbox": [
+            102,
+            100,
+            494,
+            502
+          ],
+          "table": {
+            "bbox": [
+              133,
+              187,
+              462,
+              500
+            ],
+            "columns": [
+              133,
+              195,
+              273,
+              323,
+              354,
+              402,
+              462
+            ],
+            "headers": [
+              "Work",
+              "Cipher",
+              "Rounds",
+              "Full",
+              "Hybrid",
+              "Discussed"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

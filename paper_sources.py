@@ -1,4 +1,4 @@
-"""Public metadata and PDF retrieval. Never extract or save figures."""
+"""Public metadata and PDF retrieval; visual excerpts are handled separately."""
 from datetime import datetime, timedelta
 import json
 from email.utils import parsedate_to_datetime
@@ -323,6 +323,7 @@ class Sources:
             data = self.read_local_pdf(path)
         else:
             data = self.paper_pdf(paper)
+        self.last_pdf = data  # Exact supplied/downloaded bytes for page inspection.
         with pymupdf.open(stream=data, filetype="pdf") as document:
             markdown = pymupdf4llm.to_markdown(document, write_images=False, embed_images=False,
                                                ignore_images=True, show_progress=False)
