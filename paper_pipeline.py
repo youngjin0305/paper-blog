@@ -463,7 +463,8 @@ class Pipeline:
             if visuals["items"] and not errors:
                 feedback = ""
                 for attempt in range(2):
-                    self.log(f"Inspecting {len(visuals['images'])} original visual pages, attempt {attempt + 1}/2")
+                    page_count = len({image['page'] for image in visuals['images']})
+                    self.log(f"Inspecting {page_count} original visual pages ({len(visuals['images'])} images), attempt {attempt + 1}/2")
                     generated_any = True
                     try:
                         response = self.backend.generate(visual_prompt(visuals) + feedback,

@@ -210,9 +210,10 @@ def assemble_visuals(bundle, answers):
     paper = bundle["paper"]
     for item in bundle["items"]:
         source = paper["pdfUrl"] + "#page=" + str(item["page"])
-        block = HEADING + item["id"] + "\n\n"
+        block = HEADING + item["label"] + "\n\n"
         if item.get("asset"):
-            block += f"![{item['label']}](../{item['asset']})\n\n"
+            block += f"[![{item['label']}](../{item['asset']})](../{item['asset']})\n\n"
+            block += f"[이미지 크게 보기](../{item['asset']})\n\n"
         if item.get("tableMarkdown"):
             block += "원문 셀의 행·열 순서를 보존한 표입니다.\n\n" + item["tableMarkdown"] + "\n\n"
         block += answers[item["id"]] + "\n\n"
@@ -229,13 +230,14 @@ def visual_document_errors(body, bundle):
     errors = []
     actual = re.findall(r"(?m)^### 원문 시각자료 · (.+)$", body)
     expected = (bundle or {}).get("blocks", {})
-    if sorted(actual) != sorted(expected):
+    expected_headers = [block.split("\n", 1)[0][len(HEADING):] for block in expected.values()]
+    if sorted(actual) != sorted(expected_headers):
         errors.append("Visual blocks do not match the validated source manifest")
     for key, block in expected.items():
         if body.count(block) != 1:
             errors.append("Visual block content differs from validated evidence: " + key)
     for match in re.finditer(r"(?ms)^### 원문 시각자료 · ([^\n]+)\n.*?(?=^### 원문 시각자료 · |^## |\Z)", body):
-        if match.group().strip() != expected.get(match[1], ""):
+        if match.group().strip() not in expected.values():
             errors.append("Unexpected material inside a visual block: " + match[1])
     for asset, data in (bundle or {}).get("assets", {}).items():
         if not ASSET.fullmatch(asset) or Path(asset).stem != sha256(data).hexdigest() or not data.startswith(b"\x89PNG\r\n\x1a\n"):

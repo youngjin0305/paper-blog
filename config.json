@@ -150,7 +150,7 @@
     "visual_plans_path": "data/paper-visual-plans.json",
     "visuals_max_pages": 5,
     "visuals_max_items": 5,
-    "visuals_dpi": 120,
+    "visuals_dpi": 180,
     "method_min_chars": 1200,
     "experiment_min_chars": 1000,
     "post_dir": "content/ai-cryptanalysis",
