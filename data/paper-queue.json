@@ -2609,7 +2609,7 @@
       "postPath": "content/ai-cryptanalysis/2024-08-20-844cbc284b7bc5f28a6a.md",
       "studyType": "empirical",
       "localPdf": "data/papers/c53653a5b13f09f16daa/original.pdf",
-      "note": "",
+      "note": "CC BY 4.0 원문 그림 3개·표 2개를 시각 검토해 기존 글 보강",
       "graphReferences": [
         {
           "citedId": "manual:27d827b6e7accfdbd227",
@@ -2618,7 +2618,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": ")` . [BS90] Eli Biham and Adi Shamir. Differential cryptanalysis of des-like cryptosystems. In Alfred Menezes and Scott A. Vanstone, editors, _Advance",
-            "checkedAt": "2026-10-14T03:52:59+00:00"
+            "checkedAt": "2026-10-14T06:31:32+00:00"
           }
         },
         {
@@ -2628,7 +2628,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": ".2024.10831564)` . [Goh19] Aron Gohr. Improving attacks on round-reduced speck32/64 using deep learning. In Alexandra Boldyreva and Daniele Micciancio, editors, _A",
-            "checkedAt": "2026-10-14T03:52:59+00:00"
+            "checkedAt": "2026-10-14T06:31:32+00:00"
           }
         },
         {
@@ -2638,7 +2638,7 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": "no21] AnonymousSubmissionEuroCrypt2021. A deeper look at machine-learningbased cryptanalysis (implementation). `[https://github.com/AnonymousSu](https:/",
-            "checkedAt": "2026-10-14T03:52:59+00:00"
+            "checkedAt": "2026-10-14T06:31:32+00:00"
           }
         },
         {
@@ -2648,13 +2648,155 @@
             "origin": "original-references",
             "match": "title",
             "excerpt": "an Guo, Meicheng Liu, Li Ma, and Yi Tu. Enhancing differential-neural cryptanalysis. In Shweta Agrawal and Dongdai Lin, editors, _Advances_ _in",
-            "checkedAt": "2026-10-14T03:52:59+00:00"
+            "checkedAt": "2026-10-14T06:31:32+00:00"
+          }
+        },
+        {
+          "citedId": "manual:055d293f4c53fadaf731",
+          "evidence": {
+            "url": "https://cic.iacr.org/p/3/2/21/pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "SL25] Byoungjin Seok and Changhoon Lee. A novel approach to construct a good dataset for differential-neural cryptanalysis. _IEEE_ _Trans._ _Dependable_ _Secur._ _Comput._, 22(1):246",
+            "checkedAt": "2026-10-14T06:31:32+00:00"
           }
         }
       ],
       "replacePostPath": "content/ai-cryptanalysis/2024-08-20-844cbc284b7bc5f28a6a.md",
       "journal_ref": "Communications in Cryptology 2026",
-      "doi": "10.62056/a69qxruc2"
+      "doi": "10.62056/a69qxruc2",
+      "visualReview": {
+        "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+        "checkedAt": "2026-10-14T06:33:59+00:00",
+        "model": "claude-opus-5",
+        "modelSource": "mixed",
+        "items": [
+          {
+            "id": "figure-1",
+            "page": 2,
+            "label": "Figure 1",
+            "group": "B",
+            "reuse": true,
+            "rightsReviewed": true,
+            "bbox": [
+              102,
+              150,
+              494,
+              231
+            ],
+            "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+            "asset": "static/paper-figures/f0763a13681c90d440f7/d68c630eb121075a1ffab18b9cde9e37de039761b9cdfff1d5a822b731f55647.png"
+          },
+          {
+            "id": "figure-2",
+            "page": 3,
+            "label": "Figure 2",
+            "group": "B",
+            "reuse": true,
+            "rightsReviewed": true,
+            "bbox": [
+              102,
+              100,
+              494,
+              334
+            ],
+            "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+            "asset": "static/paper-figures/f0763a13681c90d440f7/a37ee29ee2b96663891d1a77afe9f64d6ddc91dc912a152eb669261a508af5d9.png"
+          },
+          {
+            "id": "figure-3",
+            "page": 11,
+            "label": "Figure 3",
+            "group": "B",
+            "reuse": true,
+            "rightsReviewed": true,
+            "bbox": [
+              115,
+              103,
+              472,
+              305
+            ],
+            "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+            "asset": "static/paper-figures/f0763a13681c90d440f7/ecf1c3abaff33c5ee57e4b9916de77527ac325aa4f86ded7db88dea8a8494cb8.png"
+          },
+          {
+            "id": "table-1",
+            "page": 12,
+            "label": "Table 1",
+            "group": "C",
+            "reuse": true,
+            "rightsReviewed": true,
+            "bbox": [
+              102,
+              642,
+              494,
+              742
+            ],
+            "table": {
+              "bbox": [
+                160,
+                677,
+                437,
+                737
+              ],
+              "columns": [
+                160,
+                330,
+                388,
+                437
+              ],
+              "headers": [
+                "Research direction",
+                "# Works",
+                "Section"
+              ]
+            },
+            "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+            "asset": "static/paper-figures/f0763a13681c90d440f7/e03e4ddadbb34e428e3042a09efffe0df6a7535e0d18de3974498af05042d5fd.png"
+          },
+          {
+            "id": "table-3",
+            "page": 20,
+            "label": "Table 3",
+            "group": "C",
+            "reuse": true,
+            "rightsReviewed": true,
+            "bbox": [
+              102,
+              100,
+              494,
+              502
+            ],
+            "table": {
+              "bbox": [
+                133,
+                187,
+                462,
+                500
+              ],
+              "columns": [
+                133,
+                195,
+                273,
+                323,
+                354,
+                402,
+                462
+              ],
+              "headers": [
+                "Work",
+                "Cipher",
+                "Rounds",
+                "Full",
+                "Hybrid",
+                "Discussed"
+              ]
+            },
+            "pdfSha256": "c53653a5b13f09f16daa4363371dbe17e9db37f77d7fe78431f6b9fc2c083f89",
+            "asset": "static/paper-figures/f0763a13681c90d440f7/449fac37c9f63f06e445ea3b91030f8aa807855dea9d209bb49fbb064a1da05f.png"
+          }
+        ]
+      }
     },
     {
       "id": "arxiv:1806.02877",
