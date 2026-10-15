@@ -19,7 +19,7 @@ from paper_git import Publisher
 from paper_llm import AgyBackend, QuotaExceeded, AgyPermissionError, configure_workspace
 from paper_pipeline import Pipeline, FixtureBackend, assemble
 from paper_queue import canonical_id, empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
-from paper_sources import Sources, identify, parse_eprint_feed, rule_score, keyword_matches
+from paper_sources import Sources, SourceUnavailable, identify, parse_eprint_feed, rule_score, keyword_matches
 from paper_validation import parse_rank, parse_references, numbers, unsupported_numbers, validate_document, validate_group
 
 
@@ -519,6 +519,63 @@ class PipelineTests(unittest.TestCase):
 
     def test_empty_queue_success(self):
         self.assertIsNone(self.pipeline.daily())
+
+    def test_daily_skips_unavailable_pin_and_publishes_only_one_next_paper(self):
+        first = {**PAPER, "id": "manual:first", "source": "manual"}
+        second = {**PAPER, "id": "manual:second", "source": "manual"}
+        pin(self.pipeline.queue, first)
+        pin(self.pipeline.queue, second)
+        self.pipeline.fixture = None
+        self.pipeline.dry_run = False
+        with patch.object(self.pipeline.source, "fulltext", side_effect=[SourceUnavailable("HTTP 403"),
+                 (FIXTURE["markdown"], FIXTURE["source_text"])]) as read, \
+             patch.object(self.pipeline.publisher, "preflight"), \
+             patch.object(self.pipeline.publisher, "prepare") as prepare, \
+             patch.object(self.pipeline.publisher, "resume") as publish:
+            result = self.pipeline.daily_available()
+        self.assertTrue(result["valid"], result["errors"])
+        self.assertEqual(read.call_count, 2)
+        prepare.assert_called_once()
+        publish.assert_called_once()
+        self.assertEqual([p["status"] for p in self.pipeline.queue["papers"]], ["failed", "done"])
+        report = json.loads(next((self.root / "drafts").glob("*.validation.json")).read_text(encoding="utf-8"))
+        self.assertTrue(report["sourceUnavailable"])
+        self.assertEqual(report["stage"], "source")
+
+    def test_daily_source_attempts_are_bounded_and_explicit_id_does_not_skip(self):
+        result = {"valid": False, "sourceUnavailable": True}
+        with patch.object(self.pipeline, "daily", return_value=result) as daily:
+            self.assertEqual(self.pipeline.daily_available(), result)
+            self.assertEqual(daily.call_count, self.pipeline.config["daily_source_attempts"])
+        with patch.object(self.pipeline, "daily", return_value=result) as daily:
+            self.pipeline.daily_available(paper_id=PAPER["id"])
+            daily.assert_called_once_with(resume_draft=False, paper_id=PAPER["id"])
+
+    def test_daily_does_not_skip_validation_failure_or_quota(self):
+        with patch.object(self.pipeline, "daily", return_value={"valid": False, "sourceUnavailable": False}) as daily:
+            self.pipeline.daily_available()
+            daily.assert_called_once()
+        with patch.object(self.pipeline, "daily", side_effect=QuotaExceeded("429")) as daily:
+            with self.assertRaises(QuotaExceeded):
+                self.pipeline.daily_available()
+            daily.assert_called_once()
+
+    def test_daily_http_429_does_not_move_to_next_paper(self):
+        import requests
+        pin(self.pipeline.queue, PAPER)
+        self.pipeline.fixture = None
+        response = requests.Response()
+        response.status_code = 429
+        with patch.object(self.pipeline.source, "metadata", side_effect=requests.HTTPError(response=response)) as metadata:
+            result = self.pipeline.daily_available()
+        self.assertFalse(result["valid"])
+        self.assertFalse(result["sourceUnavailable"])
+        metadata.assert_called_once()
+
+    def test_daily_empty_after_unavailable_source_remains_failure(self):
+        result = {"valid": False, "sourceUnavailable": True}
+        with patch.object(self.pipeline, "daily", side_effect=[result, None]):
+            self.assertEqual(self.pipeline.daily_available(), result)
 
     def test_weekly_rubric_retry_once_and_quota_abort(self):
         with patch.object(self.pipeline.backend, "generate", side_effect=["not JSON", json.dumps(FIXTURE["rank"])]) as generate:

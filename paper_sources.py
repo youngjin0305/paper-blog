@@ -18,6 +18,10 @@ from garden import Arxiv, ATOM, UTC, now, atomic_write, atomic_write_bytes
 from paper_queue import canonical_id
 
 
+class SourceUnavailable(RuntimeError):
+    """The original PDF could not be retrieved; another paper may be tried."""
+
+
 class CitationMetadata(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -261,15 +265,16 @@ class Sources:
                 raise RuntimeError(f"PDF source returned HTTP 429 at {host}; stopped without retry") from None
             if (not self.config.get("publisher_fallback", True) or not paper.get("doi")
                     or (status is not None and status not in (403, 404, 410) and status < 500)):
-                raise RuntimeError(f"PDF download failed ({detail} at {host}); no publisher fallback") from None
+                raise SourceUnavailable(f"PDF download failed ({detail} at {host}); no publisher fallback") from None
             self.log("Checking DOI publisher metadata for an alternate public PDF")
             try:
                 data, url = self.publisher_pdf(paper)
             except requests.HTTPError as fallback_error:
                 code = fallback_error.response.status_code if fallback_error.response is not None else "unknown"
-                raise RuntimeError(f"PDF download failed ({detail} at {host}); publisher lookup/download returned HTTP {code}") from None
+                error = RuntimeError if code == 429 else SourceUnavailable
+                raise error(f"PDF download failed ({detail} at {host}); publisher lookup/download returned HTTP {code}") from None
             except (requests.Timeout, requests.ConnectionError) as fallback_error:
-                raise RuntimeError(f"PDF download failed ({detail} at {host}); publisher lookup/download failed ({type(fallback_error).__name__})") from None
+                raise SourceUnavailable(f"PDF download failed ({detail} at {host}); publisher lookup/download failed ({type(fallback_error).__name__})") from None
             paper["pdfUrl"] = url
             if cache is not None and self.cache_writes:
                 atomic_write_bytes(cache / "publisher.pdf", data)

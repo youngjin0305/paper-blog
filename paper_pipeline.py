@@ -10,6 +10,8 @@ from pathlib import Path
 import re
 import sys
 
+import requests
+
 from filelock import FileLock
 from jsonschema import ValidationError
 
@@ -23,7 +25,7 @@ from paper_catalog import load_catalog, seed_core
 from paper_graph import references_from_text
 from paper_queue import empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_visuals import prepare_visuals, visual_prompt, validate_visual_answer, assemble_visuals, strip_visuals
-from paper_sources import Sources, identify, rule_score
+from paper_sources import Sources, SourceUnavailable, identify, rule_score
 from paper_validation import GROUPS, RUBRIC, RANK_SCHEMA, abstract_number_errors, parse_rank, parse_references, quote_words, validate_document, validate_group, split_document, sections
 
 
@@ -365,6 +367,22 @@ class Pipeline:
         prompt += "\n<untrusted_paper>\n" + markdown + "\n</untrusted_paper>"
         return self.backend.generate(prompt, {"kind": group})
 
+    def daily_available(self, resume_draft=False, paper_id=None):
+        """Skip unavailable sources, but publish at most one verified paper."""
+        if paper_id:
+            return self.daily(resume_draft=resume_draft, paper_id=paper_id)
+        result = None
+        for attempt in range(self.config["daily_source_attempts"]):
+            current = self.daily(resume_draft=resume_draft)
+            if current is None:
+                return result
+            result = current
+            if current["valid"] or not current.get("sourceUnavailable"):
+                return current
+            self.log(f"Source unavailable ({attempt + 1}/{self.config['daily_source_attempts']}); checking next pending paper")
+        self.log("Daily source attempt limit reached; unavailable papers remain failed for explicit recovery")
+        return result
+
     def daily(self, resume_draft=False, paper_id=None):
         if isinstance(getattr(self.backend, "used_models", None), set):
             self.backend.used_models.clear()
@@ -382,6 +400,8 @@ class Pipeline:
         groups, errors, source_text, markdown = {}, [], "", ""
         visuals = {"items": [], "images": [], "assets": {}, "blocks": {}}
         document, path = "", ""
+        source_unavailable = False
+        phase = "source"
         try:
             if self.fixture:
                 if paper["id"] not in {p["id"] for p in self.fixture["papers"]}:
@@ -403,6 +423,7 @@ class Pipeline:
                     visuals = prepare_visuals(self.root, paper, self.config, getattr(self.source, "last_pdf", None), self.dry_run)
                 elif self.config["visuals_enabled"]:
                     self.log("Visual page inspection unavailable for this CLI adapter; text review only")
+            phase = "generation"
             archive_id = hashlib.sha256(paper["id"].encode()).hexdigest()[:20]
             if not self.dry_run:
                 archive = self.root / self.config["archive_dir"] / archive_id
@@ -515,6 +536,10 @@ class Pipeline:
             self.log("Quota exhausted: stopped immediately; queue status unchanged")
             raise
         except Exception as exc:
+            status = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
+            source_unavailable = isinstance(exc, SourceUnavailable) or (
+                phase == "source" and isinstance(exc, (requests.HTTPError, requests.Timeout, requests.ConnectionError))
+                and status != 429)
             # No raw subprocess/HTTP diagnostics: they can contain credentials.
             errors.append(f"Daily processing error ({type(exc).__name__}): " + (str(exc) if isinstance(exc, (ValueError, RuntimeError)) else "check source/CLI availability"))
         if errors:
@@ -526,10 +551,11 @@ class Pipeline:
             if not self.dry_run:
                 draft = self.root / self.config["draft_dir"] / Path(path).name
                 atomic_write(draft, document)
-                atomic_write(draft.with_suffix(".validation.json"), json.dumps({"paperId": paper["id"], "errors": errors}, ensure_ascii=False, indent=2) + "\n")
+                atomic_write(draft.with_suffix(".validation.json"), json.dumps({"paperId": paper["id"], "errors": errors,
+                    "stage": phase, "sourceUnavailable": source_unavailable}, ensure_ascii=False, indent=2) + "\n")
                 self.save_queue()
             self.log("Validation failed; no commit/push: " + json.dumps(errors, ensure_ascii=False))
-            return {"valid": False, "errors": errors, "document": document}
+            return {"valid": False, "errors": errors, "document": document, "sourceUnavailable": source_unavailable}
         paper["graphReferences"] = list({ref["citedId"]: ref for ref in graph_refs}.values())
         if visuals["blocks"]:
             paper["visualReview"] = {"pdfSha256": visuals["pdfSha256"], "checkedAt": now(),
@@ -611,7 +637,7 @@ def main(argv=None):
             if args.command == "seed-core":
                 result = pipeline.seed_core(reset_pending=args.reset_pending)
             else:
-                result = pipeline.daily(resume_draft=args.resume_draft, paper_id=args.paper) if args.command == "daily" else getattr(pipeline, args.command)()
+                result = pipeline.daily_available(resume_draft=args.resume_draft, paper_id=args.paper) if args.command == "daily" else getattr(pipeline, args.command)()
             if args.command == "daily" and result and not result["valid"]:
                 raise SystemExit(1)
     try:

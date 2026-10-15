@@ -21,6 +21,7 @@ DEFAULTS = {
     "agy_work_dir": "~/.paper-blog/agy-work", "model": "", "timeout": 300, "http_timeout": 60,
     "max_pdf_bytes": 52428800, "rule_weight": 0.3, "llm_weight": 0.7,
     "publisher_fallback": True,
+    "daily_source_attempts": 3,
     "visuals_enabled": True, "visual_plans_path": "data/paper-visual-plans.json",
     "visuals_max_pages": 5, "visuals_max_items": 5, "visuals_dpi": 180,
     "abstract_mode": "korean", "max_quote_words": 25,
