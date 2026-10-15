@@ -100,9 +100,10 @@ AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 
 | `claude/claude-opus-5` | 해당 계정에서 사용 가능한 경우 Opus 5 명시 지정 |
 | `codex` 또는 `codex/모델ID` | Codex CLI의 기본 모델 또는 지정 모델 |
 | `codex/gpt-6.1-sol` | Codex CLI의 GPT-6.1 sol 지정 |
+| `codex/gpt-6-sol` | Codex CLI의 GPT-6 sol 지정 |
 | `gemini-3.8-flash-high` | Gemini 계열 모델 지정 |
 
-현재 저장된 설정은 `codex/gpt-6.1-sol`이며, 모델 설정을 비우면 앱의 기본 Gemini 모델을 사용합니다. 게시글에는 CLI 응답에서 확인한 실제 모델명을 남기며, 응답에 모델 ID가 없으면 설정값을 요청 모델로 표시합니다.
+현재 저장된 설정은 `codex/gpt-6-sol`입니다. 2026-10-15에 GPT-6.1 sol 호출이 현재 CLI 계정에서 거절되어, 실제 응답과 모델 ID(`gpt-6-sol`)를 확인한 GPT-6 sol로 임시 전환했습니다. `pipeline.model`은 빈 값으로 유지해 주간·일간 예약 작업 모두 이 설정을 따릅니다. 모델 설정을 비우면 앱의 기본 Gemini 모델을 사용합니다. 게시글에는 CLI 응답에서 확인한 실제 모델명을 남기며, 응답에 모델 ID가 없으면 설정값을 요청 모델로 표시합니다.
 
 설정한 모델의 실제 사용 가능 여부는 Codex CLI 로그인 계정으로 확인해야 합니다. `not supported when using Codex with a ChatGPT account` 응답이면 해당 계정에서 호출이 거절된 상태이며, 파이프라인은 Claude나 다른 모델로 자동 대체하지 않습니다.
 

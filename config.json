@@ -1,6 +1,6 @@
 {
   "title": "Paper Blog",
-  "model": "codex/gpt-6.1-sol",
+  "model": "codex/gpt-6-sol",
   "schedule_enabled": false,
   "topics": [
     {
