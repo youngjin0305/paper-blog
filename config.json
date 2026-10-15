@@ -1,6 +1,6 @@
 {
   "title": "Paper Blog",
-  "model": "claude/opus",
+  "model": "codex/gpt-6.1-sol",
   "schedule_enabled": false,
   "topics": [
     {
@@ -160,6 +160,7 @@
     "archive_dir": "data/papers",
     "log_dir": "logs",
     "agy_path": "C:/Users/jiyeon/AppData/Local/agy/bin/agy.exe",
+    "codex_path": "C:/Users/jiyeon/AppData/Local/Programs/OpenAI/Codex/bin/codex.exe",
     "agy_work_dir": "~/.paper-blog/agy-work",
     "model": "",
     "timeout": 300,

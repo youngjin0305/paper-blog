@@ -99,9 +99,12 @@ AI와 보안 분야의 논문을 모아 한국어로 정리하는 개인 연구 
 | `claude/sonnet` | Claude CLI의 Sonnet 별칭 |
 | `claude/claude-opus-5` | 해당 계정에서 사용 가능한 경우 Opus 5 명시 지정 |
 | `codex` 또는 `codex/모델ID` | Codex CLI의 기본 모델 또는 지정 모델 |
+| `codex/gpt-6.1-sol` | Codex CLI의 GPT-6.1 sol 지정 |
 | `gemini-3.8-flash-high` | Gemini 계열 모델 지정 |
 
-현재 저장된 설정은 `claude/opus`이며, 모델 설정을 비우면 앱의 기본 Gemini 모델을 사용합니다. 별칭이 가리키는 버전은 바뀔 수 있으므로 게시글에는 응답에서 확인한 실제 모델명을 남깁니다.
+현재 저장된 설정은 `codex/gpt-6.1-sol`이며, 모델 설정을 비우면 앱의 기본 Gemini 모델을 사용합니다. 게시글에는 CLI 응답에서 확인한 실제 모델명을 남기며, 응답에 모델 ID가 없으면 설정값을 요청 모델로 표시합니다.
+
+설정한 모델의 실제 사용 가능 여부는 Codex CLI 로그인 계정으로 확인해야 합니다. `not supported when using Codex with a ChatGPT account` 응답이면 해당 계정에서 호출이 거절된 상태이며, 파이프라인은 Claude나 다른 모델로 자동 대체하지 않습니다.
 
 `pipeline.model`이 빈 문자열이면 최상위 모델 설정을 따릅니다. 원문 기반 정리만 다른 모델을 쓰고 싶으면 여기에 별도로 지정하세요. 예약 작업에서 CLI를 찾지 못하면 `pipeline.claude_path`, `pipeline.codex_path`, `pipeline.agy_path`에 실행 파일의 절대 경로를 지정할 수 있습니다.
 
