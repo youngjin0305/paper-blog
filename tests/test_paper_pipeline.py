@@ -577,6 +577,14 @@ class PipelineTests(unittest.TestCase):
         with patch.object(self.pipeline, "daily", side_effect=[result, None]):
             self.assertEqual(self.pipeline.daily_available(), result)
 
+    def test_local_citation_metadata_does_not_require_original_site_refresh(self):
+        pin(self.pipeline.queue, {**PAPER, "localPdf": "data/papers/fixture/original.pdf"})
+        self.pipeline.fixture = None
+        with patch.object(self.pipeline.source, "metadata", side_effect=AssertionError("Use verified local citation")), \
+             patch.object(self.pipeline.source, "fulltext", return_value=(FIXTURE["markdown"], FIXTURE["source_text"])):
+            result = self.pipeline.daily()
+        self.assertTrue(result["valid"], result["errors"])
+
     def test_weekly_rubric_retry_once_and_quota_abort(self):
         with patch.object(self.pipeline.backend, "generate", side_effect=["not JSON", json.dumps(FIXTURE["rank"])]) as generate:
             self.pipeline.weekly()

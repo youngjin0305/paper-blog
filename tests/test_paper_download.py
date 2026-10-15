@@ -124,3 +124,26 @@ class PublisherDownloadTests(unittest.TestCase):
         next(self.root.rglob("publisher.pdf")).write_bytes(self.pdf + b"\n% changed cache bytes\n")
         with self.assertRaisesRegex(ValueError, "checksum mismatch"):
             self.source.paper_pdf(self.paper)
+
+    def test_successful_original_pdf_is_cached_and_reused_without_network(self):
+        with patch.object(self.source, "download_pdf", return_value=self.pdf) as download:
+            self.assertEqual(self.source.paper_pdf(self.paper), self.pdf)
+            self.assertEqual(self.source.paper_pdf(self.paper), self.pdf)
+        download.assert_called_once()
+        manifest = next(self.root.rglob("downloaded-pdf.json"))
+        self.assertEqual(json.loads(manifest.read_text())["id"], self.paper["id"])
+        next(self.root.rglob("downloaded.pdf")).write_bytes(self.pdf + b"\n% changed\n")
+        with patch.object(self.source, "download_pdf", side_effect=AssertionError("Corrupt cache must not be hidden")):
+            with self.assertRaisesRegex(ValueError, "checksum mismatch"):
+                self.source.paper_pdf(self.paper)
+
+    def test_original_cache_is_bound_to_citation_and_no_write_mode(self):
+        self.source.cache_writes = False
+        with patch.object(self.source, "download_pdf", return_value=self.pdf):
+            self.source.paper_pdf(self.paper)
+        self.assertEqual(list(self.root.rglob("*")), [])
+        self.source.cache_writes = True
+        with patch.object(self.source, "download_pdf", return_value=self.pdf) as download:
+            self.source.paper_pdf(self.paper)
+            self.source.paper_pdf({**self.paper, "authors": ["Other author"]})
+        self.assertEqual(download.call_count, 2)

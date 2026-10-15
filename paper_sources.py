@@ -242,6 +242,15 @@ class Sources:
         cache = None
         if self.root is not None:
             cache = self.root / self.config["archive_dir"] / sha256(paper["id"].encode()).hexdigest()[:20]
+            original_manifest = cache / "downloaded-pdf.json"
+            if original_manifest.exists():
+                saved = json.loads(original_manifest.read_text(encoding="utf-8"))
+                if all(saved.get(key) == paper.get(key) for key in ("id", "title", "authors", "pdfUrl")):
+                    data = self.read_local_pdf(cache / "downloaded.pdf")
+                    if sha256(data).hexdigest() != saved.get("sha256"):
+                        raise ValueError("Cached original PDF checksum mismatch")
+                    self.log("Using cached original PDF with matching citation and checksum")
+                    return data
             manifest = cache / "publisher-pdf.json"
             if manifest.exists():
                 saved = json.loads(manifest.read_text(encoding="utf-8"))
@@ -255,7 +264,13 @@ class Sources:
                     self.log("Using verified cached publisher PDF")
                     return data
         try:
-            return self.download_pdf(paper["pdfUrl"])
+            data = self.download_pdf(paper["pdfUrl"])
+            if cache is not None and self.cache_writes:
+                atomic_write_bytes(cache / "downloaded.pdf", data)
+                saved = {key: paper.get(key) for key in ("id", "title", "authors", "pdfUrl")}
+                saved.update(sha256=sha256(data).hexdigest(), checkedAt=now())
+                atomic_write(cache / "downloaded-pdf.json", json.dumps(saved, ensure_ascii=False, indent=2) + "\n")
+            return data
         except (requests.HTTPError, requests.Timeout, requests.ConnectionError) as exc:
             status = exc.response.status_code if isinstance(exc, requests.HTTPError) and exc.response is not None else None
             host = urlparse(paper["pdfUrl"]).hostname

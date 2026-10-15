@@ -408,7 +408,7 @@ class Pipeline:
                     raise ValueError("Selected paper is not present in fixture")
                 markdown, source_text = self.fixture["markdown"], self.fixture["source_text"]
             else:
-                if paper["source"] in ("arxiv", "eprint"):
+                if paper["source"] in ("arxiv", "eprint") and not paper.get("localPdf"):
                     self.log("Refreshing publication metadata from the original source")
                     fresh = self.source.metadata(paper["url"])
                     for key in ("journal_ref", "publication_note", "doi"):
@@ -541,7 +541,9 @@ class Pipeline:
                 phase == "source" and isinstance(exc, (requests.HTTPError, requests.Timeout, requests.ConnectionError))
                 and status != 429)
             # No raw subprocess/HTTP diagnostics: they can contain credentials.
-            errors.append(f"Daily processing error ({type(exc).__name__}): " + (str(exc) if isinstance(exc, (ValueError, RuntimeError)) else "check source/CLI availability"))
+            detail = str(exc) if isinstance(exc, (ValueError, RuntimeError)) else (
+                f"{phase} HTTP {status}" if status is not None else "check source/CLI availability")
+            errors.append(f"Daily processing error ({type(exc).__name__}): " + detail)
         if errors:
             errors = list(dict.fromkeys(errors))
             if not document:
