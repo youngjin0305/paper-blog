@@ -2864,7 +2864,7 @@
       "published": "2026-10-06T13:44:36+00:00",
       "categories": [],
       "addedAt": "2026-10-11T23:00:01+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 4.3,
       "scoreDetail": {
         "rule": {
@@ -2915,9 +2915,10 @@
       "rationale": "관심사와 직접 일치하는 신경망 구별자 논문으로 대상 암호·학습 설정·구별 이점이 구체적이다. 다만 공개 자료 언급이 없어 재현성만 낮게 둔다. 초록 내 서술(예: Forró 항목에서 Salsa를 언급하는 부분)에 표기 불일치가 있다.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-10-11T23:00:01+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
-      "topic_id": "ai-cryptanalysis"
+      "topic_id": "ai-cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "eprint:2026/2381",
@@ -3068,6 +3069,69 @@
           }
         }
       ]
+    },
+    {
+      "id": "manual:dc5a855034dfdba1899d",
+      "source": "manual",
+      "title": "Deep Neural Networks Aiding Cryptanalysis: A Case Study of the Speck Distinguisher",
+      "authors": [
+        "Norica Băcuieți",
+        "Lejla Batina",
+        "Stjepan Picek"
+      ],
+      "abstract": "At CRYPTO’19, A. Gohr proposed neural distinguishers for the lightweight block cipher Speck32/64, achieving better results than the state-of-the-art at that point. However, the motivation for using that particular architecture was not very clear; therefore, in this paper, we study the depth-10 and depth-1 neural distinguishers proposed by Gohr [7] with the aim of finding out whether smaller or better-performing distinguishers for Speck32/64 exist. We first evaluate whether we can find smaller neural networks that match the accuracy of the proposed distinguishers. We answer this question in the affirmative with the depth-1 distinguisher successfully pruned, resulting in a network that remained within one percentage point of the unpruned network’s performance. Having found a smaller network that achieves the same performance, we examine whether its performance can be improved as well. We also study whether processing the input before giving it to the pruned depth-1 network would improve its performance. To this end, convolutional autoencoders were found that managed to reconstruct the ciphertext pairs successfully, and their trained encoders were used as a preprocessor before training the pruned depth-1 network. We found that, even though the autoencoders achieved a nearly perfect reconstruction, the pruned network did not have the necessary complexity anymore to extract useful information from the preprocessed input, motivating us to look at the feature importance to get more insights. To achieve this, we used LIME, with results showing that a stronger explainer is needed to assess it correctly.",
+      "url": "https://doi.org/10.1007/978-3-031-09234-3_40",
+      "pdfUrl": "https://pure.tudelft.nl/ws/portalfiles/portal/145059017/978_3_031_09234_3_40.pdf",
+      "published": "2022-06-18T00:00:00+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "journal_ref": "ACNS 2022",
+      "doi": "10.1007/978-3-031-09234-3_40",
+      "publication_note": "Final published version; citation verified with Crossref, Springer and TU Delft on 2026-10-15.",
+      "localPdf": "data/papers/03880b7acc1f3a3e74f3/original.pdf",
+      "topic_id": "ai-cryptanalysis",
+      "addedAt": "2026-10-15T02:05:34+00:00",
+      "status": "done",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": "content/ai-cryptanalysis/2022-06-18-7efe6d4035044a34eca4.md",
+      "note": "2026-10-15 recovery: public TU Delft final publication; metadata verified against Crossref and Springer",
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://pure.tudelft.nl/ws/portalfiles/portal/145059017/978_3_031_09234_3_40.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "5_28) ~~2~~ 8 5. Biham, E., Shamir, A.: Differential cryptanalysis of des-like cryptosystems, vol. 4, pp. 2–21 (1990). [https://doi.org/10.1007/3-540-38",
+            "checkedAt": "2026-10-15T02:05:42+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://pure.tudelft.nl/ws/portalfiles/portal/145059017/978_3_031_09234_3_40.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "/arxiv.org/abs/1803.03635) 7. Gohr, A.: Improving attacks on round-reduced speck32/64 using deep learning. In: Boldyreva, A., Micciancio, D. (eds.) CRYPTO 2019. LNCS",
+            "checkedAt": "2026-10-15T02:05:42+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://pure.tudelft.nl/ws/portalfiles/portal/145059017/978_3_031_09234_3_40.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "A., Gerault, D., Peyrin, T., Tan, Q.Q.: A deeper look at machine learning-based cryptanalysis. In: Canteaut, A., Standaert, F.-X. (eds.) EUROCRYPT 2021.",
+            "checkedAt": "2026-10-15T02:05:42+00:00"
+          }
+        }
+      ]
     }
   ],
   "seen": [
@@ -3114,7 +3178,8 @@
     "manual:4772153072351b952954",
     "manual:5d39689454a587183ada",
     "manual:cf168ef7c911b4f838dd",
-    "manual:055d293f4c53fadaf731"
+    "manual:055d293f4c53fadaf731",
+    "manual:dc5a855034dfdba1899d"
   ],
   "lastWeeklyAt": "2026-10-11T23:00:01+00:00"
 }
