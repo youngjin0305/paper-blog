@@ -2933,7 +2933,7 @@
       "published": "2026-10-06T13:16:54+00:00",
       "categories": [],
       "addedAt": "2026-10-11T23:00:01+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 3.35,
       "scoreDetail": {
         "rule": {
@@ -2976,9 +2976,10 @@
       "rationale": "암호 자체의 키 복구 복잡도를 정량화하는 견실한 격자 암호분석이지만, 부채널 유출을 힌트로 쓰는 축이 커 AI 기반 공격 관심사와는 거리가 있다. 공개 추정 도구 사용이 부분적 재현성을 준다.",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-10-11T23:00:01+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
-      "topic_id": "cryptanalysis"
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "manual:055d293f4c53fadaf731",
@@ -3132,6 +3133,829 @@
           }
         }
       ]
+    },
+    {
+      "id": "eprint:2026/2471",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2471",
+      "pdfUrl": "https://eprint.iacr.org/2026/2471.pdf",
+      "title": "Connecting Cryptanalytic Distinguishers through Divisibility",
+      "authors": [
+        "Hosein Hadipour"
+      ],
+      "abstract": "Integral distinguishers can reveal more than a zero-sum property: the number of ones in an output component may be divisible by a high power of $2$, rather than merely being even. To exploit this divisibility, we relate linear, integral, differential-linear, and restricted differential sums through two-way conversions with explicit divisibility guarantees and data complexity, recovering established links as special cases. We derive exact random-permutation probabilities and rigorous bounds to quantify the distinguishing strength while accounting for dependencies between output conditions.\nTo discover these properties, we develop automated MILP/SAT models that use complete-round Walsh coefficients or combine Walsh and ultrametric representations to obtain stronger bounds. These weighted models prove finite divisibility even when compatible trails exist, beyond what trail-existence tests alone can establish. For differential-linear sums, we show that combining differential and linear propagation with local DLCT zeros can give false zero-correlation claims. We address this limitation with exact mix-basis models that establish zero correlation and finite divisibility.\nTo complement these symbolic methods, we provide a black-box algorithm using exact histograms and the fast Walsh-Hadamard transform to search all output masks for selected input conditions and identify zeros and finite divisibility properties.\nOur MILP/SAT models significantly improve the divisibility bounds reported by Beyne and Verbauwhede in 674 cases across the SIMON family, as well as for PRESENT, without trail enumeration and at unchanged data complexity, e.g., from $2^5$ to $2^{11}$ on 9-round SIMON32 and from $2^6$ to $2^{22}$ on 10-round SIMON48. To our knowledge, we are the first to prove higher divisibility for 8-round SPECK and for BEANIE, with new bounds for GIFT-64 and Ascon and exact counts for SKINNY-64. Our black-box searches reveal new properties on RC5, ChiLow-32, KeeLoq, and KATAN32, including output-bit combinations missed by single-bit searches, and lead us to introduce probabilistic divisibility.",
+      "published": "2026-10-14T09:12:14+00:00",
+      "categories": [],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 4.3,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalytic",
+            "Speck",
+            "Simon",
+            "ASCON",
+            "GIFT",
+            "PRESENT"
+          ],
+          "categories": [],
+          "score": 5.0,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalytic",
+              "Speck",
+              "Simon",
+              "ASCON",
+              "GIFT",
+              "PRESENT"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "여러 암호의 구별 성질과 데이터 복잡도를 직접 분석한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 결과보다 강한 가분성 경계와 새로운 대상별 성질을 보고한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "변환의 보장과 복잡도, 확률 경계, MILP/SAT 모델 및 탐색 알고리즘을 구체적으로 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "코드나 데이터의 공개 여부가 메타데이터에 명시되지 않았다."
+          },
+          "rationale": "암호 구별자 연구와 직접 관련되며, 초록에 공격 성질과 검증 방법이 상세하다."
+        }
+      },
+      "rationale": "암호 구별자 연구와 직접 관련되며, 초록에 공격 성질과 검증 방법이 상세하다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "arxiv:2610.21127",
+      "title": "Reaction Attack on CKKS Deployments with Asymptotically Optimal Query Complexity",
+      "abstract": "We study a protocol-level reaction leakage in CKKS deployments where public coefficient-to-slot (C2S) evaluation keys are combined with a client's 1-bit validity response. Under this deployment surface, a malicious evaluator can recover a ternary secret key using asymptotically optimal $O(H)$ reaction queries, where $H$ is the entropy of the secret key. The attack does not break RLWE or CKKS IND-CPA security. Instead, it exploits the interaction between client-side validity reactions and public homomorphic linear transformations. A shift of a public encryption key yields a ciphertext whose plaintext is a function of the secret key; the public ${\\sf C2S}$ layer then repacks this information to construct a ciphertext whose validity depends strictly on whether a targeted secret coefficient matches a guessed value. Furthermore, each submitted query is independently randomized with a fresh encryption of zero, so that each resulting malicious ciphertext appears entirely distinct, thereby allowing the attack to simply evade trivial detection mechanisms on the client side. We implemented the full end-to-end attack in Lattigo v6.2.0 and recovered the full secret key across four parameter sets drawn from standard CKKS presets. For uniform ternary secrets, the attack uses $O(N)$ queries and is within a factor $2/\\log_2 3 < 2$ of the oracle-only entropy lower bound. For sparse ternary secrets, a tailored variant further reduces the number of queries in practice. Our results show that observable validity reactions form a practical key-recovery channel in CKKS deployments exposing this surface, even when the underlying cryptographic assumptions remain intact.",
+      "published": "2026-10-15T02:33:11Z",
+      "updated": "2026-10-15T02:33:11Z",
+      "authors": [
+        "Song Bian",
+        "Hyeongmin Choe",
+        "Jiseung Kim",
+        "Changmin Lee"
+      ],
+      "url": "https://arxiv.org/abs/2610.21127v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.21127v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 3.525,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "key recovery",
+            "encryption"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "key recovery",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "CKKS 배치 환경에서 반응 정보를 이용한 실제 비밀키 복구 공격이다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "공개 C2S 키와 유효성 응답을 결합한 공격 및 점근적으로 최적인 질의 수를 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "공격 표면, 계수별 판별 절차, 질의 복잡도와 네 가지 매개변수 집합의 구현 결과를 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "Lattigo 구현은 보고했지만 공격 코드나 데이터의 공개 여부는 명시하지 않았다."
+          },
+          "rationale": "암호 가정 자체보다는 배치 프로토콜의 누출을 이용하지만, 구체적인 키 복구 공격에 해당한다."
+        }
+      },
+      "rationale": "암호 가정 자체보다는 배치 프로토콜의 누출을 이용하지만, 구체적인 키 복구 공격에 해당한다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "publication_note": "Accepted to the 2027 IEEE Symposium on Security and Privacy"
+    },
+    {
+      "id": "eprint:2026/2496",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2496",
+      "pdfUrl": "https://eprint.iacr.org/2026/2496.pdf",
+      "title": "Structural Cryptanalysis of the Eevee AEAD Family",
+      "authors": [
+        "Shuping Mao",
+        "Peng Wang",
+        "Jiadong Han",
+        "Tingting Guo",
+        "Yan Jia",
+        "Ying Chen"
+      ],
+      "abstract": "Eevee is a family of three AEAD modes, Umbreon, Jolteon, and Espeon, proposed at CCS 2023 for IoT-to-cloud secure computation. We analyze structural flaws in the algorithms of the supplied full-version specification and the proof steps underlying their online authenticated-encryption claims. An AD-free, two-encryption prefix distinguisher has advantage $1-2^{-n}$ in the ideal-forkcipher model, contradicting the specified online ideal object. Independently, the separable associated-data transform yields a four-encryption nonce-misuse distinguisher with advantage $1-2^{-n}$, a deterministic AD-only forgery, and nonempty-message forgeries obtained from cross-domain state differences. These attacks contradict the advertised nonce-misuse bounds of Umbreon and Espeon. With nonce-respecting encryption queries, one two-block Jolteon encryption permits a fresh one-block forgery with the same tag, while Espeon's short-message path permits arbitrary AD substitution. We trace these counterexamples to failures of online-prefix consistency, conditional transcript distributions, domain separation, and checksum freshness in the original proof. The authenticity attacks follow from deterministic identities, and the privacy counterexamples persist with an ideal forkcipher. We derive corresponding requirements for AD processing and message finalization, and briefly summarize supporting checks of the published C routines. The central failures concern the mode design and cannot be resolved solely by correcting implementation encodings.",
+      "published": "2026-10-15T08:05:19+00:00",
+      "categories": [],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 3.4,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "encryption"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "AEAD 모드에 대한 구별 공격과 위조 공격을 직접 제시한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "Eevee 계열의 여러 모드에서 새로운 구조적 반례를 보고한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "질의 수, 구별 이점, 위조 조건과 증명의 오류 원인을 구체적으로 기술한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "공개된 C 루틴의 점검을 언급하지만 저자의 검증 코드나 데이터 공개 여부는 명시하지 않았다."
+          },
+          "rationale": "암호 모드의 프라이버시·인증 성질을 겨냥한 직접적인 구조적 암호분석이다."
+        }
+      },
+      "rationale": "암호 모드의 프라이버시·인증 성질을 겨냥한 직접적인 구조적 암호분석이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "arxiv:2610.19898",
+      "title": "Bilinear Compressive Security with Finitely Many Samples",
+      "abstract": "Bilinear Compressive Security (BCS) is a lightweight encryption scheme that combines compressed sensing with a fresh random convolution filter to improve resistance against key-recovery attacks under key reuse. Previous work derived information-theoretic guarantees for BCS by relating key identifiability to phase retrieval under the assumption that an adversary has access to the full ciphertext distribution induced by the random filter. In practice, however, an adversary only observes finitely many encryptions, leaving the security of BCS in the finite-sample regime largely unexplored. In this paper, we study key recovery from only finitely many observations. We first develop a covariance-based attack that estimates the linear measurements from repeated encryptions of the same plaintext and subsequently recovers the secret measurement matrix. We analyze the estimation procedure and derive finite-sample guarantees together with corresponding sample-complexity bounds. We further investigate the complete attack experimentally and compare its observed recovery behavior with the previously established information-theoretic identifiability results. Our experiments show two qualitatively different recovery regimes on the structure of the measurement matrix. For dense matrices, including Gaussian matrices, the number of measurements required for successful recovery appears to grow linearly with the signal dimension. This differs from the worst-case behavior suggested by information theory. In contrast, for matrices with sparse rows, we observe a quadratic growth consistent with the theoretical bound. These results suggest that the sparsity structure of the measurement matrix plays an important role in the security of BCS and should be taken into account when selecting parameters and designing practical instances of the scheme.",
+      "published": "2026-10-14T09:57:40Z",
+      "updated": "2026-10-14T09:57:40Z",
+      "authors": [
+        "Axel Flinth",
+        "Semira Einsele",
+        "Matilda Kylberg",
+        "Hubert Orlicki",
+        "Gerhard Wunder"
+      ],
+      "url": "https://arxiv.org/abs/2610.19898v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.19898v1",
+      "categories": [
+        "cs.CR",
+        "cs.IT",
+        "eess.SP"
+      ],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 3.175,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "key recovery",
+            "encryption"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "key recovery",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "BCS 암호의 유한 표본 기반 비밀키 복구와 표본 복잡도를 분석한다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "기존 식별성 분석을 유한 표본 공격으로 확장한다고 설명하나 선행 연구 대비 독창성은 초록만으로 제한적으로 판단된다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "공분산 기반 복구 절차, 표본 복잡도 경계와 행렬 구조별 실험을 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "실험을 보고하지만 코드나 데이터의 공개 여부는 명시하지 않았다."
+          },
+          "rationale": "암호화 방식에 대한 직접적인 키 복구 연구이며 이론과 실험을 함께 다룬다."
+        }
+      },
+      "rationale": "암호화 방식에 대한 직접적인 키 복구 연구이며 이론과 실험을 함께 다룬다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis"
+    },
+    {
+      "id": "eprint:2026/2490",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2490",
+      "pdfUrl": "https://eprint.iacr.org/2026/2490.pdf",
+      "title": "Reaction Attack on CKKS Deployments with Asymptotically Optimal Query Complexity",
+      "authors": [
+        "Song Bian",
+        "Hyeongmin Choe",
+        "Jiseung Kim",
+        "Changmin Lee"
+      ],
+      "abstract": "We study a protocol-level reaction leakage in CKKS deployments where public coefficient-to-slot (C2S) evaluation keys are combined with a client's 1-bit validity response. Under this deployment surface, a malicious evaluator can recover a ternary secret key using asymptotically optimal $O(\\mathcal{H})$ reaction queries, where $\\mathcal{H}$ is the entropy of the secret key.\n\nThe attack does not break RLWE or CKKS IND-CPA security. Instead, it exploits the interaction between client-side validity reactions and public homomorphic linear transformations. A shift of a public encryption key yields a ciphertext whose plaintext is a function of the secret key; the public ${\\sf C2S}$ layer then repacks this information to construct a ciphertext whose validity depends strictly on whether a targeted secret coefficient matches a guessed value. Furthermore, each submitted query is independently randomized with a fresh encryption of zero, so that each resulting malicious ciphertext appears entirely distinct, thereby allowing the attack to simply evade trivial detection mechanisms on the client side. \n\nWe implemented the full end-to-end attack in Lattigo v6.2.0 and recovered the full secret key across four parameter sets drawn from standard CKKS presets. \nFor uniform ternary secrets, the attack uses\n$O(N)$ queries and is within a factor $2/\\log_2 3 < 2$ of the oracle-only entropy lower bound. For sparse ternary secrets, a tailored variant further reduces the number of queries in practice. Our results show that observable validity reactions form a practical key-recovery channel in CKKS deployments exposing this surface, even when the underlying cryptographic assumptions remain intact.",
+      "published": "2026-10-15T02:33:00+00:00",
+      "categories": [],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 3.05,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "key recovery",
+            "encryption"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "key recovery",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "CKKS 배포 환경에서 반응 누출을 이용한 비밀키 복구와 질의 복잡도를 직접 다룬다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "초록은 점근적으로 최적인 질의 복잡도를 주장하지만, 선행연구 대비 새로움은 확인할 수 없다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "공격 조건, 계수 판별 방식, 복잡도 경계, 구현체와 실험 매개변수 범위를 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "Lattigo 버전과 실험 범위는 명시했으나 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "암호 배포 환경의 구체적인 키 복구 공격으로 수집 범위에 부합한다."
+        }
+      },
+      "rationale": "암호 배포 환경의 구체적인 키 복구 공격으로 수집 범위에 부합한다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2492",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2492",
+      "pdfUrl": "https://eprint.iacr.org/2026/2492.pdf",
+      "title": "Exploring Fault Injection Attacks on HQC and BIKE Beyond Fujisaki-Okamoto Verification",
+      "authors": [
+        "Thales B. Paiva",
+        "Lucas C. Cardoso",
+        "Keerthi Kamalakshan",
+        "Hariprasad Valsaraj Kelassery",
+        "Marcos A. Simplicio Jr.",
+        "Shivam Bhasin"
+      ],
+      "abstract": "Fault injection attacks have been extensively studied in the context of post-quantum cryptography, yet existing analyses on code-based KEMs largely focus on faults targeting the Fujisaki-Okamoto transform. This work presents new fault injection attacks against BIKE and HQC that operate beyond this commonly protected component and target less obvious instructions within the decapsulation process. The proposed attacks achieve full key recovery using only valid ciphertexts under NIST Level 1 parameters, requiring 17392 and approximately 3 million decapsulation queries for HQC and BIKE, respectively. In addition, we introduce a general approach to identify effective fault locations by analyzing decoder behavior under perturbed conditions. The attacks are experimentally validated on an STM32H7 microcontroller using laser fault injection, demonstrating high repeatability. These results reveal a broader attack surface and provide a foundation for more efficient fault attack analyses in future work.",
+      "published": "2026-10-15T03:39:21+00:00",
+      "categories": [],
+      "addedAt": "2026-10-18T23:00:02+00:00",
+      "status": "failed",
+      "score": 2.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "key recovery",
+            "PRESENT"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "key recovery",
+              "PRESENT"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "BIKE·HQC의 키 복구를 다루지만, 주된 공격 경로는 구현체에 대한 결함 주입이다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "초록은 기존 FO 검증 대상 밖의 결함 위치를 제시하지만, 선행연구 대비 새로움은 확인할 수 없다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "대상·공격 위치·질의 수·레이저 결함 주입 실험 환경을 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "실험 장치는 명시했으나 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "구체적인 키 복구 공격이지만 구현체 결함에 의존해 관심 범위와의 관련성은 중간 수준이다."
+        }
+      },
+      "rationale": "구체적인 키 복구 공격이지만 구현체 결함에 의존해 관심 범위와의 관련성은 중간 수준이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-18T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2586",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2586",
+      "pdfUrl": "https://eprint.iacr.org/2026/2586.pdf",
+      "title": "Modeling Modular Multiplication for Monomial Prediction and Impossible Differentials, with Application to MSX",
+      "authors": [
+        "Emanuele Bellini",
+        "Mohamed Rachidi",
+        "Sharwan K. Tiwari"
+      ],
+      "abstract": "MSX is a recent family of lightweight block ciphers for microcontrollers, and its round function draws nonlinearity from modular addition and modular multiplication on $32$-bit words. The multiplication is the distinctive part of the design because it turns the round function into a strongly universal hash function, and from this, the designers prove ideal strong differential and linear properties. The same operation also kept MSX out of reach of automated cryptanalysis, since no exact bit-level model of a modular multiplication was available.\n\nWe give two such models for $z=(x\\cdot y)\\bmod 2^n$. Both work at the bit level and, to the best of our knowledge, both are new. The first is for monomial prediction under the three-subset division property without an unknown subset (3SDP-woU), and it assigns an exact parity to every monomial without using a truth table. The second is a deterministic truncated model for impossible differential search, and we prove that it is not merely sound but exact for two independent operands, so every incompatibility a miss-in-the-middle search reports through a multiplication is genuine.\n\nBoth properties are deterministic, so our results are exact, whereas the designers' own analysis provides bounds and estimates, with no explicit trail. Using the two models, we analyze MSX. As far as we know, this is its first independent cryptanalysis. For MSX-128 we obtain a $7$-round deterministic integral distinguisher of data complexity $2^{96}$, where a $96$-bit cube leaves $64$ of the $128$ output bits balanced, and we extend it to key recoveries on $8$ and $9$ of the $18$ rounds that recover the $256$-bit master key in about $2^{228}$ operations, improving over the MSX designers' generic yoyo key recovery attack on seven rounds. \nSearching all $16,384$ single-bit pairs at each round count, we also find $1,984$ impossible differentials at seven rounds and none at eight. Both models are implemented in the CLAASP library, so they can be used on any included primitive that uses modular multiplication.",
+      "published": "2026-10-21T10:19:10+00:00",
+      "categories": [],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "failed",
+      "score": 4.65,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "impossible differential",
+            "key recovery",
+            "block cipher",
+            "hash function"
+          ],
+          "categories": [],
+          "score": 5.0,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "impossible differential",
+              "key recovery",
+              "block cipher",
+              "hash function"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "MSX의 적분 구별자, 불가능 차분, 키 복구를 분석한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "모듈러 곱셈의 두 모델과 MSX 독립 분석을 새 기여로 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "정확성 증명과 라운드별 구별자·키 복구 복잡도를 명시한다."
+          },
+          "reproducibility": {
+            "score": 4,
+            "reason": "두 모델을 CLAASP 라이브러리에 구현했다고 명시하나 공개 접근 여부는 확인되지 않는다."
+          },
+          "rationale": "암호 원시기술에 대한 구체적인 공격과 자동화 모델을 함께 제시한다."
+        }
+      },
+      "rationale": "암호 원시기술에 대한 구체적인 공격과 자동화 모델을 함께 제시한다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2602",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2602",
+      "pdfUrl": "https://eprint.iacr.org/2026/2602.pdf",
+      "title": "A Probabilistic Extension of the Division Property: Integral Distinguishers with Key-Independent Bounds",
+      "authors": [
+        "Jules Baudrin",
+        "Christina Boura",
+        "Patrick Derbez",
+        "Gregor Leander",
+        "Yevhen Perehuda"
+      ],
+      "abstract": "Classical integral cryptanalysis relies on zero-sum properties that, for every key, hold with probability one. Existing arguments against such deterministic integrals, based on the division property and its algebraic variants, only exclude this extreme case: once the zero-sum probability falls below one, they say nothing about its actual value, nor about a probabilistic bias that could still be exploited. We develop a tool combining MILP-based trail search with a recursive evaluation of assignments to the constant inputs. It estimates the probability that no valid trail remains and uses an additional heuristic to predict the zero-sum probability. Applying this tool to PRESENT and GIFT, we obtain probabilistic integral distinguishers for 6 to 9 rounds, including 6- and 7-round PRESENT distinguishers using $2^4$ and $2^{12}$ plaintexts per structure, respectively. For the ASCON permutation, we obtain 4- and 5-round distinguishers using as few as $2$ and $2^{12}$ inputs per structure. We further explain algebraically the large bias of the 6-round PRESENT distinguisher, showing how the S-box and bit permutation restrict the way active variables combine. Finally, we show how these distinguishers can be used for key recovery, reducing both the data and time complexities compared to their deterministic variants for PRESENT and GIFT-64.",
+      "published": "2026-10-22T18:20:16+00:00",
+      "categories": [],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "failed",
+      "score": 4.3,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "key recovery",
+            "ASCON",
+            "GIFT",
+            "PRESENT"
+          ],
+          "categories": [],
+          "score": 5.0,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "key recovery",
+              "ASCON",
+              "GIFT",
+              "PRESENT"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "PRESENT·GIFT·ASCON 구별자와 키 복구 공격을 직접 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "확률적 적분 구별자를 제시하지만 선행연구 대비 새로움은 초록만으로 확정하기 어렵다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "MILP 탐색, 확률 추정, 대상별 라운드·데이터 복잡도를 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "입력 수와 공격 결과는 제시하지만 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "관심 대상인 구별 공격과 키 복구에 직접 해당한다."
+        }
+      },
+      "rationale": "관심 대상인 구별 공격과 키 복구에 직접 해당한다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2582",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2582",
+      "pdfUrl": "https://eprint.iacr.org/2026/2582.pdf",
+      "title": "SoK: Design-Level Backdoors in Block Ciphers Constructions, Detection, and Key Recovery",
+      "authors": [
+        "Shah Fahd"
+      ],
+      "abstract": "A block cipher is trusted once it resists every published attack and its\nS-boxes pass the standard tests. A design-level backdoor turns this trust\nagainst its users. Its designer hides a structure that only they can\nexploit, and that the usual tests miss.\n\nFour such backdoors have been published, by Rijmen and Preneel, Paterson,\nBannier and Filiol, and Peyrin and Wang. Each paper shows what the hidden\nstructure gives its designer. Everyone else needs answers to two other\nquestions. Does the structure also weaken the cipher against ordinary\ncryptanalysis? Can an evaluator who holds only the specification find it?\nNeither has been answered for all four designs, so an S-box that passes\nthe usual tests is trusted by default.\n\nIn this paper we answer both questions. We place the four designs in one\ntaxonomy and in Beyne's correlation-matrix framework. We give an algorithm\nthat recovers a partition trapdoor from the S-box tables, and prove that it\nnever reports a false one and, below an explicit cap, never misses one. We\nshow that inversion and affine equivalence preserve a trapdoor, while\nextended affine and CCZ equivalence can erase it. We then attack KG-DES\n(Paterson's S-boxes in DES), BEA-1 and LowMC-M.\n\nThe answer to the first question depends on the rest of the cipher. In\nKG-DES the trapdoor makes ordinary attacks far stronger. The best\n$16$-round differential characteristic has probability $2^{-21.23}$,\nagainst $2^{-61.97}$ for DES, and a two-stage attack recovers the $56$-bit\nkey in minutes. In BEA-1 the trapdoor opens no useful trail. However, for\nevery key both ciphers act as an exact smaller cipher on the cosets, and\nfall to known-plaintext distinguishers from about $2^{16.5}$ and\n$2^{20.5}$ texts. An independent MILP model confirms every optimum it can\nprove, and shows that single characteristics put the KG-DES boomerang at\n$2^{-36.79}$ when it returns with probability $1$.\n\nThe answer to the second question depends on where the backdoor sits. Our\nalgorithm finds Paterson's trapdoor and BEA-1's four in the S-boxes that\ncarry them. Rijmen and Preneel's trapdoor needs unbalanced S-boxes, which\nlinear algebra exposes. LowMC-M's MALICIOUS backdoor sits in the linear\nlayers instead. With an ideal XOF a backdoored instance is distributed as\nan honest one, so no test of the primitive finds it. Its holder recovered\nthe key from $35$ to $409$ queries in seven full-size measurements.\n\nA deterministic trapdoor in the S-boxes therefore leaves a trace that a\nsound algorithm finds. A trapdoor in unexplained linear layers leaves none,\nand only constants derived verifiably from a public seed rule it out. We\nrecommend both as routine checks. Probabilistic trapdoors and trapdoors in\nonly some S-boxes remain open.",
+      "published": "2026-10-21T07:09:56+00:00",
+      "categories": [],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "failed",
+      "score": 4.0,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "key recovery",
+            "block cipher",
+            "DES"
+          ],
+          "categories": [],
+          "score": 4,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "key recovery",
+              "block cipher",
+              "DES"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "블록암호의 구별·키 복구 공격과 백도어 탐지를 직접 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 백도어를 통합 분석하고 탐지 알고리즘과 추가 공격 결과를 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "탐지 보장, 공격 확률·데이터량, MILP 검증 결과를 구체적으로 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "정량 결과는 상세하지만 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "여러 블록암호에 대한 실제 공격 성능을 제시해 수집 범위와 밀접하다."
+        }
+      },
+      "rationale": "여러 블록암호에 대한 실제 공격 성능을 제시해 수집 범위와 밀접하다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2599",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2599",
+      "pdfUrl": "https://eprint.iacr.org/2026/2599.pdf",
+      "title": "Linear Cryptanalysis of TFHE-Friendly Cipher FRAST in the Average Key Setting",
+      "authors": [
+        "Xingwei Ren",
+        "Zhenyu Xiong",
+        "Bo Xu",
+        "Yongqiang Li",
+        "Mingsheng Wang"
+      ],
+      "abstract": "In the average key setting, a linear attack of Bak et al. on the TFHE-friendly stream cipher FRAST let wrong guesses pass, which they left as an open problem. The S-boxes of FRAST are public and random for every keystream block. For the mask on the least significant bit, we show that key differences fall into five indistinguishable classes per round. The filter of Bak et al. gives some wrong classes of the right parity a nonzero expected score. We compute the trail correlation exactly through the real cipher and bound the success of our statistic for every fixed master key. We bound its false alarms for a fixed master key with the last round kept and no filter, and for every attack against an ideal keystream.\n\nWith known XOF inputs, our algorithm Contract recovered the classes of a branch pair of 15 rounds and the master key of ten rounds. A cost model gives class recovery for every sampled key at 26 rounds with known inputs and for a third at 38 rounds with chosen inputs. In the accounting of Bak et al., it reaches full FRAST on weak master keys of density $2^{-11.8}$ to $2^{-5.4}$ within the claimed security. A distinguisher of full FRAST has a proved advantage on these keys, and its time over the advantage stays below the claimed security as well. Independent branch S-boxes remove the cheap classes at a cost in TFHE.",
+      "published": "2026-10-22T15:40:55+00:00",
+      "categories": [],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "failed",
+      "score": 3.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "linear attack",
+            "stream cipher"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "linear attack",
+              "stream cipher"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "FRAST에 대한 선형 구별 및 키 복구 공격과 공격 비용을 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 공격의 오경보 문제를 분석하고 평균 키 설정의 새 공격 결과를 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "상관관계·오경보 경계, 공격 조건, 라운드 수와 약한 키 밀도를 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "공격 조건은 제시되지만 코드·데이터 공개 여부는 명시되지 않았다."
+          },
+          "rationale": "관심 분야에 직접 해당하며 공격 모델과 결과가 초록에 구체적으로 드러난다."
+        }
+      },
+      "rationale": "관심 분야에 직접 해당하며 공격 모델과 결과가 초록에 구체적으로 드러난다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "arxiv:2610.27506",
+      "title": "Quantum Cryptanalysis on Two Feistel-Type Constructions",
+      "abstract": "With the rapid advancement of quantum computing, the security of traditional cryptographic systems is facing significant challenges. As a fundamental component of symmetric cryptography, block ciphers have attracted increasing attention regarding their quantum security in recent years. In this paper, we propose new quantum attacks on two Feistel-type constructions, i.e., New Structure IV and the lightweight block cipher LBlock, under the quantum chosen-plaintext attack (qCPA) model. First, we construct an 8-round quantum distinguisher for New Structure IV and perform an $r(r>12)$-round quantum key-recovery attack. Compared with Li et al.'s qCPA-based result presented at INSCRYPT 2024, our attack reduces the time complexity by a factor of $2^{n/2}$, where $n$ denotes the subkey length. Second, we design a 9-round quantum distinguisher for LBlock and extend it to an $r(r>15)$-round quantum key-recovery attack. The proposed quantum distinguisher covers one more round than Liu et al.'s automated-search distinguisher at ASIACRYPT 2025, which results in a $2^{16}$ reduction in the time complexity of our $r$-round quantum key-recovery attack on LBlock. Furthermore, by analyzing the structure of the round function and the key scheduling of LBlock, we reduce the subkey guess space for the 15-round attack from 76 bits to 52 bits, lowering the time complexity from \\(O(2^{38})\\) to \\(O(2^{26})\\) by a factor of \\(2^{12}\\).",
+      "published": "2026-10-20T02:21:06Z",
+      "updated": "2026-10-20T02:21:06Z",
+      "authors": [
+        "Yan-Ying Zhu",
+        "Bin-Bin Cai",
+        "Fei Gao",
+        "Song Lin"
+      ],
+      "url": "https://arxiv.org/abs/2610.27506v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.27506v1",
+      "categories": [
+        "quant-ph"
+      ],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "done",
+      "score": 3.35,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "key recovery",
+            "block cipher"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "key recovery",
+              "block cipher"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 4,
+            "reason": "Feistel형 구성과 LBlock의 양자 구별·키 복구 공격을 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 결과 대비 구별 라운드 확장과 시간 복잡도 개선을 명시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "qCPA 모델, 공격 라운드, 키 추측 공간과 시간 복잡도를 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "복잡도는 제시하지만 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "직접적인 암호분석 연구이며, 양자 공격이라는 점에서 명시된 관심사와의 관련성은 다소 낮다."
+        }
+      },
+      "rationale": "직접적인 암호분석 연구이며, 양자 공격이라는 점에서 명시된 관심사와의 관련성은 다소 낮다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": "content/cryptanalysis/2026-10-20-43e54e0e8d3c0524d0f9.md",
+      "topic_id": "cryptanalysis",
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2610.27506v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "[1] E. Biham and A. Shamir, “Differential cryptanalysis of DES-like cryptosystems,” in _Proceedings of the Annual International Cryptology_ _",
+            "checkedAt": "2026-10-27T00:00:12+00:00"
+          }
+        },
+        {
+          "citedId": "manual:4772153072351b952954",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2610.27506v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "2–21, Springer, 1990. [2] M. Matsui, “Linear cryptanalysis method for DES cipher,” in _Pro-_ _ceedings_ _of_ _the_ _Annual_ _International_",
+            "checkedAt": "2026-10-27T00:00:12+00:00"
+          }
+        },
+        {
+          "citedId": "manual:5d39689454a587183ada",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2610.27506v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "E. Biham, A. Biryukov, and A. Shamir, “Cryptanalysis of Skipjack reduced to 31 rounds using impossible differentials,” in _Proceedings_ _of the Annual International Conference",
+            "checkedAt": "2026-10-27T00:00:12+00:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2610.29224",
+      "title": "Cryptanalysis and Repair of \"Decentralized Multi-authority ABE for NC$^1$ from BDH\"",
+      "abstract": "We present a plaintext-recovery attack on the decentralized multi-authority attribute-based encryption construction of Datta, Komargodski, and Waters (Journal of Cryptology, 2023). The attack succeeds in the claimed static model with one corrupt authority and two users whose individual attribute sets remain unauthorized even when combined with the corrupt authority's attribute. The flaw is an incorrect extension of LSSS matrix-normalization invariance from complete secret shares to coordinate-wise ciphertext masks. A corrupt authority can expose these masks and remove identity binding from other users' decryption shares. We replace the coordinate-wise masks with independent full linear sharings of zero and prove static security under decisional bilinear Diffie-Hellman (DBDH) in the random oracle model. The repair retains the original matrix-width and row-labeling restrictions and leaves authority keys, user keys, decryption, and ciphertext size unchanged, while increasing encryption randomness and field arithmetic. We also give analogous attacks on both multi-authority attribute-based inner-product functional encryption constructions of Datta and Pal (PKC, 2023). The same modification restores correctness and matrix-substitution invariance for both variants. We prove static security of the repaired small-universe variant under asymmetric DBDH. For the large-universe variant, we identify a separate missing source-group encoding in the original reduction, formulate an augmented $L$-DBDH assumption, prove its hardness in the asymmetric generic bilinear group model, and give a static security reduction for the repaired scheme.",
+      "journal_ref": "",
+      "publication_note": "",
+      "doi": "",
+      "published": "2026-10-21T05:30:43Z",
+      "updated": "2026-10-21T05:30:43Z",
+      "authors": [
+        "Xingwang Wang"
+      ],
+      "url": "https://arxiv.org/abs/2610.29224v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.29224v1",
+      "categories": [
+        "cs.CR"
+      ],
+      "addedAt": "2026-10-25T23:00:03+00:00",
+      "status": "candidate",
+      "score": 3.3,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "PRESENT",
+            "encryption"
+          ],
+          "categories": [
+            "cs.CR"
+          ],
+          "score": 4,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "PRESENT",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "암호화 구성의 평문 복구 공격이지만 주된 관심인 원시기술 구별·키 복구와는 거리가 있다."
+          },
+          "novelty": {
+            "score": 3,
+            "reason": "기존 구성의 결함과 수정안을 제시하며 독창성의 범위는 초록만으로 판단하기 어렵다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "공격 조건, 결함 원인, 수정 방식과 보안 증명 가정을 명시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "공격 모델은 설명하지만 코드·데이터 공개 여부는 알 수 없다."
+          },
+          "rationale": "직접적인 암호 공격이나 수집 범위의 핵심인 블록암호·해시 분석은 아니다."
+        }
+      },
+      "rationale": "직접적인 암호 공격이나 수집 범위의 핵심인 블록암호·해시 분석은 아니다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-10-25T23:00:03+00:00",
+      "failCount": 0,
+      "postPath": null,
+      "topic_id": "cryptanalysis"
     }
   ],
   "seen": [
@@ -3163,6 +3987,10 @@
     "arxiv:2609.39651",
     "arxiv:2610.00649",
     "arxiv:2610.01788",
+    "arxiv:2610.19898",
+    "arxiv:2610.21127",
+    "arxiv:2610.27506",
+    "arxiv:2610.29224",
     "eprint:2019/037",
     "eprint:2021/287",
     "eprint:2021/719",
@@ -3173,13 +4001,21 @@
     "eprint:2026/2224",
     "eprint:2026/2381",
     "eprint:2026/2382",
+    "eprint:2026/2471",
+    "eprint:2026/2490",
+    "eprint:2026/2492",
+    "eprint:2026/2496",
+    "eprint:2026/2582",
+    "eprint:2026/2586",
+    "eprint:2026/2599",
+    "eprint:2026/2602",
+    "manual:055d293f4c53fadaf731",
     "manual:16661c9151450f07fa3b",
     "manual:27d827b6e7accfdbd227",
     "manual:4772153072351b952954",
     "manual:5d39689454a587183ada",
     "manual:cf168ef7c911b4f838dd",
-    "manual:055d293f4c53fadaf731",
     "manual:dc5a855034dfdba1899d"
   ],
-  "lastWeeklyAt": "2026-10-11T23:00:01+00:00"
+  "lastWeeklyAt": "2026-10-25T23:00:03+00:00"
 }
