@@ -3893,9 +3893,6 @@
       "id": "arxiv:2610.29224",
       "title": "Cryptanalysis and Repair of \"Decentralized Multi-authority ABE for NC$^1$ from BDH\"",
       "abstract": "We present a plaintext-recovery attack on the decentralized multi-authority attribute-based encryption construction of Datta, Komargodski, and Waters (Journal of Cryptology, 2023). The attack succeeds in the claimed static model with one corrupt authority and two users whose individual attribute sets remain unauthorized even when combined with the corrupt authority's attribute. The flaw is an incorrect extension of LSSS matrix-normalization invariance from complete secret shares to coordinate-wise ciphertext masks. A corrupt authority can expose these masks and remove identity binding from other users' decryption shares. We replace the coordinate-wise masks with independent full linear sharings of zero and prove static security under decisional bilinear Diffie-Hellman (DBDH) in the random oracle model. The repair retains the original matrix-width and row-labeling restrictions and leaves authority keys, user keys, decryption, and ciphertext size unchanged, while increasing encryption randomness and field arithmetic. We also give analogous attacks on both multi-authority attribute-based inner-product functional encryption constructions of Datta and Pal (PKC, 2023). The same modification restores correctness and matrix-substitution invariance for both variants. We prove static security of the repaired small-universe variant under asymmetric DBDH. For the large-universe variant, we identify a separate missing source-group encoding in the original reduction, formulate an augmented $L$-DBDH assumption, prove its hardness in the asymmetric generic bilinear group model, and give a static security reduction for the repaired scheme.",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2026-10-21T05:30:43Z",
       "updated": "2026-10-21T05:30:43Z",
       "authors": [
@@ -3908,7 +3905,7 @@
         "cs.CR"
       ],
       "addedAt": "2026-10-25T23:00:03+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 3.3,
       "scoreDetail": {
         "rule": {
@@ -3954,8 +3951,9 @@
       "weeksInQueue": 1,
       "lastRankedAt": "2026-10-25T23:00:03+00:00",
       "failCount": 0,
-      "postPath": null,
-      "topic_id": "cryptanalysis"
+      "postPath": "content/cryptanalysis/2026-10-21-2b7f6a69e724ad5c60c4.md",
+      "topic_id": "cryptanalysis",
+      "graphReferences": []
     }
   ],
   "seen": [
