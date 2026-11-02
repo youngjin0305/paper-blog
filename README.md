@@ -243,3 +243,29 @@ PDF 다운로드가 HTTP 403·404·410·서버 오류나 연결 장애로 실패
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_*.py'
 ```
+
+
+## 근거 기반 연구 지도
+
+`research-flow.html`의 기본 화면은 계승 지도·연구 범위·두 논문 비교를 제공합니다. 기존 가로 그래프는 `research-connections.html`, 기존 세로 계보는 `research-lineage.html`에서 유지합니다. LIBRARY에는 연구 흐름 진입점 하나만 두고 내부에서 전환합니다.
+
+`data/research-atlas.json`은 큐/게시 여부와 독립적인 서지·연구 분류·의미 관계 저장소입니다. 시범 범위는 AI CryptAnalysis 14편입니다. 확인된 의미 관계는 12개이며, 초록에서 확인한 관계와 PDF 페이지에서 확인한 관계를 구분합니다. 이는 체계적 문헌고찰이나 분야 전체의 누락 없는 목록이 아닙니다. 별표/후보 점수와 연구 분류 검토 상태는 별개입니다. survey는 연구 결과 셀에 실험 논문으로 집계하지 않습니다.
+
+- 관계 유형: 방법 확장, 대상·조건 확장, 작동 원리 분석, 한계·재평가, 비교·재현. 일반 인용을 자동으로 계승으로 바꾸지 않습니다.
+- 모든 관계에는 변경 내용, 근거 URL·위치·확인일, `basis`(abstract/fulltext), `status`(reviewed/pending)가 필요합니다. `reviewed`는 표기된 근거 범위에서 분류를 검토했다는 뜻이며 결과의 정확성을 보증하지 않습니다.
+- `profiles.studies`는 실제로 명시된 대상×기법 조합만 기록합니다. 동일 논문의 여러 실험을 키워드의 무조건적인 교차 곱으로 확장하지 않습니다. 조건이 명시되지 않으면 `기재 확인 안 됨`으로 남깁니다. unkeyed/관련키/단일키, 라운드와 데이터 조건이 다른 성능은 순위로 비교하지 않습니다.
+- 연구 범위의 빈칸은 현재 분류 자료에서 미확인입니다. 필터 밖 연구는 별도 개수로 표시합니다. 셀에서 원문과 추가 검색을 열거나 조사 질문 Markdown을 내려받을 수 있습니다. 미발견을 미연구로 승격하지 않습니다.
+- 계승 지도는 의미가 다른 직접 관계를 보존합니다. 기존 세로 계보에서도 검토된 의미 관계와 일치하는 인용선은 중복 생략의 예외로 보존합니다.
+
+검증된 서지 목록의 새 논문을 후보로 보충합니다(기존 큐·seen·failed·done 상태와 우선순위는 보존):
+
+```powershell
+.\.venv\Scripts\python.exe -B paper_pipeline.py seed-research --dry-run
+.\.venv\Scripts\python.exe -B paper_pipeline.py seed-research
+```
+
+이 명령은 파이프라인 파일 잠금과 원자적 큐 저장을 사용하고 새 항목만 candidate/score=0으로 추가합니다. 별표를 부여하거나 글을 게시하지 않습니다. 명시적인 연구 목록 보충은 주간 신규 제한과 별개이며, 이후 주간 정리에는 기존 상한·만료 규칙이 적용됩니다. 그래프 지식은 큐 만료와 무관하게 저장소에 남습니다.
+
+`pipeline.research_analysis: true`이면 `daily`가 본문 검증 이후 연구 조건·계승 관계 후보를 별도 JSON 호출로 추출합니다. 선행 ID·관계 유형·구조와 원문 근거 문자열을 코드로 검사하고 실패 시 한 번 재시도합니다. 생성된 후보는 항상 pending이며 기본 지도에서 숨깁니다. 문자열 일치가 의미의 정확성을 보증하지 않으므로, 근거를 확인한 뒤 atlas에 별도로 반영해야 reviewed가 됩니다. 자동 결과는 큐의 `researchCandidate`와 로컬 `data/papers/<ID 해시>/research-candidate.json`에 보관합니다. 분류 실패는 유효한 본문 게시를 막지 않고 로그를 남기지만, 쿼터 초과는 기존 규칙대로 즉시 중단합니다. 테스트 fixture와 dry-run은 실제 LLM을 호출하지 않습니다.
+
+검증: `python -B -m unittest discover -s tests`, `python -B app.py export`, `python -B tests/research_browser.py`. 브라우저 검증은 로컬 정적 파일만 읽으며 Edge/Playwright를 사용합니다.

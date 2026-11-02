@@ -41,7 +41,8 @@
   const chronological = (a, b) => a.year - b.year || (a.timeOrder || 0) - (b.timeOrder || 0) || a.id.localeCompare(b.id);
   const edgeLabel = edge => edge.kind === 'citation' ? '확인된 인용' : '주제 연결 · 추정';
   const preservationReason = edge => (data.settings.lineage_keep_edges || [])
-    .find(rule => rule.source === edge.source && rule.target === edge.target)?.reason || '';
+    .find(rule => rule.source === edge.source && rule.target === edge.target)?.reason
+    || (data.research?.relations || []).find(rule => rule.status === 'reviewed' && rule.source === edge.source && rule.target === edge.target)?.change || '';
 
   function flowEdges(edges) {
     // Reduce only the currently displayed field. Hidden intermediate papers

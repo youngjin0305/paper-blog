@@ -97,6 +97,7 @@ def create_app(garden=None):
                     topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
                     reading_href="/reading-list", essential_href="/essentials",
                     graph_href="/research-flow", lineage_href="/research-lineage",
+                    connections_href="/research-connections",
                     token=token, static_mode=False, root_url="/", asset_url="/static/",
                     topic_href=lambda identifier: f"/topics/{identifier}",
                     post_href=lambda identifier: f"/posts/{identifier}")
@@ -147,6 +148,11 @@ def create_app(garden=None):
     @app.get("/research-lineage")
     def lineage_page():
         return render_template("lineage.html", selected=None, graph_view=True, lineage_view=True,
+                               graph_data_url="/research-flow/data.js")
+
+    @app.get("/research-connections")
+    def connections_page():
+        return render_template("connections.html", selected=None, graph_view=True, connections_view=True,
                                graph_data_url="/research-flow/data.js")
 
     @app.get("/research-flow/data.js")
@@ -227,6 +233,7 @@ def export_site(app, garden):
                                    topic_groups=grouped_topics(config["topics"]), pending_count=len(reading), essential_count=len(essentials),
                                    reading_href=prefix + "reading-list.html", essential_href=prefix + "essentials.html",
                                    graph_href=prefix + "research-flow.html", lineage_href=prefix + "research-lineage.html",
+                                   connections_href=prefix + "research-connections.html",
                                    asset_url=prefix + "assets/", query="",
                                    topic_href=lambda i: prefix + f"topics/{i}.html",
                                    post_href=lambda i: prefix + f"posts/{i}.html", **kwargs)
@@ -235,6 +242,10 @@ def export_site(app, garden):
                      graph_data_url="assets/research-graph-data.js"))
         atomic_write(output / "research-lineage.html", page("lineage.html", selected=None, graph_view=True,
                      lineage_view=True, graph_data_url="assets/research-graph-data.js"))
+        atomic_write(output / "research-connections.html", page("connections.html", selected=None, graph_view=True,
+                     connections_view=True, graph_data_url="assets/research-graph-data.js"))
+        for asset in ("research-atlas.js", "research-atlas.css"):
+            atomic_write(output / "assets" / asset, (ROOT / "static" / asset).read_text(encoding="utf-8"))
         atomic_write(output / "assets/research-graph-data.js", graph_script(build_graph(garden.root, config, all_posts)))
         atomic_write(output / "assets/research-graph.js", (ROOT / "static/research-graph.js").read_text(encoding="utf-8"))
         atomic_write(output / "assets/research-lineage.js", (ROOT / "static/research-lineage.js").read_text(encoding="utf-8"))

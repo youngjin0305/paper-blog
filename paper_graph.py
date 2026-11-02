@@ -113,6 +113,9 @@ def graph_papers(root, config, posts):
     queue = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"papers": []}
     states = {p["id"]: p for p in queue["papers"]}
     papers = {p["id"]: deepcopy(p) for p in queue["papers"] if p["status"] in ("candidate", "pinned", "done")}
+    from paper_research import load_atlas
+    for paper in load_atlas(root)["papers"]:
+        papers.setdefault(paper["id"], {**paper, **states.get(paper["id"], {})})
     for p in load_catalog(root, pipeline)["papers"]:
         papers[p["id"]] = {**states.get(p["id"], {}), **p}
     for post in posts:
@@ -210,8 +213,9 @@ def build_graph(root, config, posts):
             labels = [c["label"] for c in settings["concepts"] if c["id"] in shared]
             edges[(older["id"], newer["id"])] = {"source": older["id"], "target": newer["id"], "kind": "related",
                 "similarity": round(similarity, 3), "reason": "공통 개념: " + ", ".join(labels) + "; 제목·초록 TF-IDF 유사도. 실제 인용 또는 계승을 뜻하지 않습니다."}
-    return {"version": 1, "nodes": nodes, "edges": sorted(edges.values(), key=lambda e: (e["target"], e["source"])),
-            "checkedAt": snapshot.get("checkedAt"), "settings": settings}
+    from paper_research import enrich_graph, load_atlas
+    return enrich_graph({"version": 1, "nodes": nodes, "edges": sorted(edges.values(), key=lambda e: (e["target"], e["source"])),
+            "checkedAt": snapshot.get("checkedAt"), "settings": settings}, load_atlas(root), papers)
 
 
 def sync_graph_evidence(root, config, posts, dry_run=False):

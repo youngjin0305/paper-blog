@@ -8,6 +8,7 @@ data/*
 !data/core-papers.json
 !data/paper-graph-evidence.json
 !data/paper-visual-plans.json
+!data/research-atlas.json
 site/
 *.log
 drafts/

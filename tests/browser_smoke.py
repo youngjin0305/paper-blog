@@ -109,7 +109,7 @@ with tempfile.TemporaryDirectory() as directory:
             expect(page.locator('#search-empty')).to_be_visible()
             page.get_by_role('searchbox', name='읽기 목록 검색').fill('Test')
             expect(page.locator('#post-count')).to_have_text('1')
-            page.goto((root / "site/research-flow.html").as_uri())
+            page.goto((root / "site/research-connections.html").as_uri())
             page.locator('#flow-field').select_option('topic:quantum')
             page.locator('#flow-quality').select_option('core')
             expect(page.locator('.graph-node')).to_have_count(1)

@@ -520,6 +520,17 @@ class Pipeline:
                             errors.append("Reference selection failed twice")
                             selected = []
                         prompt += "\n검증 실패: 허용 번호의 JSON 정수 배열만 출력하라."
+            if self.config["research_analysis"] and not self.fixture and not errors:
+                from paper_research import extract_candidate, save_candidate, load_atlas
+                self.log("Extracting research profile candidate; semantic review remains pending")
+                try:
+                    paper["researchCandidate"] = extract_candidate(paper, markdown, self.backend, load_atlas(self.root)["papers"])
+                    if not self.dry_run:
+                        save_candidate(self.root, paper)
+                except QuotaExceeded:
+                    raise
+                except (ValueError, RuntimeError, TimeoutError):
+                    self.log("Research profile extraction unavailable; leaving classification unreviewed")
             model = recorded_model(self.backend, self.config["model"])
             model_source = "reported" if getattr(self.backend, "used_models", None) else "configured"
             if reused_model and not generated_any:
@@ -579,7 +590,7 @@ class Pipeline:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Paper Blog weekly/daily pipeline")
-    parser.add_argument("command", choices=["weekly", "daily", "add", "list", "setup-agy", "seed-core"])
+    parser.add_argument("command", choices=["weekly", "daily", "add", "list", "setup-agy", "seed-core", "seed-research"])
     parser.add_argument("paper", nargs="?")
     parser.add_argument("--note", default="")
     parser.add_argument("--category", help="add: place a manually specified paper in an existing category")
@@ -635,6 +646,12 @@ def main(argv=None):
         if args.command == "add":
             pipeline.add(args.paper, args.note, category=args.category, metadata_file=args.metadata_file,
                          replace_post=args.replace_post)
+        elif args.command == "seed-research":
+            from paper_research import seed_research
+            added = seed_research(pipeline.root, pipeline.queue, args.dry_run)
+            if not args.dry_run:
+                pipeline.save_queue()
+            pipeline.log("Research candidates added: " + json.dumps(added))
         else:
             if args.command == "seed-core":
                 result = pipeline.seed_core(reset_pending=args.reset_pending)
