@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock
 
 from garden import ROOT, atomic_write
-from paper_research import load_atlas, seed_research, extract_candidate, enrich_graph, validate_profile
+from paper_research import load_atlas, seed_research, extract_candidate, enrich_graph, validate_profile, validate_taxonomy
 from paper_queue import empty_queue
 
 
@@ -90,3 +90,16 @@ class ResearchTests(unittest.TestCase):
         graph = enrich_graph({'nodes': [{'id':p['id']} for p in self.atlas['papers']], 'edges': []}, self.atlas, [])
         self.assertEqual(graph['edges'], [])
         self.assertEqual(len(graph['research']['relations']), len(self.atlas['relations']))
+
+    def test_taxonomy_supports_multiple_parents_but_rejects_cycles_and_unknown_memberships(self):
+        tax = deepcopy(self.atlas['taxonomy'])
+        validate_taxonomy(tax)
+        combined = next(b for b in tax['branches'] if b['id'] == 'differential-linear')
+        self.assertEqual(set(combined['parents']), {'linear', 'differential'})
+        next(b for b in tax['branches'] if b['id'] == 'linear')['parents'] = ['differential-linear']
+        with self.assertRaisesRegex(ValueError, 'cycle'):
+            validate_taxonomy(tax)
+        tax = deepcopy(self.atlas['taxonomy'])
+        next(iter(tax['memberships'].values()))['branches'] = ['invented']
+        with self.assertRaisesRegex(ValueError, 'membership'):
+            validate_taxonomy(tax)

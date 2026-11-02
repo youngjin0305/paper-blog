@@ -5,7 +5,8 @@
   const research = data.research, byId = new Map(data.nodes.map(n => [n.id,n]));
   const detail = document.getElementById('atlas-detail');
   const controls = Object.fromEntries(['topic','method','target','search','pending','unclassified'].map(k => [k,document.getElementById('atlas-'+k)]));
-  let mode = 'lineage', selected = null, comparison = [], frame;
+  let mode = research.taxonomy ? 'fields' : 'lineage', selected = null, comparison = [], frame;
+  let fieldPath = research.taxonomy ? [research.taxonomy.root] : [], fieldFacet = '';
   const element = (tag,text,cls) => { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; };
   const button = (text,action,cls) => {const b=element('button',text,cls); b.type='button'; b.addEventListener('click',action); return b;};
   const safe = url => {try {const u=new URL(url); return u.protocol==='https:'?u.href:'#';} catch {return '#';}};
@@ -27,6 +28,8 @@
     selected=n.id; const p=profile(n); detail.replaceChildren(element('h2',n.title));
     detail.append(element('p',`${n.year} · ${n.authors.join(', ')} · ${n.venue}`));article(detail,n);
     evidence(detail,p);describe(detail,'이 논문이 바꾼 점',p?.contribution);
+    const membership=research.taxonomy?.memberships[n.id];
+    if(membership){const names=research.taxonomy.branches.filter(b=>membership.branches.includes(b.id)).map(b=>b.label);describe(detail,'분야 분류',names.join(' · '));detail.append(link('분야 분류 근거 ↗',membership.evidence.url),element('small',membership.evidence.locator));}
     const incoming=research.relations.filter(r=>r.target===n.id && (r.status==='reviewed'||controls.pending.checked));
     const outgoing=research.relations.filter(r=>r.source===n.id && (r.status==='reviewed'||controls.pending.checked));
     for(const [label,rels,inbound] of [['출발점',incoming,true],['후속 연구',outgoing,false]]) {
@@ -38,6 +41,8 @@
     describe(detail,'확인한 연구 조건',studies(n).map(s=>`${s.target} · ${research.methods[s.method]} · ${s.goal||''}\n${s.conditions||'기재 확인 안 됨'}`).join('\n\n'));
     describe(detail,'저자가 밝힌 한계',p?.limitations);
     detail.append(button(comparison.includes(n.id)?'비교에서 제외':'비교에 추가',()=>toggleCompare(n.id)));
+    if(mode==='fields')detail.append(button('분야 설명과 논문 목록으로 돌아가기',()=>render()));
+    if(window.innerWidth<=1150)detail.scrollIntoView({behavior:'smooth',block:'start'});
     paint();
   }
   function toggleCompare(id){comparison=comparison.includes(id)?comparison.filter(x=>x!==id):[...comparison.slice(-1),id];render();if(selected)showNode(byId.get(selected));}
@@ -94,10 +99,48 @@
     for(const [label,fn] of [['논문',n=>n.title],['근거 수준',n=>status(profile(n))],['출발점',n=>research.relations.filter(r=>r.target===n.id&&(r.status==='reviewed'||controls.pending.checked)).map(r=>byId.get(r.source)?.title+' — '+r.change).join('\n')],['변경점',n=>profile(n)?.contribution],['대상·기법·목표·조건',n=>studies(n).map(s=>`${s.target} / ${research.methods[s.method]} / ${s.goal||''}\n${s.conditions||'기재 확인 안 됨'}`).join('\n\n')],['저자 명시 한계',n=>profile(n)?.limitations]]){const row=element('tr');row.append(element('th',label));for(const n of ns)row.append(element('td',fn(n)||'기재 확인 안 됨'));table.append(row);}
     const wrap=element('div',undefined,'atlas-table-scroll');wrap.append(table);canvas.append(element('p','조건이 다른 결과의 단순 수치 순위는 제공하지 않습니다. 비교 선택은 필터 변경 후에도 유지됩니다.','atlas-hint'),wrap,button('비교 선택 비우기',()=>{comparison=[];render();}));
   }
+  function fields(){
+    const tax=research.taxonomy;
+    if(!tax){canvas.append(element('p','아직 분야 분류가 없습니다.'));return;}
+    const branches=new Map(tax.branches.map(b=>[b.id,b])), current=branches.get(fieldPath.at(-1));
+    const descendants=id=>{const result=new Set([id]),pending=[id];while(pending.length){const parent=pending.pop();for(const b of tax.branches)if(b.parents.includes(parent)&&!result.has(b.id)){result.add(b.id);pending.push(b.id);}}return result;};
+    const papers=id=>{const ids=descendants(id);return ordered(data.nodes.filter(n=>{const m=tax.memberships[n.id];return m&&m.branches.some(b=>ids.has(b))&&(!fieldFacet||m.facets.includes(fieldFacet));}));};
+    const navigate=id=>{fieldPath.push(id);selected=null;render();};
+    const crumbs=element('nav',undefined,'field-breadcrumbs');crumbs.setAttribute('aria-label','분야 탐색 경로');
+    fieldPath.forEach((id,i)=>{if(i)crumbs.append(element('span','/'));const b=button(branches.get(id).label,()=>{fieldPath=fieldPath.slice(0,i+1);render();});if(i===fieldPath.length-1)b.setAttribute('aria-current','page');crumbs.append(b);});canvas.append(crumbs);
+    const facets=element('div',undefined,'field-facets');facets.append(element('span','논문에 겹쳐 보기'));
+    for(const [id,label] of [['','전체'],['ai','AI 활용'],['related-key','관련키 조건']]){const b=button(label,()=>{fieldFacet=id;render();});b.setAttribute('aria-pressed',String(fieldFacet===id));facets.append(b);}canvas.append(facets);
+    const children=tax.branches.filter(b=>b.parents.includes(current.id)), matches=papers(current.id);
+    const items=children.length?children.map(b=>({id:b.id,label:b.label,en:b.english,count:papers(b.id).length,branch:b})):matches.slice(0,6).map(n=>({id:n.id,label:n.title,en:String(n.year),paper:n}));
+    const map=element('div',undefined,'field-map');map.setAttribute('aria-label',current.label+' 분야 구조');
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1000 680');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');map.append(svg);
+    const center=element('div',undefined,'field-center');center.append(element('small',current.english),element('h2',current.label),element('span',`${matches.length}편 연결 · 하위 갈래 포함`));map.append(center);
+    // Fixed, stable positions avoid force-layout jitter and give every branch equal prominence.
+    const positions=[[20,19],[80,19],[87,50],[80,81],[20,81],[13,50]];
+    items.forEach((item,i)=>{const [x,y]=positions[i],path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',`M 500 340 Q ${x*10} 340 ${x*10} ${y*6.8}`);svg.append(path);
+      const b=button('',()=>item.branch?navigate(item.id):showNode(item.paper),'field-node'+(item.paper?' field-paper':''));b.dataset.field=item.id;b.style.left=x+'%';b.style.top=y+'%';
+      b.append(element('strong',item.label),element('small',item.en),element('span',item.branch?(item.count?`${item.count}편 · 펼치기 →`:'연결 논문 미등록 · 펼치기 →'):'논문 살펴보기 →'));
+      if(item.branch?.parents.length>1)b.append(element('em','두 갈래가 만나는 기법'));
+      map.append(b);});
+    if(!items.length)map.append(element('p','이 갈래의 논문을 아직 연결하지 않았습니다.','field-no-papers'));canvas.append(map);
+    canvas.append(element('p',children.length?'곡선은 분야의 포함 관계입니다. 논문의 인용·발전 관계는 계승 지도에서 확인하세요.':`이 갈래의 논문 ${matches.length}편 중 최대 6편을 지도에 표시합니다. 전체 목록은 상세 영역에서 확인하세요.`,'atlas-hint'));
+    canvas.append(button('분야 설명·전체 논문 목록 보기 ↓',()=>{detail.scrollIntoView({behavior:'smooth',block:'start'});},'field-detail-jump'));
+    detail.replaceChildren(element('p','FIELD GUIDE','atlas-badge'),element('h2',current.label),element('p',current.english),element('p',current.description),link('기법 설명의 출처 ↗',current.source));
+    if(current.parents.length>1){detail.append(element('h3','함께 연결되는 갈래'));for(const id of current.parents)detail.append(button(branches.get(id).label,()=>{fieldPath=[tax.root,id,current.id];render();}));}
+    detail.append(element('h3',`연결 논문 ${matches.length}편`));
+    if(!matches.length)detail.append(element('p','현재 목록에서 이 갈래에 연결한 논문이 없습니다. 연구 자체가 없다는 뜻은 아닙니다.'));
+    for(const n of matches){const m=tax.memberships[n.id],row=element('div',undefined,'field-paper-row');row.append(button(n.title,()=>showNode(n),'atlas-title'),element('small',`${n.year}${m.overview?' · Survey':''}${m.facets.includes('ai')?' · AI 활용':''}${m.facets.includes('related-key')?' · 관련키':''}`));article(row,n);detail.append(row);}
+    detail.append(element('h3','지도 범위'),element('p',tax.scope),element('p','AI는 활용 도구, 관련키는 공격 조건입니다. 여러 분석 기법에 함께 적용될 수 있어 독립된 하위 분야로 강제하지 않습니다. 한 논문은 여러 갈래에 속할 수 있고 상위 개수는 중복 없이 셉니다.'));
+    const unmapped=data.nodes.filter(n=>['cryptanalysis','ai-cryptanalysis'].includes(n.topic)&&!tax.memberships[n.id]);
+    detail.append(element('small',`현재 CryptAnalysis·AI CryptAnalysis 목록 중 ${unmapped.length}편은 이 지도에서 미분류 또는 범위 밖입니다.`));
+    const list=element('details');list.append(element('summary','미분류·범위 밖 논문 보기'));for(const n of unmapped)list.append(button(n.title,()=>showNode(n),'atlas-title'));detail.append(list);
+  }
   function render(){const nodes=visible();canvas.replaceChildren();document.getElementById('atlas-comparison-count').textContent=`${comparison.length}/2`;
+    document.querySelector('.flow-controls').hidden=mode==='fields';
+    document.querySelector('.atlas-layout').classList.toggle('field-layout',mode==='fields');
     const all=data.nodes.filter(n=>n.topic===controls.topic.value),classified=all.filter(n=>profile(n));document.getElementById('atlas-status').textContent=`현재 ${nodes.length}편 · 분야 전체 ${all.length}편 · 분류 있음 ${classified.length}편 / 미분류 ${all.length-classified.length}편 · 우선순위와 분류 근거는 별개`;
     for(const b of document.querySelectorAll('[data-mode]'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));
-    if(mode==='compare')compare();else if(!nodes.length)canvas.append(element('p','조건에 맞는 논문이 없습니다. 필터를 바꾸거나 미분류 논문을 포함하세요.'));else if(mode==='matrix')matrix(nodes);else timeline(nodes);
+    if(mode==='fields'){document.getElementById('atlas-status').textContent='Cryptography / 대칭키 암호분석 · 두 수집 카테고리의 논문을 기법별로 함께 탐색합니다.';fields();}else if(mode==='compare')compare();else if(!nodes.length)canvas.append(element('p','조건에 맞는 논문이 없습니다. 필터를 바꾸거나 미분류 논문을 포함하세요.'));else if(mode==='matrix')matrix(nodes);else timeline(nodes);
   }
   for(const [id,label] of Object.entries(research.methods)){const o=element('option',label);o.value=id;controls.method.append(o);}
   for(const t of [...new Set(data.nodes.flatMap(n=>studies(n).map(s=>s.target)))].sort()){const o=element('option',t);o.value=t;controls.target.append(o);}

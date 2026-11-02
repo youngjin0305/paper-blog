@@ -32,7 +32,41 @@ def load_atlas(root):
         validate_evidence(relation["evidence"])
         if not relation.get("change") or relation.get("status") not in ("reviewed", "pending"):
             raise ValueError("Research relation needs change and review status")
+    validate_taxonomy(data.get("taxonomy"))
     return data
+
+
+def validate_taxonomy(taxonomy):
+    if taxonomy is None:
+        return
+    branches = {b["id"]: b for b in taxonomy["branches"]}
+    if len(branches) != len(taxonomy["branches"]) or taxonomy["root"] not in branches:
+        raise ValueError("Invalid taxonomy IDs")
+    visited, active = set(), set()
+    def visit(identifier):
+        if identifier in active or identifier not in branches:
+            raise ValueError("Taxonomy cycle or missing parent")
+        if identifier in visited:
+            return
+        active.add(identifier)
+        for parent in branches[identifier]["parents"]:
+            visit(parent)
+        active.remove(identifier)
+        visited.add(identifier)
+    for identifier, branch in branches.items():
+        visit(identifier)
+        if identifier != taxonomy["root"] and not branch["parents"]:
+            raise ValueError("Disconnected taxonomy branch")
+        if urlparse(branch["source"]).scheme != "https":
+            raise ValueError("Taxonomy source must be HTTPS")
+    if branches[taxonomy["root"]]["parents"]:
+        raise ValueError("Taxonomy root must have no parents")
+    for membership in taxonomy["memberships"].values():
+        if not membership["branches"] or any(b not in branches for b in membership["branches"]):
+            raise ValueError("Unknown taxonomy membership")
+        if any(f not in ("ai", "related-key") for f in membership["facets"]):
+            raise ValueError("Unknown taxonomy facet")
+        validate_evidence(membership["evidence"])
 
 
 def validate_evidence(evidence):
@@ -79,6 +113,7 @@ def enrich_graph(graph, atlas, papers):
     for node in graph["nodes"]:
         node["research"] = profiles.get(node["id"])
     graph["research"] = {"methods": METHODS, "relationLabels": RELATIONS,
+        "taxonomy": deepcopy(atlas.get("taxonomy")),
         "relations": [r for r in relations if r["source"] in ids and r["target"] in ids],
         "searches": atlas.get("searches", []), "checkedAt": atlas.get("checkedAt")}
     return graph

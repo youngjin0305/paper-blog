@@ -3,8 +3,8 @@
 {% block scripts %}<link rel="stylesheet" href="{{ asset_url }}research-atlas.css"><script src="{{ graph_data_url }}" defer></script><script src="{{ asset_url }}research-atlas.js" defer></script>{% endblock %}
 {% block content %}
 {% include "graph-views.html" %}
-<section class="flow-header"><div class="eyebrow">RESEARCH ATLAS</div><h1>무엇을 이어받고, 무엇을 바꿨을까?</h1><p>연구의 출발점과 변경점을 따라 읽고, 기법과 대상별로 다음 조사 질문을 찾아보세요.</p></section>
-<div class="atlas-modes" role="group" aria-label="연구 지도 보기"><button data-mode="lineage" aria-pressed="true">계승 지도</button><button data-mode="matrix" aria-pressed="false">연구 범위</button><button data-mode="compare" aria-pressed="false">논문 비교 <span id="atlas-comparison-count">0/2</span></button></div>
+<section class="flow-header"><div class="eyebrow">RESEARCH ATLAS</div><h1>분야를 펼치고, 연구의 흐름을 따라가세요.</h1><p>큰 갈래에서 세부 기법으로, 기법에서 논문과 다음 연구 질문으로.</p></section>
+<div class="atlas-modes" role="group" aria-label="연구 지도 보기"><button data-mode="fields" aria-pressed="true">분야 지도</button><button data-mode="lineage" aria-pressed="false">계승 지도</button><button data-mode="matrix" aria-pressed="false">연구 범위</button><button data-mode="compare" aria-pressed="false">논문 비교 <span id="atlas-comparison-count">0/2</span></button></div>
 <section class="flow-controls" aria-label="연구 지도 필터">
 <label>분야<select id="atlas-topic">{% for topic in config.topics %}<option value="{{ topic.id }}" {{ 'selected' if topic.id == 'ai-cryptanalysis' else '' }}>{{ topic.name }}</option>{% endfor %}</select></label>
 <label>연구 갈래<select id="atlas-method"><option value="">모든 기법</option></select></label>
