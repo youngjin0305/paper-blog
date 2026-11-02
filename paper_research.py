@@ -9,7 +9,10 @@ from paper_queue import entry
 
 PATH = "data/research-atlas.json"
 METHODS = {"data": "데이터 구성", "difference": "입력 차분 탐색", "architecture": "구별자 구조",
-           "interpretation": "작동 원리·해석", "key-recovery": "키 복구", "related-key": "관련키", "rx": "Rotational-XOR"}
+           "interpretation": "작동 원리·해석", "key-recovery": "키 복구", "related-key": "관련키", "rx": "Rotational-XOR",
+           "differential": "차분 분석", "linear": "선형 분석", "integral": "적분·Division Property",
+           "algebraic": "대수적 분석", "mitm": "중간 일치", "rotational": "회전 분석",
+           "impossible": "불능 차분", "boomerang": "Boomerang", "differential-linear": "차분-선형"}
 RELATIONS = {"extends": "방법 확장", "applies": "대상·조건 확장", "explains": "작동 원리 분석",
              "reassesses": "한계·재평가", "compares": "비교·재현"}
 

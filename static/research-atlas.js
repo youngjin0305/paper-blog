@@ -110,20 +110,20 @@
     fieldPath.forEach((id,i)=>{if(i)crumbs.append(element('span','/'));const b=button(branches.get(id).label,()=>{fieldPath=fieldPath.slice(0,i+1);render();});if(i===fieldPath.length-1)b.setAttribute('aria-current','page');crumbs.append(b);});canvas.append(crumbs);
     const facets=element('div',undefined,'field-facets');facets.append(element('span','논문에 겹쳐 보기'));
     for(const [id,label] of [['','전체'],['ai','AI 활용'],['related-key','관련키 조건']]){const b=button(label,()=>{fieldFacet=id;render();});b.setAttribute('aria-pressed',String(fieldFacet===id));facets.append(b);}canvas.append(facets);
-    const children=tax.branches.filter(b=>b.parents.includes(current.id)), matches=papers(current.id);
-    const items=children.length?children.map(b=>({id:b.id,label:b.label,en:b.english,count:papers(b.id).length,branch:b})):matches.slice(0,6).map(n=>({id:n.id,label:n.title,en:String(n.year),paper:n}));
-    const map=element('div',undefined,'field-map');map.setAttribute('aria-label',current.label+' 분야 구조');
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 1000 680');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');map.append(svg);
-    const center=element('div',undefined,'field-center');center.append(element('small',current.english),element('h2',current.label),element('span',`${matches.length}편 연결 · 하위 갈래 포함`));map.append(center);
-    // Fixed, stable positions avoid force-layout jitter and give every branch equal prominence.
-    const positions=[[20,19],[80,19],[87,50],[80,81],[20,81],[13,50]];
-    items.forEach((item,i)=>{const [x,y]=positions[i],path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',`M 500 340 Q ${x*10} 340 ${x*10} ${y*6.8}`);svg.append(path);
-      const b=button('',()=>item.branch?navigate(item.id):showNode(item.paper),'field-node'+(item.paper?' field-paper':''));b.dataset.field=item.id;b.style.left=x+'%';b.style.top=y+'%';
-      b.append(element('strong',item.label),element('small',item.en),element('span',item.branch?(item.count?`${item.count}편 · 펼치기 →`:'연결 논문 미등록 · 펼치기 →'):'논문 살펴보기 →'));
-      if(item.branch?.parents.length>1)b.append(element('em','두 갈래가 만나는 기법'));
-      map.append(b);});
-    if(!items.length)map.append(element('p','이 갈래의 논문을 아직 연결하지 않았습니다.','field-no-papers'));canvas.append(map);
-    canvas.append(element('p',children.length?'곡선은 분야의 포함 관계입니다. 논문의 인용·발전 관계는 계승 지도에서 확인하세요.':`이 갈래의 논문 ${matches.length}편 중 최대 6편을 지도에 표시합니다. 전체 목록은 상세 영역에서 확인하세요.`,'atlas-hint'));
+    const matches=papers(current.id);
+    const tree=element('div',undefined,'field-tree');tree.setAttribute('aria-label','대칭키 암호분석 분야 트리');
+    const build=(id,path)=>{const b=branches.get(id),li=element('li'),row=element('div',undefined,'field-tree-row');
+      const choose=button('',()=>{fieldPath=[...path,id];selected=null;render();},'field-node'+(id===current.id?' field-current':''));choose.dataset.field=id;
+      choose.append(element('strong',b.label),element('small',b.english),element('span',papers(id).length?`${papers(id).length}편`:'연결 논문 미등록'));
+      if(b.parents.length>1)choose.append(element('em','결합 기법 · 여러 갈래에 표시'));
+      row.append(choose);li.append(row);
+      const children=tax.branches.filter(child=>child.parents.includes(id));
+      if(children.length){const section=element('details',undefined,'field-subtree');section.open=true;section.append(element('summary','세부 갈래 '+children.length+'개'));const ul=element('ul');for(const child of children)ul.append(build(child.id,[...path,id]));section.append(ul);li.append(section);}
+      const direct=ordered(data.nodes.filter(n=>{const m=tax.memberships[n.id];return m&&m.branches.includes(id)&&(!fieldFacet||m.facets.includes(fieldFacet));}));
+      if(direct.length){const list=element('details',undefined,'field-tree-papers');list.append(element('summary',`이 갈래의 논문 ${direct.length}편`));for(const n of direct){const item=button(n.title,()=>showNode(n),'field-paper atlas-title');item.dataset.paper=n.id;list.append(item);}li.append(list);}
+      return li;};
+    const root=element('ul');root.append(build(tax.root,[]));tree.append(root);canvas.append(tree);
+    canvas.append(element('p','가지선은 분야의 포함 관계입니다. 결합 기법은 양쪽 가지에 표시하고, 상위 논문 수는 중복 없이 셉니다. 논문 목록과 세부 갈래는 접고 펼칠 수 있습니다.','atlas-hint'));
     canvas.append(button('분야 설명·전체 논문 목록 보기 ↓',()=>{detail.scrollIntoView({behavior:'smooth',block:'start'});},'field-detail-jump'));
     detail.replaceChildren(element('p','FIELD GUIDE','atlas-badge'),element('h2',current.label),element('p',current.english),element('p',current.description),link('기법 설명의 출처 ↗',current.source));
     if(current.parents.length>1){detail.append(element('h3','함께 연결되는 갈래'));for(const id of current.parents)detail.append(button(branches.get(id).label,()=>{fieldPath=[tax.root,id,current.id];render();}));}
