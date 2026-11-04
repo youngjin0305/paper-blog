@@ -3956,6 +3956,67 @@
       "graphReferences": []
     },
     {
+      "id": "eprint:2026/2654",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2654",
+      "pdfUrl": "https://eprint.iacr.org/2026/2654.pdf",
+      "title": "When Algebraic Structure Meets Too Many Hints",
+      "authors": [
+        "Dongshu Cai",
+        "Yijian Liu",
+        "Xianhui Lu"
+      ],
+      "abstract": "The hint framework of Dachman-Soled, Ducas, Gong, and Rossi (CRYPTO 2020), together with the later too-many-hints analyses from May and Nowakowski (ASIACRYPT 2023) and Cao, Jiang, and Cheng (CRYPTO 2025), gives a classification of secret-dependent hints and LLL-breaking hint thresholds for LWE schemes. These values are now frequently adopted as the default benchmark for side-channel security evaluation. We show that applying them as a security metric is problematic.\n\nDDGR categorizes hints based only on their local algebraic form, while the threshold analyses assume uniformly sampled hint vectors. Neither captures how the specific algebraic form of a hint governs the geometry of the resulting sparsified lattice. A hint’s class label and the corresponding uniform threshold therefore cannot, on their own, capture its real cryptanalytic power.\n\nWe illustrate this mismatch with two forms of structured leakage that naturally appear in ring and module lattice implementations, validated via synthetic experiments on Kyber-512. NTT-domain residues qualify formally as mod-$q$ hints, yet they recover the full Kyber-512 secret with roughly half as many hints as the uniform mod-$q$ bound predicts. Finite-precision FFT samples fall into the weaker approximate-hint class, and still only need $25\\%$--$55\\%$ of the hint budget required for uniform perfect hints.\n\nThe gap stems from algebraic structure: these hint families carry additional ring structure that enables tailored lattice recovery strategies, a distinction invisible under the uniform-sampling model.\n\nWe do not propose new attack optimizations. Our findings indicate that DDGR hint classes and too-many-hints thresholds are syntactic descriptions, not standalone security metrics for real leakage traces. Evaluating a side-channel leak requires considering the algebraic structure of the hint vectors, not just their category and quantity.",
+      "published": "2026-10-27T02:37:08+00:00",
+      "categories": [],
+      "addedAt": "2026-11-01T23:00:02+00:00",
+      "status": "failed",
+      "score": 2.875,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalytic",
+            "lattice"
+          ],
+          "categories": [],
+          "score": 2,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalytic",
+              "lattice"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 3,
+            "reason": "Kyber-512 비밀 복구와 격자 기반 분석을 다루지만 구조화된 누출 힌트를 전제로 한다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 힌트 분류와 균일 임계값이 구조화된 누출의 공격력을 포착하지 못한다는 결과를 제시한다."
+          },
+          "methodology": {
+            "score": 4,
+            "reason": "두 힌트 형태를 합성 실험으로 검증하고 필요한 힌트 수의 차이를 정량화했다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "코드·실험 데이터 공개 여부가 명시되지 않았다."
+          },
+          "rationale": "구조화된 힌트에 따른 실제 비밀 복구를 분석해 암호분석과 관련되지만, 누출 기반 공격이라는 범위상 제한이 있다."
+        }
+      },
+      "rationale": "구조화된 힌트에 따른 실제 비밀 복구를 분석해 암호분석과 관련되지만, 누출 기반 공격이라는 범위상 제한이 있다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-01T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
       "id": "arxiv:2301.11601",
       "title": "Improved Differential-neural Cryptanalysis for Round-reduced Simeck32/64",
       "abstract": "In CRYPTO 2019, Gohr presented differential-neural cryptanalysis by building the differential distinguisher with a neural network, achieving practical 11-, and 12-round key recovery attack for Speck32/64. Inspired by this framework, we develop the Inception neural network that is compatible with the round function of Simeck to improve the accuracy of the neural distinguishers, thus improving the accuracy of (9-12)-round neural distinguishers for Simeck32/64. To provide solid baselines for neural distinguishers, we compute the full distribution of differences induced by one specific input difference up to 13-round Simeck32/64. Moreover, the performance of the DDT-based distinguishers in multiple ciphertext pairs is evaluated. Compared with the DDT-based distinguishers, the 9-, and 10-round neural distinguishers achieve better accuracy. Also, an in-depth analysis of the wrong key response profile revealed that the 12-th and 13-th bits of the subkey have little effect on the score of the neural distinguisher, thereby accelerating key recovery attacks. Finally, an enhanced 15-round and the first practical 16-, and 17-round attacks are implemented for Simeck32/64, and the success rate of both the 15-, and 16-round attacks is almost 100%.",
@@ -3994,9 +4055,6 @@
       "id": "arxiv:2201.03767",
       "title": "Improved (Related-key) Differential-based Neural Distinguishers for SIMON and SIMECK Block Ciphers",
       "abstract": "In CRYPTO 2019, Gohr made a pioneering attempt and successfully applied deep learning to the differential cryptanalysis against NSA block cipher SPECK32/64, achieving higher accuracy than the pure differential distinguishers. By its very nature, mining effective features in data plays a crucial role in data-driven deep learning. In this paper, in addition to considering the integrity of the information from the training data of the ciphertext pair, domain knowledge about the structure of differential cryptanalysis is also considered into the training process of deep learning to improve the performance. Meanwhile, taking the performance of the differential-neural distinguisher of SIMON32/64 as an entry point, we investigate the impact of input difference on the performance of the hybrid distinguishers to choose the proper input difference. Eventually, we improve the accuracy of the neural distinguishers of SIMON32/64, SIMON64/128, SIMECK32/64, and SIMECK64/128. We also obtain related-key differential-based neural distinguishers on round-reduced versions of SIMON32/64, SIMON64/128, SIMECK32/64, and SIMECK64/128 for the first time.",
-      "journal_ref": "The Computer Journal 2022",
-      "publication_note": "",
-      "doi": "",
       "published": "2022-01-11T04:00:11Z",
       "updated": "2022-11-15T03:53:13Z",
       "authors": [
@@ -4017,14 +4075,182 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/ai-cryptanalysis/2022-01-11-dcc02c92baafc80f45a8.md",
+      "journal_ref": "The Computer Journal 2022",
+      "researchCandidate": {
+        "contribution": "8개 암호문 쌍과 차분 정보를 결합한 데이터 형식 및 SE-ResNet을 사용하고, 입력 차분을 검토해 SIMON·SIMECK의 차분 신경망 구별자 정확도를 개선했다. 네 암호의 관련키 차분 신경망 구별자도 처음 제시했다.",
+        "studies": [
+          {
+            "target": "Simon32/64",
+            "method": "differential",
+            "goal": "차분 신경망 구별자 정확도 개선",
+            "conditions": "9~12라운드; 8개 암호문 쌍; 9~11라운드 입력 차분 (0x0000,0x0040), 12라운드 입력 차분 (0x0001,0x0004)"
+          },
+          {
+            "target": "Simon64/128",
+            "method": "differential",
+            "goal": "차분 신경망 구별자 구축",
+            "conditions": "11~14라운드; 입력 차분 (0x00000000,0x00000040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "differential",
+            "goal": "차분 신경망 구별자 구축",
+            "conditions": "9~12라운드; 입력 차분 (0x0000,0x0040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simeck64/128",
+            "method": "differential",
+            "goal": "차분 신경망 구별자 구축",
+            "conditions": "14~18라운드; 입력 차분 (0x00000000,0x00000040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simon32/64",
+            "method": "related-key",
+            "goal": "관련키 차분 신경망 구별자 구축",
+            "conditions": "10~13라운드; 평문 차분 (0x0000,0x0040); 키 차분 (0x0000,0x0000,0x0000,0x0040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simon64/128",
+            "method": "related-key",
+            "goal": "관련키 차분 신경망 구별자 구축",
+            "conditions": "12~14라운드; 평문 차분 (0x00000000,0x00000040); 키 차분 (0x00000000,0x00000000,0x00000000,0x00000040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "related-key",
+            "goal": "관련키 차분 신경망 구별자 구축",
+            "conditions": "13~15라운드; 입력 차분 (0x0000,0x0040); 키 차분 (0x0000,0x0000,0x0000,0x0040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simeck64/128",
+            "method": "related-key",
+            "goal": "관련키 차분 신경망 구별자 구축",
+            "conditions": "18~22라운드; 입력 차분 (0x00000000,0x00000040); 키 차분 (0x00000000,0x00000000,0x00000000,0x00000040); 8개 암호문 쌍"
+          },
+          {
+            "target": "Simon32/64",
+            "method": "difference",
+            "goal": "혼합 구별자에 적합한 입력 차분 탐색",
+            "conditions": "11라운드 신경망 구별자에서 해밍 무게 1~3의 입력 차분 5,488개 조사; 선별한 차분을 12라운드와 앞에 붙이는 3라운드 고전적 차분에서도 검토"
+          },
+          {
+            "target": "Simon32/64",
+            "method": "data",
+            "goal": "암호문 쌍의 데이터 형식에 따른 정확도 비교",
+            "conditions": "9~11라운드; 입력 차분 (0x0000,0x0040); 8개 암호문 쌍; 훈련 2 × 10^7개, 시험 2 × 10^6개 표본"
+          }
+        ],
+        "limitations": "데이터 형식의 우수성은 사용한 신경망 구조에 한정되며, 구조가 바뀌면 다른 결과가 나올 수 있다고 밝혔다.",
+        "relations": [
+          {
+            "source": "eprint:2019/037",
+            "kind": "extends",
+            "change": "Gohr의 차분 신경망 구별자를 SIMON·SIMECK으로 확장하고 입력 데이터와 구조를 개선",
+            "evidence": {
+              "url": "https://arxiv.org/pdf/2201.03767v3",
+              "locator": "3.2절",
+              "checkedAt": "2026-11-04T00:04:54+00:00"
+            }
+          },
+          {
+            "source": "eprint:2021/287",
+            "kind": "extends",
+            "change": "여러 암호문 쌍을 쓰는 선행 접근에 새로운 데이터 형식을 추가",
+            "evidence": {
+              "url": "https://arxiv.org/pdf/2201.03767v3",
+              "locator": "3.1절",
+              "checkedAt": "2026-11-04T00:04:54+00:00"
+            }
+          },
+          {
+            "source": "eprint:2021/719",
+            "kind": "extends",
+            "change": "선행 SIMON 구별자의 데이터 입력과 네트워크 성능을 개선하고 동일한 암호문 쌍 수에서 정확도를 비교",
+            "evidence": {
+              "url": "https://arxiv.org/pdf/2201.03767v3",
+              "locator": "5.1절",
+              "checkedAt": "2026-11-04T00:04:54+00:00"
+            }
+          }
+        ],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://arxiv.org/pdf/2201.03767v3",
+          "locator": "1절 Our contribution; 3.1절; 3.2절; 4~6절",
+          "checkedAt": "2026-11-04T00:04:54+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "[1] Biham, E. and Shamir, A. Differential cryptanalysis of des-like cryptosystems. Journal of CRYPTOLOGY, 4, 3–72. [2] Matsui, M. Linear",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "hic Engineering, 1, 293. [16] Gohr, A. Improving attacks on round-reduced speck32/64 using deep learning. Annual International Cryptology Conference, pp. 150–179. S",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        },
+        {
+          "citedId": "manual:4772153072351b952954",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "CRYPTOLOGY, 4, 3–72. [2] Matsui, M. Linear cryptanalysis method for des cipher. Workshop on the Theory and Application of of Cryptographic",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "erault, D., Peyrin, T., and Tan, Q. Q. A deeper look at machine learning-based cryptanalysis. Annual International Conference on the Theory and Applicat",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/719",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "., Guo, J., Liu, M., Ma, L., and Tu, Y. Enhancing differential-neural cryptanalysis. International Conference on the Theory and Application of",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        },
+        {
+          "citedId": "manual:99a4b02dd25a1fbf8d4a",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2201.03767v3",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "ringer. [3] Knudsen, L. and Wagner, D. Integral cryptanalysis. International Workshop on Fast Software Encryption, pp. 1",
+            "checkedAt": "2026-11-04T00:00:15+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:2511.06336",
@@ -4085,13 +4311,13 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4498,6 +4724,7 @@
     "eprint:2026/2586",
     "eprint:2026/2599",
     "eprint:2026/2602",
+    "eprint:2026/2654",
     "manual:055d293f4c53fadaf731",
     "manual:16661c9151450f07fa3b",
     "manual:27d827b6e7accfdbd227",
@@ -4522,5 +4749,5 @@
     "eprint:2015/682",
     "eprint:2015/095"
   ],
-  "lastWeeklyAt": "2026-10-25T23:00:03+00:00"
+  "lastWeeklyAt": "2026-11-01T23:00:02+00:00"
 }
