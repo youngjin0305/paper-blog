@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "checkedAt": "2026-11-02",
+  "checkedAt": "2026-11-07",
   "papers": [
     {
       "id": "eprint:2019/037",
@@ -612,6 +612,40 @@
       },
       "publicationYear": 1999,
       "researchSeed": false
+    },
+    {
+      "id": "manual:48cd3186a90ce22c21de",
+      "source": "manual",
+      "title": "Truncated and higher order differentials",
+      "authors": [
+        "Lars R. Knudsen"
+      ],
+      "abstract": "In [6] higher order derivatives of discrete functions were considered and the concept of higher order differentials was introduced. We introduce the concept of truncated differentials and present attacks on ciphers presumably secure against differential attacks, but vulnerable to attacks using higher order and truncated differentials. Also we give a differential attack using truncated differentials on DES reduced to 6 rounds using only 46 chosen plaintexts with an expected running time of about the time of 3,500 encryptions. Finally it is shown how to find a minimum nonlinear order of a block cipher using higher order differentials.",
+      "url": "https://doi.org/10.1007/3-540-60590-8_16",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/3-540-60590-8_16.pdf",
+      "published": "1995-01-01T00:00:00+00:00",
+      "publishedPrecision": "year",
+      "publicationYear": 1995,
+      "doi": "10.1007/3-540-60590-8_16",
+      "journal_ref": "FSE 1994 · Proceedings 1995",
+      "topic_id": "cryptanalysis",
+      "researchSeed": false
+    },
+    {
+      "id": "arxiv:2610.27506",
+      "title": "Quantum Cryptanalysis on Two Feistel-Type Constructions",
+      "abstract": "With the rapid advancement of quantum computing, the security of traditional cryptographic systems is facing significant challenges. As a fundamental component of symmetric cryptography, block ciphers have attracted increasing attention regarding their quantum security in recent years. In this paper, we propose new quantum attacks on two Feistel-type constructions, i.e., New Structure IV and the lightweight block cipher LBlock, under the quantum chosen-plaintext attack (qCPA) model. First, we construct an 8-round quantum distinguisher for New Structure IV and perform an $r(r>12)$-round quantum key-recovery attack. Compared with Li et al.'s qCPA-based result presented at INSCRYPT 2024, our attack reduces the time complexity by a factor of $2^{n/2}$, where $n$ denotes the subkey length. Second, we design a 9-round quantum distinguisher for LBlock and extend it to an $r(r>15)$-round quantum key-recovery attack. The proposed quantum distinguisher covers one more round than Liu et al.'s automated-search distinguisher at ASIACRYPT 2025, which results in a $2^{16}$ reduction in the time complexity of our $r$-round quantum key-recovery attack on LBlock. Furthermore, by analyzing the structure of the round function and the key scheduling of LBlock, we reduce the subkey guess space for the 15-round attack from 76 bits to 52 bits, lowering the time complexity from \\(O(2^{38})\\) to \\(O(2^{26})\\) by a factor of \\(2^{12}\\).",
+      "published": "2026-10-20T02:21:06Z",
+      "authors": [
+        "Yan-Ying Zhu",
+        "Bin-Bin Cai",
+        "Fei Gao",
+        "Song Lin"
+      ],
+      "url": "https://arxiv.org/abs/2610.27506v1",
+      "source": "arxiv",
+      "pdfUrl": "https://arxiv.org/pdf/2610.27506v1",
+      "topic_id": "cryptanalysis"
     }
   ],
   "profiles": {
@@ -1414,6 +1448,56 @@
         "locator": "Abstract",
         "checkedAt": "2026-11-02"
       }
+    },
+    "manual:48cd3186a90ce22c21de": {
+      "status": "reviewed",
+      "basis": "abstract",
+      "contribution": "절단 차분을 도입하고 고차·절단 차분 공격 및 축소 DES 공격을 제시한다.",
+      "studies": [
+        {
+          "target": "DES",
+          "method": "truncated",
+          "goal": "차분 공격",
+          "conditions": "6-round DES; chosen plaintext"
+        },
+        {
+          "target": "Block ciphers",
+          "method": "higher-order",
+          "goal": "최소 비선형 차수 탐색",
+          "conditions": "고차 차분; 구체적인 암호별 조건은 전문 확인 필요"
+        }
+      ],
+      "limitations": "전체 DES 공격으로 일반화하지 않음; 초록 범위 분류",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-60590-8_16",
+        "locator": "Abstract; Cite this paper (1995 proceedings / FSE 1994)",
+        "checkedAt": "2026-11-07"
+      }
+    },
+    "arxiv:2610.27506": {
+      "status": "reviewed",
+      "basis": "abstract",
+      "contribution": "qCPA 모델에서 두 Feistel 계열 구조에 양자 구별자와 키 복구 공격을 제시한다.",
+      "studies": [
+        {
+          "target": "New Structure IV",
+          "method": "quantum",
+          "goal": "구별자·키 복구",
+          "conditions": "quantum chosen-plaintext (qCPA); 대상별 라운드 조건은 원문 확인"
+        },
+        {
+          "target": "LBlock",
+          "method": "quantum",
+          "goal": "구별자·키 복구",
+          "conditions": "quantum chosen-plaintext (qCPA); 대상별 라운드 조건은 원문 확인"
+        }
+      ],
+      "limitations": "qCPA 접근 조건의 공격; 고전적 접근 모델과 직접 비교하지 않음",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2610.27506",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-07"
+      }
     }
   },
   "relations": [
@@ -1752,6 +1836,49 @@
         ],
         "description": "회전 관계와 XOR 차이를 결합한 성질을 분석합니다. 신경망 구별자를 적용한 연구도 연결됩니다.",
         "source": "https://arxiv.org/abs/2511.06336"
+      },
+      {
+        "id": "truncated",
+        "label": "절단 차분 분석",
+        "english": "Truncated differential cryptanalysis",
+        "parents": [
+          "differential"
+        ],
+        "description": "차분의 모든 비트 값을 고정하지 않고 일부 또는 집합의 성질로 전파를 분석합니다. 차분 분석의 일반화이며 라운드를 줄인다는 뜻이 아닙니다.",
+        "source": "https://link.springer.com/chapter/10.1007/3-540-60590-8_16",
+        "aliases": [
+          "Truncated differential cryptoanalysis",
+          "truncated differential"
+        ]
+      },
+      {
+        "id": "higher-order",
+        "label": "고차 차분 분석",
+        "english": "Higher-order differential cryptanalysis",
+        "parents": [
+          "differential"
+        ],
+        "description": "반복 차분과 고차 도함수의 성질을 이용하는 차분 분석의 갈래입니다.",
+        "source": "https://link.springer.com/chapter/10.1007/3-540-60590-8_16",
+        "aliases": [
+          "Higher-order differential cryptoanalysis",
+          "higher order differential"
+        ]
+      },
+      {
+        "id": "quantum",
+        "label": "양자 암호분석",
+        "english": "Quantum cryptanalysis",
+        "parents": [
+          "symmetric"
+        ],
+        "axis": "computing",
+        "description": "양자 계산을 이용하는 공격 관점입니다. 차분·선형 분석과도 결합할 수 있으며 여기서는 대칭키 암호의 양자 공격을 연결합니다. 공개키에 대한 Shor 공격 등 양자 암호분석 전체를 포함하는 분류는 아닙니다. qCPA·Q1·Q2 등 접근 조건을 구별해서 읽어야 합니다.",
+        "source": "https://arxiv.org/abs/1510.05836",
+        "aliases": [
+          "Quantum CryptoAnalysis",
+          "양자 암호 분석"
+        ]
       }
     ],
     "memberships": {
@@ -2094,6 +2221,33 @@
           "url": "https://eprint.iacr.org/2015/095",
           "locator": "Abstract",
           "checkedAt": "2026-11-02"
+        }
+      },
+      "manual:48cd3186a90ce22c21de": {
+        "branches": [
+          "truncated",
+          "higher-order"
+        ],
+        "facets": [],
+        "basis": "abstract",
+        "evidence": {
+          "url": "https://link.springer.com/chapter/10.1007/3-540-60590-8_16",
+          "locator": "Abstract; Cite this paper (1995 proceedings / FSE 1994)",
+          "checkedAt": "2026-11-07"
+        }
+      },
+      "arxiv:2610.27506": {
+        "branches": [
+          "quantum"
+        ],
+        "facets": [
+          "quantum"
+        ],
+        "basis": "abstract",
+        "evidence": {
+          "url": "https://arxiv.org/abs/2610.27506",
+          "locator": "Abstract",
+          "checkedAt": "2026-11-07"
         }
       }
     }

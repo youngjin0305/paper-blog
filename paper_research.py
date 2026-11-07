@@ -12,7 +12,8 @@ METHODS = {"data": "데이터 구성", "difference": "입력 차분 탐색", "ar
            "interpretation": "작동 원리·해석", "key-recovery": "키 복구", "related-key": "관련키", "rx": "Rotational-XOR",
            "differential": "차분 분석", "linear": "선형 분석", "integral": "적분·Division Property",
            "algebraic": "대수적 분석", "mitm": "중간 일치", "rotational": "회전 분석",
-           "impossible": "불능 차분", "boomerang": "Boomerang", "differential-linear": "차분-선형"}
+           "impossible": "불능 차분", "boomerang": "Boomerang", "differential-linear": "차분-선형",
+           "truncated": "절단 차분", "higher-order": "고차 차분", "quantum": "양자 암호분석"}
 RELATIONS = {"extends": "방법 확장", "applies": "대상·조건 확장", "explains": "작동 원리 분석",
              "reassesses": "한계·재평가", "compares": "비교·재현"}
 
@@ -67,7 +68,7 @@ def validate_taxonomy(taxonomy):
     for membership in taxonomy["memberships"].values():
         if not membership["branches"] or any(b not in branches for b in membership["branches"]):
             raise ValueError("Unknown taxonomy membership")
-        if any(f not in ("ai", "related-key") for f in membership["facets"]):
+        if any(f not in ("ai", "related-key", "quantum") for f in membership["facets"]):
             raise ValueError("Unknown taxonomy facet")
         validate_evidence(membership["evidence"])
 

@@ -6,7 +6,8 @@
   const detail = document.getElementById('atlas-detail');
   const controls = Object.fromEntries(['topic','method','target','search','pending','unclassified'].map(k => [k,document.getElementById('atlas-'+k)]));
   let mode = research.taxonomy ? 'fields' : 'lineage', selected = null, comparison = [], frame;
-  let fieldPath = research.taxonomy ? [research.taxonomy.root] : [], fieldFacet = '';
+  let fieldPath = research.taxonomy ? [research.taxonomy.root] : [], fieldFacet = '', fieldQuery = '';
+  const collapsedFields = new Set();
   const element = (tag,text,cls) => { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; };
   const button = (text,action,cls) => {const b=element('button',text,cls); b.type='button'; b.addEventListener('click',action); return b;};
   const safe = url => {try {const u=new URL(url); return u.protocol==='https:'?u.href:'#';} catch {return '#';}};
@@ -105,20 +106,43 @@
     const branches=new Map(tax.branches.map(b=>[b.id,b])), current=branches.get(fieldPath.at(-1));
     const descendants=id=>{const result=new Set([id]),pending=[id];while(pending.length){const parent=pending.pop();for(const b of tax.branches)if(b.parents.includes(parent)&&!result.has(b.id)){result.add(b.id);pending.push(b.id);}}return result;};
     const papers=id=>{const ids=descendants(id);return ordered(data.nodes.filter(n=>{const m=tax.memberships[n.id];return m&&m.branches.some(b=>ids.has(b))&&(!fieldFacet||m.facets.includes(fieldFacet));}));};
-    const navigate=id=>{fieldPath.push(id);selected=null;render();};
+    const pathTo=id=>{const parent=branches.get(id)?.parents[0];return parent?[...pathTo(parent),id]:[id];};
+    const locate=id=>{fieldFacet='';fieldPath=pathTo(id);for(const key of [...collapsedFields])if(fieldPath.some(p=>key.split('/').includes(p)))collapsedFields.delete(key);render();canvas.querySelector('.field-current')?.scrollIntoView({behavior:'smooth',block:'center'});};
+    const canonical=s=>norm(s).replace(/cryptoanalysis/g,'cryptanalysis');
+    const searchable=s=>canonical(s).replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+    const taxonomyPath=id=>pathTo(id).map(p=>branches.get(p).label).join(' → ');
+    const searchBox=element('section',undefined,'field-search');
+    const searchLabel=element('label','논문·분야 찾기');searchLabel.htmlFor='field-search-input';
+    const searchInput=element('input');searchInput.id='field-search-input';searchInput.type='search';searchInput.placeholder='논문 제목·저자·ID 또는 Quantum, Truncated';searchInput.value=fieldQuery;
+    const results=element('div',undefined,'field-search-results');results.setAttribute('aria-live','polite');
+    searchBox.append(searchLabel,searchInput,element('small','지도에 등록된 모든 분야·미분류 논문을 검색합니다. 교차 필터와 무관하게 찾습니다.'),results);canvas.append(searchBox);
+    const search=()=>{fieldQuery=searchInput.value;results.replaceChildren();const terms=searchable(fieldQuery).split(/\s+/).filter(Boolean);if(!terms.length)return;
+      const match=text=>terms.every(t=>searchable(text).includes(t));
+      const foundBranches=tax.branches.filter(b=>match([b.label,b.english,...(b.aliases||[]),b.description].join(' ')));
+      const foundPapers=ordered(data.nodes.filter(n=>{const m=tax.memberships[n.id];return match([n.title,...n.authors,n.id,...(m?.branches||[]).map(id=>taxonomyPath(id)+' '+branches.get(id).english)].join(' '));}));
+      results.append(element('p',`분야 ${foundBranches.length}개 · 논문 ${foundPapers.length}편`));
+      if(!foundBranches.length&&!foundPapers.length)results.append(element('p','검색 결과가 없습니다. 다른 제목·저자·분야명으로 찾아보세요.'));
+      for(const b of foundBranches){const row=element('div',undefined,'field-search-result');row.append(button(b.label+' · '+b.english,()=>locate(b.id)),element('small',taxonomyPath(b.id)));results.append(row);}
+      for(const n of foundPapers){const row=element('div',undefined,'field-search-result');row.dataset.resultPaper=n.id;row.append(button(n.title,()=>showNode(n),'atlas-title'));const m=tax.memberships[n.id];
+        if(m){for(const id of m.branches){row.append(element('small',taxonomyPath(id)),button('트리에서 보기 · '+branches.get(id).label,()=>locate(id)));}row.append(element('small',m.evidence.locator+' · 분류 근거 '+m.evidence.checkedAt.slice(0,10)));}
+        else row.append(element('small','분야 미분류 · 수집 카테고리: '+n.topicLabel));
+        article(row,n);results.append(row);}
+    };
+    searchInput.addEventListener('input',search);searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';search();}});search();
     const crumbs=element('nav',undefined,'field-breadcrumbs');crumbs.setAttribute('aria-label','분야 탐색 경로');
     fieldPath.forEach((id,i)=>{if(i)crumbs.append(element('span','/'));const b=button(branches.get(id).label,()=>{fieldPath=fieldPath.slice(0,i+1);render();});if(i===fieldPath.length-1)b.setAttribute('aria-current','page');crumbs.append(b);});canvas.append(crumbs);
     const facets=element('div',undefined,'field-facets');facets.append(element('span','논문에 겹쳐 보기'));
-    for(const [id,label] of [['','전체'],['ai','AI 활용'],['related-key','관련키 조건']]){const b=button(label,()=>{fieldFacet=id;render();});b.setAttribute('aria-pressed',String(fieldFacet===id));facets.append(b);}canvas.append(facets);
+    for(const [id,label] of [['','전체'],['ai','AI 활용'],['related-key','관련키 조건'],['quantum','양자 계산']]){const b=button(label,()=>{fieldFacet=id;render();});b.setAttribute('aria-pressed',String(fieldFacet===id));facets.append(b);}canvas.append(facets);
     const matches=papers(current.id);
     const tree=element('div',undefined,'field-tree');tree.setAttribute('aria-label','대칭키 암호분석 분야 트리');
     const build=(id,path)=>{const b=branches.get(id),li=element('li'),row=element('div',undefined,'field-tree-row');
       const choose=button('',()=>{fieldPath=[...path,id];selected=null;render();},'field-node'+(id===current.id?' field-current':''));choose.dataset.field=id;
       choose.append(element('strong',b.label),element('small',b.english),element('span',papers(id).length?`${papers(id).length}편`:'연결 논문 미등록'));
+      if(b.axis==='computing')choose.append(element('em','계산 관점 · 여러 기법과 결합'));
       if(b.parents.length>1)choose.append(element('em','결합 기법 · 여러 갈래에 표시'));
       row.append(choose);li.append(row);
       const children=tax.branches.filter(child=>child.parents.includes(id));
-      if(children.length){const section=element('details',undefined,'field-subtree');section.open=true;section.append(element('summary','세부 갈래 '+children.length+'개'));const ul=element('ul');for(const child of children)ul.append(build(child.id,[...path,id]));section.append(ul);li.append(section);}
+      if(children.length){const section=element('details',undefined,'field-subtree');const key=[...path,id].join('/');section.open=!collapsedFields.has(key);section.addEventListener('toggle',()=>{if(section.open)collapsedFields.delete(key);else collapsedFields.add(key);});section.append(element('summary','세부 갈래 '+children.length+'개'));const ul=element('ul');for(const child of children)ul.append(build(child.id,[...path,id]));section.append(ul);li.append(section);}
       const direct=ordered(data.nodes.filter(n=>{const m=tax.memberships[n.id];return m&&m.branches.includes(id)&&(!fieldFacet||m.facets.includes(fieldFacet));}));
       if(direct.length){const list=element('details',undefined,'field-tree-papers');list.append(element('summary',`이 갈래의 논문 ${direct.length}편`));for(const n of direct){const item=button(n.title,()=>showNode(n),'field-paper atlas-title');item.dataset.paper=n.id;list.append(item);}li.append(list);}
       return li;};
@@ -130,7 +154,7 @@
     detail.append(element('h3',`연결 논문 ${matches.length}편`));
     if(!matches.length)detail.append(element('p','현재 목록에서 이 갈래에 연결한 논문이 없습니다. 연구 자체가 없다는 뜻은 아닙니다.'));
     for(const n of matches){const m=tax.memberships[n.id],row=element('div',undefined,'field-paper-row');row.append(button(n.title,()=>showNode(n),'atlas-title'),element('small',`${n.year}${m.overview?' · Survey':''}${m.facets.includes('ai')?' · AI 활용':''}${m.facets.includes('related-key')?' · 관련키':''}`));article(row,n);detail.append(row);}
-    detail.append(element('h3','지도 범위'),element('p',tax.scope),element('p','AI는 활용 도구, 관련키는 공격 조건입니다. 여러 분석 기법에 함께 적용될 수 있어 독립된 하위 분야로 강제하지 않습니다. 한 논문은 여러 갈래에 속할 수 있고 상위 개수는 중복 없이 셉니다.'));
+    detail.append(element('h3','지도 범위'),element('p',tax.scope),element('p','AI는 활용 도구, 관련키는 공격 조건입니다. 여러 분석 기법에 함께 적용될 수 있어 독립된 하위 분야로 강제하지 않습니다. 양자 계산도 여러 기법과 결합하는 관점이며 여기서는 대칭키 공격을 다룹니다. 한 논문은 여러 갈래에 속할 수 있고 상위 개수는 중복 없이 셉니다.'));
     const unmapped=data.nodes.filter(n=>['cryptanalysis','ai-cryptanalysis'].includes(n.topic)&&!tax.memberships[n.id]);
     detail.append(element('small',`현재 CryptAnalysis·AI CryptAnalysis 목록 중 ${unmapped.length}편은 이 지도에서 미분류 또는 범위 밖입니다.`));
     const list=element('details');list.append(element('summary','미분류·범위 밖 논문 보기'));for(const n of unmapped)list.append(button(n.title,()=>showNode(n),'atlas-title'));detail.append(list);
