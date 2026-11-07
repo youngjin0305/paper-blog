@@ -4042,13 +4042,13 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4256,9 +4256,6 @@
       "id": "arxiv:2511.06336",
       "title": "Enhancing Deep Learning-Based Rotational-XOR Attacks on Lightweight Block Ciphers Simon32/64 and Simeck32/64",
       "abstract": "At CRYPTO 2019, Gohr pioneered neural cryptanalysis by introducing differential-based neural distinguishers to attack Speck32/64, establishing a novel paradigm combining deep learning with differential cryptanalysis.Since then, constructing neural distinguishers has become a significant approach to achieving the deep learning-based cryptanalysis for block ciphers.This paper advances rotational-XOR (RX) attacks through neural networks, focusing on optimizing distinguishers and presenting key-recovery attacks for the lightweight block ciphers Simon32/64 and Simeck32/64.In particular, we first construct the fundamental data formats specially designed for training RX-neural distinguishers by refining the existing data formats for differential-neural distinguishers. Based on these data formats, we systematically identify optimal RX-differences with Hamming weights 1 and 2 that develop high-accuracy RX-neural distinguishers. Then, through innovative application of the bit sensitivity test, we achieve significant compression of data format without sacrificing the distinguisher accuracy. This optimization enables us to add more multi-ciphertext pairs into the data formats, further strengthening the performance of RX-neural distinguishers. As an application, we obtain 14- and 17-round RX-neural distinguishers for Simon32/64 and Simeck32/64, which improves the previous ones by 3 and 2 rounds, respectively.In addition, we propose two novel techniques, key bit sensitivity test and the joint wrong key response, to tackle the challenge of applying Bayesian's key-recovery strategy to the target cipher that adopts nonlinear key schedule in the related-key setting without considering of weak-key space. By this, we can straightforwardly mount a 17-round key-recovery attack on Simeck32/64 based on the improved 16-round RX-nerual distinguisher. To the best of our knowledge, the presented RX-neural......",
-      "journal_ref": "",
-      "publication_note": "",
-      "doi": "",
       "published": "2025-11-09T11:35:11Z",
       "updated": "2025-11-09T11:35:11Z",
       "authors": [
@@ -4278,13 +4275,13 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4324,8 +4321,6 @@
       "id": "eprint:2024/2002",
       "source": "eprint",
       "title": "Improving Differential-Neural Distinguisher For Simeck Family",
-      "journal_ref": "Cryptology ePrint Archive",
-      "doi": "",
       "authors": [
         "Xue Yuan",
         "Qichun Wang"
@@ -4339,21 +4334,20 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "eprint:2023/235",
       "source": "eprint",
       "title": "New Results on Machine Learning Based Distinguishers",
-      "journal_ref": "Cryptology ePrint Archive",
-      "doi": "",
       "authors": [
         "Anubhab Baksi",
         "Jakub Breier",
@@ -4371,14 +4365,15 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "manual:1d7dad302624b347beaa",
@@ -4401,14 +4396,203 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/ai-cryptanalysis/2023-09-19-32f3ee288b89c564b8cf.md",
+      "researchCandidate": {
+        "contribution": "입력 차분을 자동 탐색하는 진화 알고리즘과 암호 구조에 의존하지 않는 DBitNet 및 단계별 학습 파이프라인을 결합해 여러 암호의 신경망 구별자를 구축했다.",
+        "studies": [
+          {
+            "target": "SPECK32",
+            "method": "architecture",
+            "goal": "자동 학습 파이프라인으로 8라운드 구별자를 구축",
+            "conditions": "8라운드, 정확도 51% 초과; 연마 단계를 적용하면 선행 연구의 정확도에 도달"
+          },
+          {
+            "target": "SPECK128",
+            "method": "difference",
+            "goal": "입력 차분 탐색을 통해 새로운 신경망 구별자를 구축",
+            "conditions": "10라운드, 정확도 0.5916"
+          },
+          {
+            "target": "SIMON32",
+            "method": "architecture",
+            "goal": "단순한 학습 파이프라인으로 기존 연구와 유사한 구별 성능을 달성",
+            "conditions": "11라운드, 정확도 약 0.516; 표 2의 자동 파이프라인 결과"
+          },
+          {
+            "target": "SIMON64",
+            "method": "architecture",
+            "goal": "선행 구별자보다 한 라운드 더 확장",
+            "conditions": "13라운드, 정확도 약 0.518; 선행 비교 연구는 표본당 64쌍 사용"
+          },
+          {
+            "target": "SIMON128",
+            "method": "architecture",
+            "goal": "새로운 신경망 구별자 구축",
+            "conditions": "20라운드, 정확도 0.5057"
+          },
+          {
+            "target": "GIMLI",
+            "method": "difference",
+            "goal": "자동 입력 차분 탐색으로 구별 라운드를 확장",
+            "conditions": "11라운드, 정확도 0.527; 비교 대상은 8라운드"
+          },
+          {
+            "target": "HIGHT",
+            "method": "architecture",
+            "goal": "최초로 발표된 HIGHT 신경망 구별자를 구축",
+            "conditions": "10라운드, 정확도 0.751"
+          },
+          {
+            "target": "HIGHT",
+            "method": "related-key",
+            "goal": "파이프라인의 관련키 구별 가능성을 실증",
+            "conditions": "14라운드 관련키 설정, 정확도 0.562"
+          },
+          {
+            "target": "PRESENT",
+            "method": "architecture",
+            "goal": "기존 신경망 구별자의 도달 라운드를 개선",
+            "conditions": "9라운드, 정확도 0.5092; 비교 대상은 7라운드"
+          },
+          {
+            "target": "KATAN",
+            "method": "architecture",
+            "goal": "통계적으로 유의한 구별 라운드를 확장",
+            "conditions": "69라운드; 연마 파이프라인 적용 시 71라운드, 정확도 0.5034 ± 0.0002"
+          },
+          {
+            "target": "TEA and XTEA",
+            "method": "architecture",
+            "goal": "두 암호에 같은 입력 차분을 사용한 구별자 구축",
+            "conditions": "각각 5사이클(10라운드); 정확도 TEA 0.5634, XTEA 0.5984"
+          },
+          {
+            "target": "LEA",
+            "method": "architecture",
+            "goal": "최초의 LEA 신경망 구별자 제안",
+            "conditions": "11라운드, 정확도 0.5109"
+          }
+        ],
+        "limitations": "입력 차분 탐색의 최적성은 주장하지 않으며, 반환된 차분 전체를 조사하기 어렵다. 관련키 설정에서 찾은 차분을 공격에 활용하는 작업은 후속 연구로 남겼다. SPECK128에서 제시한 23~25라운드 이론적 후보는 신호 대 잡음비 때문에 직접 적용할 수 없다.",
+        "relations": [
+          {
+            "source": "eprint:2019/037",
+            "kind": "extends",
+            "change": "Gohr의 신경망 구별자와 입력 차분 탐색을 출발점으로 삼아 자동 탐색과 단순한 단계별 학습 파이프라인으로 확장",
+            "evidence": {
+              "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+              "locator": "§2.4; §4.2; §6.1",
+              "checkedAt": "2026-11-07T00:05:32+00:00"
+            }
+          },
+          {
+            "source": "eprint:2021/287",
+            "kind": "explains",
+            "change": "선행 연구의 절단 차분 해석을 비트 편향 점수에 기반한 입력 차분 탐색 가설로 연결",
+            "evidence": {
+              "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+              "locator": "§5.1",
+              "checkedAt": "2026-11-07T00:05:32+00:00"
+            }
+          },
+          {
+            "source": "eprint:2021/719",
+            "kind": "compares",
+            "change": "SIMON32 결과와 학습 절차 및 계산량을 비교",
+            "evidence": {
+              "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+              "locator": "§7",
+              "checkedAt": "2026-11-07T00:05:32+00:00"
+            }
+          }
+        ],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+          "locator": "Abstract; §5–7",
+          "checkedAt": "2026-11-07T00:05:32+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "010. [BS91] Eli Biham and Adi Shamir. Differential cryptanalysis of des-like cryptosystems. _J._ _Cryptology_, 4:3–72, 1991. [BTCS [+] 15] Ray Beaul",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "ep_speck)`, 2019. [Goh19b] Aron Gohr. Improving attacks on round-reduced speck32/64 using deep learning. In Alexandra Boldyreva and Daniele Micciancio, editors, _A",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "ault, Thomas Peyrin, and Quan Quan Tan. A deeper look at machine learning-based cryptanalysis. In Anne Canteaut and François-Xavier Standaert, editors, _",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/719",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "an Guo, Meicheng Liu, Li Ma, and Yi Tu. Enhancing differential-neural cryptanalysis. In Shweta Agrawal and Dongdai Lin, editors, _Advances_ _in",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "manual:dc5a855034dfdba1899d",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "uieti, Lejla Batina, and Stjepan Picek. Deep neural networks aiding cryptanalysis: A case study of the speck distinguisher. In Giuseppe Ateniese and Daniele Venturi, editors, _Applie",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "arxiv:2201.03767",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "ang Liu, Bing Sun, Chao Li, and Li Liu. Improved (RelatedKey) Differential-Based Neural Distinguishers for SIMON and SIMECK Block Ciphers. _The_ _Computer_ _Journal_, 01 2023. bxac195. [Mat94] Mi",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        },
+        {
+          "citedId": "manual:99a4b02dd25a1fbf8d4a",
+          "evidence": {
+            "url": "https://tosc.iacr.org/index.php/ToSC/article/download/11188/10630",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "[KW02] Lars Knudsen and David Wagner. Integral cryptanalysis. In Joan Daemen and Vincent Rijmen, editors, _Fast_ _Softwa",
+            "checkedAt": "2026-11-07T00:00:16+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "manual:f599bdaeb6e8aa2a2c31",
