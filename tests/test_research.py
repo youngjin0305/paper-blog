@@ -6,11 +6,28 @@ import unittest
 from unittest.mock import Mock
 
 from garden import ROOT, atomic_write
-from paper_research import load_atlas, seed_research, extract_candidate, enrich_graph, validate_profile, validate_taxonomy
+from paper_research import load_atlas, seed_research, extract_candidate, enrich_graph, validate_profile, validate_taxonomy, save_research_scope
 from paper_queue import empty_queue
 
 
 class ResearchTests(unittest.TestCase):
+    def test_scope_archive_preserves_explicit_pairs_pending_and_unclassified(self):
+        nodes = [{'id': 'p', 'title': 'Paper', 'topic': 'cryptanalysis', 'url': 'https://example.org/p',
+                  'research': {'status': 'pending', 'basis': 'fulltext', 'evidence': {'locator': 'Section 3'},
+                               'studies': [{'target': 'AES', 'method': 'mitm', 'conditions': '8 rounds'},
+                                           {'target': 'DES', 'method': 'linear', 'conditions': '6 rounds'}]}},
+                 {'id': 'u', 'title': 'Unclassified', 'topic': 'cryptanalysis', 'url': 'https://example.org/u'}]
+        graph = {'nodes': nodes, 'research': {'methods': {'mitm': '중간 일치', 'linear': '선형'}}}
+        original = deepcopy(graph)
+        path = save_research_scope(self.root, graph)
+        saved = json.loads(path.read_text(encoding='utf-8'))
+        self.assertEqual(graph, original)
+        self.assertEqual(saved['papers'][0]['studies'], nodes[0]['research']['studies'])
+        self.assertEqual(saved['papers'][0]['classificationStatus'], 'pending')
+        self.assertEqual(saved['papers'][1]['classificationStatus'], 'unclassified')
+        self.assertEqual(saved['papers'][1]['studies'], [])
+        self.assertFalse((self.root / 'site/research-scope.json').exists())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

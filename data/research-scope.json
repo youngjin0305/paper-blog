@@ -1,0 +1,1204 @@
+{
+  "version": 1,
+  "methods": {
+    "data": "데이터 구성",
+    "difference": "입력 차분 탐색",
+    "architecture": "구별자 구조",
+    "interpretation": "작동 원리·해석",
+    "key-recovery": "키 복구",
+    "related-key": "관련키",
+    "rx": "Rotational-XOR",
+    "differential": "차분 분석",
+    "linear": "선형 분석",
+    "integral": "적분·Division Property",
+    "algebraic": "대수적 분석",
+    "mitm": "중간 일치",
+    "rotational": "회전 분석",
+    "impossible": "불능 차분",
+    "boomerang": "Boomerang",
+    "differential-linear": "차분-선형",
+    "truncated": "절단 차분",
+    "higher-order": "고차 차분",
+    "quantum": "양자 암호분석"
+  },
+  "note": "명시된 연구 조건만 보관합니다. 없는 조합이 미연구를 뜻하지 않습니다.",
+  "papers": [
+    {
+      "id": "arxiv:1805.04953",
+      "title": "Learning Rich Features for Image Manipulation Detection",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/1805.04953v1",
+      "summaryId": "9bc2c2afeda78233093d",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:1806.02877",
+      "title": "In Ictu Oculi: Exposing AI Generated Fake Face Videos by Detecting Eye Blinking",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/1806.02877v2",
+      "summaryId": null,
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:1809.00888",
+      "title": "MesoNet: a Compact Facial Video Forgery Detection Network",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/1809.00888v1",
+      "summaryId": "fe2a3d2668adefb349ec",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:1901.08971",
+      "title": "FaceForensics++: Learning to Detect Manipulated Facial Images",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/1901.08971v3",
+      "summaryId": "654369b74d2f5a936723",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2112.05061",
+      "title": "Deep Learning based Differential Distinguisher for Lightweight Block Ciphers",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2112.05061v1",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2112.05061v1",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "PRESENT",
+          "method": "architecture",
+          "goal": "구별 및 입력 차분 탐색",
+          "conditions": "PRESENT-80 및 Simeck64/128; 축소 라운드"
+        },
+        {
+          "target": "PRESENT",
+          "method": "difference",
+          "goal": "구별 및 입력 차분 탐색",
+          "conditions": "PRESENT-80 및 Simeck64/128; 축소 라운드"
+        },
+        {
+          "target": "Simeck",
+          "method": "architecture",
+          "goal": "구별 및 입력 차분 탐색",
+          "conditions": "PRESENT-80 및 Simeck64/128; 축소 라운드"
+        },
+        {
+          "target": "Simeck",
+          "method": "difference",
+          "goal": "구별 및 입력 차분 탐색",
+          "conditions": "PRESENT-80 및 Simeck64/128; 축소 라운드"
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2201.03767",
+      "title": "Improved (Related-key) Differential-based Neural Distinguishers for SIMON and SIMECK Block Ciphers",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2201.03767v3",
+      "summaryId": "dcc02c92baafc80f45a8",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2201.03767v3",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SIMON",
+          "method": "data",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        },
+        {
+          "target": "SIMON",
+          "method": "difference",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        },
+        {
+          "target": "SIMON",
+          "method": "related-key",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        },
+        {
+          "target": "Simeck",
+          "method": "data",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        },
+        {
+          "target": "Simeck",
+          "method": "difference",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        },
+        {
+          "target": "Simeck",
+          "method": "related-key",
+          "goal": "단일키·관련키 구별",
+          "conditions": "32/64 및 64/128 변형; 축소 라운드"
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2301.11601",
+      "title": "Improved Differential-neural Cryptanalysis for Round-reduced Simeck32/64",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2301.11601v1",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2301.11601v1",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Simeck",
+          "method": "architecture",
+          "goal": "구별 성능 및 키 복구",
+          "conditions": "Simeck32/64; 축소 라운드; DDT 기반 구별자와 비교"
+        },
+        {
+          "target": "Simeck",
+          "method": "key-recovery",
+          "goal": "구별 성능 및 키 복구",
+          "conditions": "Simeck32/64; 축소 라운드; DDT 기반 구별자와 비교"
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2511.06336",
+      "title": "Enhancing Deep Learning-Based Rotational-XOR Attacks on Lightweight Block Ciphers Simon32/64 and Simeck32/64",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2511.06336v1",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2511.06336v1",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SIMON",
+          "method": "rx",
+          "goal": "RX 구별",
+          "conditions": "Simon32/64 및 Simeck32/64"
+        },
+        {
+          "target": "SIMON",
+          "method": "data",
+          "goal": "RX 구별",
+          "conditions": "Simon32/64 및 Simeck32/64"
+        },
+        {
+          "target": "Simeck",
+          "method": "rx",
+          "goal": "RX 구별",
+          "conditions": "Simon32/64 및 Simeck32/64"
+        },
+        {
+          "target": "Simeck",
+          "method": "data",
+          "goal": "RX 구별",
+          "conditions": "Simon32/64 및 Simeck32/64"
+        },
+        {
+          "target": "Simeck",
+          "method": "key-recovery",
+          "goal": "RX 키 복구",
+          "conditions": "Simeck32/64; related-key; 비선형 키 스케줄"
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2609.18783",
+      "title": "s-MDM: Generative Virtualization of Multi-Device Hardware Variations for Portable DL-SCA",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.18783v1",
+      "summaryId": "948152698cb491494dcb",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.21344",
+      "title": "CESBench: Benchmarking Large Language Models on Cryptographic Engineering Security for IoT Devices",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.21344v1",
+      "summaryId": "ff131682caeba74f65b3",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.21941",
+      "title": "End-to-End Hard-Label Cryptanalytic Model Extraction Using Efficient Sign Recovery",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.21941v1",
+      "summaryId": "f0397bb4b210cd174389",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.24359",
+      "title": "Dissecting Agentic Forensics: The Role of Triage, Prompting, and Evidence Arbitration in Open-World Fake Image Detection",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.24359v1",
+      "summaryId": "62800f915f5cce31e7a7",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.25154",
+      "title": "Benchmarking Neural Defend ARCAS 1B: A Foundational Multimodal Deepfake Detection Model",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.25154v1",
+      "summaryId": "8bcb7cbec4fb28551b7d",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.27427",
+      "title": "Extracting CNNs in the Unknown-Architecture and Feedback-Agnostic Setting",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.27427v1",
+      "summaryId": "a31fd1225f727ee7adeb",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.28205",
+      "title": "GUIAuditor: Enabling Post-hoc Child Safety Forensics via Action-Guided GUI Provenance on Mobile Devices",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.28205v1",
+      "summaryId": "b57bad1cd900a0ac9af3",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.29045",
+      "title": "The Tokens Remember: When Tokenization Bypasses Knowledge Editing and Unlearning",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.29045v1",
+      "summaryId": "24fc77c70fae9942c9bc",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.35536",
+      "title": "Look Before You Judge: Training-Free Region Mining for Grounded and Explainable Deepfake Detection",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.35536v1",
+      "summaryId": "45239c5c4a95f78560ea",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.38830",
+      "title": "SparLeak: Privacy Leakage from Sparse Attention in LLM Inference on Shared GPUs",
+      "topic": "ai-cryptanalysis",
+      "url": "https://arxiv.org/abs/2609.38830v1",
+      "summaryId": "b1cda916d4487e46a272",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.39066",
+      "title": "Agentic Tool-Augmented Reasoning for Explainable Image Forgery Detection",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.39066v1",
+      "summaryId": "4f6590f24f22e0bf2f42",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2609.39651",
+      "title": "Neural Audio Codec for Robust Audio Deepfake Detection",
+      "topic": "ai-digital-forensics",
+      "url": "https://arxiv.org/abs/2609.39651v1",
+      "summaryId": "defdf964f985c8e978e6",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "arxiv:2610.27506",
+      "title": "Quantum Cryptanalysis on Two Feistel-Type Constructions",
+      "topic": "cryptanalysis",
+      "url": "https://arxiv.org/abs/2610.27506v1",
+      "summaryId": "43e54e0e8d3c0524d0f9",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://arxiv.org/abs/2610.27506",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-07"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "New Structure IV",
+          "method": "quantum",
+          "goal": "구별자·키 복구",
+          "conditions": "quantum chosen-plaintext (qCPA); 대상별 라운드 조건은 원문 확인"
+        },
+        {
+          "target": "LBlock",
+          "method": "quantum",
+          "goal": "구별자·키 복구",
+          "conditions": "quantum chosen-plaintext (qCPA); 대상별 라운드 조건은 원문 확인"
+        }
+      ]
+    },
+    {
+      "id": "arxiv:2610.29224",
+      "title": "Cryptanalysis and Repair of \"Decentralized Multi-authority ABE for NC$^1$ from BDH\"",
+      "topic": "cryptanalysis",
+      "url": "https://arxiv.org/abs/2610.29224v1",
+      "summaryId": "2b7f6a69e724ad5c60c4",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "eprint:2015/095",
+      "title": "Rotational Cryptanalysis of ARX Revisited",
+      "topic": "cryptanalysis",
+      "url": "https://eprint.iacr.org/2015/095",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2015/095",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "BLAKE2",
+          "method": "rotational",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "BLAKE2의 기존 회전 공격 수정; simplified Skein 공격"
+        },
+        {
+          "target": "Skein",
+          "method": "rotational",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "BLAKE2의 기존 회전 공격 수정; simplified Skein 공격"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2015/682",
+      "title": "Integral Cryptanalysis on Full MISTY1",
+      "topic": "cryptanalysis",
+      "url": "https://eprint.iacr.org/2015/682",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2015/682",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "MISTY1",
+          "method": "integral",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "8-round MISTY1 / 5 FL layers; 이론적 공격이며 실용 공격과 구분"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2018/161",
+      "title": "Boomerang Connectivity Table: A New Cryptanalysis Tool",
+      "topic": "cryptanalysis",
+      "url": "https://eprint.iacr.org/2018/161",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2018/161",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Deoxys-BC",
+          "method": "boomerang",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "single S-box layer; Deoxys-BC와 SKINNY 분석"
+        },
+        {
+          "target": "SKINNY",
+          "method": "boomerang",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "single S-box layer; Deoxys-BC와 SKINNY 분석"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2019/037",
+      "title": "Improving Attacks on Round-Reduced Speck32/64 using Deep Learning",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2019/037",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2019/037",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "architecture",
+          "goal": "구별 및 키 복구",
+          "conditions": "SPECK32/64; 축소 라운드; chosen-plaintext 설정"
+        },
+        {
+          "target": "SPECK",
+          "method": "key-recovery",
+          "goal": "구별 및 키 복구",
+          "conditions": "SPECK32/64; 축소 라운드; chosen-plaintext 설정"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2021/287",
+      "title": "A Deeper Look at Machine Learning-Based Cryptanalysis",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2021/287",
+      "summaryId": "d6c457de5465d7c0e737",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2021/287",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "interpretation",
+          "goal": "구별자의 작동 원리 설명",
+          "conditions": "기재 확인 안 됨 — 전문 검토 필요"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2021/719",
+      "title": "Enhancing Differential-Neural Cryptanalysis",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2021/719",
+      "summaryId": "d0b86f2bdc4a21d2a27f",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2021/719",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "key-recovery",
+          "goal": "키 복구",
+          "conditions": "축소 라운드 SPECK32/64"
+        },
+        {
+          "target": "SIMON",
+          "method": "architecture",
+          "goal": "신경망·차분 구별자 비교",
+          "conditions": "축소 라운드 SIMON32/64"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2023/235",
+      "title": "New Results on Machine Learning Based Distinguishers",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2023/235",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2023/235",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "architecture",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "SPECK",
+          "method": "difference",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "ASCON",
+          "method": "architecture",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "ASCON",
+          "method": "difference",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "Simeck",
+          "method": "architecture",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "Simeck",
+          "method": "difference",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "SKINNY",
+          "method": "architecture",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        },
+        {
+          "target": "SKINNY",
+          "method": "difference",
+          "goal": "ML 기반 구별",
+          "conditions": "unkeyed 및 축소 라운드 설정; 일반적인 keyed 공격과 구분해 비교해야 함"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2024/1300",
+      "title": "Survey: Six Years of Neural Differential Cryptanalysis",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2024/1300",
+      "summaryId": "844cbc284b7bc5f28a6a",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2024/1300",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": true,
+      "studies": []
+    },
+    {
+      "id": "eprint:2024/2002",
+      "title": "Improving Differential-Neural Distinguisher For Simeck Family",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2024/2002",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://eprint.iacr.org/2024/2002",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Simeck",
+          "method": "architecture",
+          "goal": "구별 성능",
+          "conditions": "Simeck 계열; 전문 검토 필요"
+        },
+        {
+          "target": "Simeck",
+          "method": "data",
+          "goal": "구별 성능",
+          "conditions": "Simeck 계열; 전문 검토 필요"
+        }
+      ]
+    },
+    {
+      "id": "eprint:2026/2224",
+      "title": "The Tower of Babel: Large Language Models for Side-channel Analysis",
+      "topic": "ai-cryptanalysis",
+      "url": "https://eprint.iacr.org/2026/2224",
+      "summaryId": "14d4dfdd1b9e8a6aed3c",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "manual:055d293f4c53fadaf731",
+      "title": "A Novel Approach to Construct a Good Dataset for Differential-Neural Cryptanalysis",
+      "topic": "ai-cryptanalysis",
+      "url": "https://ieeexplore.ieee.org/document/10510376/",
+      "summaryId": "e46f618533a003c0a9ce",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://ieeexplore.ieee.org/document/10510376/",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "data",
+          "goal": "데이터 구성 및 입력 차분 선택",
+          "conditions": "기재 확인 안 됨 — 전문 검토 필요"
+        },
+        {
+          "target": "SPECK",
+          "method": "difference",
+          "goal": "데이터 구성 및 입력 차분 선택",
+          "conditions": "기재 확인 안 됨 — 전문 검토 필요"
+        },
+        {
+          "target": "SIMON",
+          "method": "data",
+          "goal": "데이터 구성 및 입력 차분 선택",
+          "conditions": "기재 확인 안 됨 — 전문 검토 필요"
+        },
+        {
+          "target": "SIMON",
+          "method": "difference",
+          "goal": "데이터 구성 및 입력 차분 선택",
+          "conditions": "기재 확인 안 됨 — 전문 검토 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:16661c9151450f07fa3b",
+      "title": "QUANTUM POWERED FORENSICS: A NEW AGE OF CYBER INVESTIGATION",
+      "topic": "quantum-forensics",
+      "url": "https://journalofemergingtechnologyanddigitaltransformation.com/index.php/3/article/view/46",
+      "summaryId": "827c68391b5cd73d2c12",
+      "classificationStatus": "unclassified",
+      "basis": null,
+      "evidence": null,
+      "overview": false,
+      "studies": []
+    },
+    {
+      "id": "manual:19104d4ca90393296dc9",
+      "title": "Differential-Linear Cryptanalysis",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/3-540-48658-5_3",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-48658-5_3",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "DES",
+          "method": "differential-linear",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "8-round DES; chosen plaintext; 전체 DES 공격과 구분"
+        }
+      ]
+    },
+    {
+      "id": "manual:1d7dad302624b347beaa",
+      "title": "A Cipher-Agnostic Neural Training Pipeline with Automated Finding of Good Input Differences",
+      "topic": "ai-cryptanalysis",
+      "url": "https://doi.org/10.46586/tosc.v2023.i3.184-212",
+      "summaryId": "32f3ee288b89c564b8cf",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://doi.org/10.46586/tosc.v2023.i3.184-212",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "SPECK",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "SIMON",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "SIMON",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "PRESENT",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "PRESENT",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "GIMLI",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "GIMLI",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "XTEA",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "XTEA",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "LEA",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "LEA",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "HIGHT",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "HIGHT",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "KATAN",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "KATAN",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "TEA",
+          "method": "difference",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        },
+        {
+          "target": "TEA",
+          "method": "architecture",
+          "goal": "여러 암호에 적용 가능한 구별자",
+          "conditions": "암호별 라운드·학습 조건은 서로 다름; 전문 비교 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:27d827b6e7accfdbd227",
+      "title": "Differential cryptanalysis of DES-like cryptosystems",
+      "topic": "cryptanalysis",
+      "url": "https://link.springer.com/article/10.1007/BF00630563",
+      "summaryId": "e45e0f54dfca5c32cc60",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/article/10.1007/BF00630563",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "DES-like ciphers",
+          "method": "differential",
+          "goal": "구조적 암호분석",
+          "conditions": "세부 라운드·데이터 조건은 원문 확인 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:33563d6ef471f0a426e3",
+      "title": "Cryptanalysis of Block Ciphers with Overdefined Systems of Equations",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/3-540-36178-2_17",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-36178-2_17",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Rijndael",
+          "method": "algebraic",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "복잡도는 중복 방정식으로 불확실; 실용적인 AES 해독으로 해석하지 않음"
+        },
+        {
+          "target": "Serpent",
+          "method": "algebraic",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "복잡도는 중복 방정식으로 불확실; 실용적인 AES 해독으로 해석하지 않음"
+        }
+      ]
+    },
+    {
+      "id": "manual:4772153072351b952954",
+      "title": "Linear Cryptanalysis Method for DES Cipher",
+      "topic": "cryptanalysis",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48285-7_33",
+      "summaryId": "24ef321e548333d673d0",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-48285-7_33",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "DES",
+          "method": "linear",
+          "goal": "구조적 암호분석",
+          "conditions": "세부 라운드·데이터 조건은 원문 확인 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:48cd3186a90ce22c21de",
+      "title": "Truncated and higher order differentials",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/3-540-60590-8_16",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-60590-8_16",
+        "locator": "Abstract; Cite this paper (1995 proceedings / FSE 1994)",
+        "checkedAt": "2026-11-07"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "DES",
+          "method": "truncated",
+          "goal": "차분 공격",
+          "conditions": "6-round DES; chosen plaintext"
+        },
+        {
+          "target": "Block ciphers",
+          "method": "higher-order",
+          "goal": "최소 비선형 차수 탐색",
+          "conditions": "고차 차분; 구체적인 암호별 조건은 전문 확인 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:509a1bad9c19a2d7283e",
+      "title": "A Meet-in-the-Middle Attack on 8-Round AES",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/978-3-540-71039-4_7",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/978-3-540-71039-4_7",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "AES",
+          "method": "mitm",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "7-round AES-192 / 8-round AES-256; full-round AES와 구분"
+        }
+      ]
+    },
+    {
+      "id": "manual:5d39689454a587183ada",
+      "title": "Cryptanalysis of Skipjack Reduced to 31 Rounds Using Impossible Differentials",
+      "topic": "cryptanalysis",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48910-X_2",
+      "summaryId": "43afe4bb8f68574735ce",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-48910-X_2",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Skipjack",
+          "method": "impossible",
+          "goal": "구조적 암호분석",
+          "conditions": "세부 라운드·데이터 조건은 원문 확인 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:99a4b02dd25a1fbf8d4a",
+      "title": "Integral Cryptanalysis",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/3-540-45661-9_9",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-45661-9_9",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "전단사 구성 요소를 사용하는 블록암호",
+          "method": "integral",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "추상적인 기법 소개; 구체적인 대상·라운드는 초록에서 확인 안 됨"
+        }
+      ]
+    },
+    {
+      "id": "manual:cafe7a3b19d70ea60608",
+      "title": "Rotational Cryptanalysis of ARX",
+      "topic": "cryptanalysis",
+      "url": "https://doi.org/10.1007/978-3-642-13858-4_19",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/978-3-642-13858-4_19",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Threefish",
+          "method": "rotational",
+          "goal": "암호 구조·공격 분석",
+          "conditions": "reduced-round Threefish; ARX with constants의 함수적 완전성도 분석"
+        }
+      ]
+    },
+    {
+      "id": "manual:cf168ef7c911b4f838dd",
+      "title": "The Boomerang Attack",
+      "topic": "cryptanalysis",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48519-8_12",
+      "summaryId": "051ebd775c2b0c3da1f8",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://link.springer.com/chapter/10.1007/3-540-48519-8_12",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "Block ciphers",
+          "method": "boomerang",
+          "goal": "구조적 암호분석",
+          "conditions": "세부 라운드·데이터 조건은 원문 확인 필요"
+        }
+      ]
+    },
+    {
+      "id": "manual:dc5a855034dfdba1899d",
+      "title": "Deep Neural Networks Aiding Cryptanalysis: A Case Study of the Speck Distinguisher",
+      "topic": "ai-cryptanalysis",
+      "url": "https://doi.org/10.1007/978-3-031-09234-3_40",
+      "summaryId": "7efe6d4035044a34eca4",
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://doi.org/10.1007/978-3-031-09234-3_40",
+        "locator": "Abstract (초록에서 명시된 범위만 분류)",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SPECK",
+          "method": "architecture",
+          "goal": "구조 축소와 설명 가능성",
+          "conditions": "SPECK32/64; depth-1·depth-10 네트워크"
+        },
+        {
+          "target": "SPECK",
+          "method": "interpretation",
+          "goal": "구조 축소와 설명 가능성",
+          "conditions": "SPECK32/64; depth-1·depth-10 네트워크"
+        }
+      ]
+    },
+    {
+      "id": "manual:f599bdaeb6e8aa2a2c31",
+      "title": "Enhanced related-key differential neural distinguishers for SIMON and SIMECK block ciphers",
+      "topic": "ai-cryptanalysis",
+      "url": "https://doi.org/10.7717/peerj-cs.2566",
+      "summaryId": null,
+      "classificationStatus": "reviewed",
+      "basis": "abstract",
+      "evidence": {
+        "url": "https://doi.org/10.7717/peerj-cs.2566",
+        "locator": "Abstract",
+        "checkedAt": "2026-11-02"
+      },
+      "overview": false,
+      "studies": [
+        {
+          "target": "SIMON",
+          "method": "related-key",
+          "goal": "관련키 구별 성능",
+          "conditions": "32/64·48/96·64/128 변형; 라운드별 조건이 다름; 단일키 결과와 직접 비교하지 않음"
+        },
+        {
+          "target": "SIMON",
+          "method": "difference",
+          "goal": "관련키 구별 성능",
+          "conditions": "32/64·48/96·64/128 변형; 라운드별 조건이 다름; 단일키 결과와 직접 비교하지 않음"
+        },
+        {
+          "target": "Simeck",
+          "method": "related-key",
+          "goal": "관련키 구별 성능",
+          "conditions": "32/64·48/96·64/128 변형; 라운드별 조건이 다름; 단일키 결과와 직접 비교하지 않음"
+        },
+        {
+          "target": "Simeck",
+          "method": "difference",
+          "goal": "관련키 구별 성능",
+          "conditions": "32/64·48/96·64/128 변형; 라운드별 조건이 다름; 단일키 결과와 직접 비교하지 않음"
+        }
+      ]
+    }
+  ]
+}

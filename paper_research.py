@@ -196,3 +196,21 @@ def save_candidate(root, paper):
         key = hashlib.sha256(paper["id"].encode()).hexdigest()[:20]
         atomic_write(Path(root) / "data/papers" / key / "research-candidate.json",
                      json.dumps(paper["researchCandidate"], ensure_ascii=False, indent=2) + '\n')
+
+
+def save_research_scope(root, graph):
+    """Archive explicit study records; no inferred empty cells or cross products."""
+    papers = []
+    for node in sorted(graph["nodes"], key=lambda n: n["id"]):
+        profile = node.get("research") or {}
+        papers.append({"id": node["id"], "title": node["title"], "topic": node["topic"],
+            "url": node["url"], "summaryId": node.get("summaryId"),
+            "classificationStatus": profile.get("status", "unclassified"),
+            "basis": profile.get("basis"), "evidence": profile.get("evidence"),
+            "overview": profile.get("overview", False), "studies": deepcopy(profile.get("studies", []))})
+    snapshot = {"version": 1, "methods": graph["research"]["methods"],
+        "note": "명시된 연구 조건만 보관합니다. 없는 조합이 미연구를 뜻하지 않습니다.",
+        "papers": papers}
+    path = Path(root) / "data/research-scope.json"
+    atomic_write(path, json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n')
+    return path

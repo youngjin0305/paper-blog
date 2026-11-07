@@ -9,6 +9,7 @@ data/*
 !data/paper-graph-evidence.json
 !data/paper-visual-plans.json
 !data/research-atlas.json
+!data/research-scope.json
 site/
 *.log
 drafts/

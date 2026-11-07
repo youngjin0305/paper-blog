@@ -247,7 +247,10 @@ def export_site(app, garden):
                      connections_view=True, graph_data_url="assets/research-graph-data.js"))
         for asset in ("research-atlas.js", "research-atlas.css"):
             atomic_write(output / "assets" / asset, (ROOT / "static" / asset).read_text(encoding="utf-8"))
-        atomic_write(output / "assets/research-graph-data.js", graph_script(build_graph(garden.root, config, all_posts)))
+        graph = build_graph(garden.root, config, all_posts)
+        from paper_research import save_research_scope
+        save_research_scope(garden.root, graph)
+        atomic_write(output / "assets/research-graph-data.js", graph_script(graph))
         atomic_write(output / "assets/research-graph.js", (ROOT / "static/research-graph.js").read_text(encoding="utf-8"))
         atomic_write(output / "assets/research-lineage.js", (ROOT / "static/research-lineage.js").read_text(encoding="utf-8"))
         for name, papers, essential_view in (("reading-list", reading, False), ("essentials", essentials, True)):
