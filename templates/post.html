@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ post.title }} · {{ config.title }}{% endblock %}
 {% block scripts %}
-<link rel="stylesheet" href="{{ asset_url }}vendor/katex/katex.min.css">
-<script defer src="{{ asset_url }}vendor/katex/katex.min.js"></script>
-<script defer src="{{ asset_url }}vendor/katex/auto-render.min.js"></script>
-<script defer src="{{ asset_url }}math.js"></script>
+{% include "math-assets.html" %}
 {% endblock %}
 {% block content %}
 <div class="article-top"><a href="{{ root_url }}" class="quiet-link">← 논문 목록</a><div>{% if not static_mode %}<a class="secondary small" href="/posts/{{ post.id }}/markdown">↓ Markdown</a>{% endif %}<a class="primary small" href="{{ source.url }}" target="_blank" rel="noopener noreferrer">원문 읽기 ↗</a></div></div>

@@ -76,9 +76,10 @@ def create_app(garden=None):
     def headers(response):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
-        # KaTeX positions glyphs with inline style attributes; keep the
-        # exception limited to article HTML, while stylesheets remain local.
-        math_style = "style-src-attr 'unsafe-inline'; " if request.path.startswith("/posts/") and response.mimetype == "text/html" else ""
+        # KaTeX positions glyphs with inline styles on articles and list titles.
+        # Only HTML loading our renderer needs this; scripts/stylesheets stay local.
+        has_math = response.mimetype == "text/html" and 'math.js"' in response.get_data(as_text=True)
+        math_style = "style-src-attr 'unsafe-inline'; " if has_math else ""
         response.headers["Content-Security-Policy"] = ("default-src 'self'; script-src 'self'; style-src 'self'; "
                                                        + math_style + "img-src 'self' data:; connect-src 'self'; "
                                                        "frame-ancestors 'none'; base-uri 'none'; form-action 'self'")

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block scripts %}{% if static_mode %}<script src="{{ asset_url }}search-data.js" defer></script><script src="{{ asset_url }}search.js" defer></script>{% endif %}{% endblock %}
+{% block scripts %}{% include "math-assets.html" %}{% if static_mode %}<script src="{{ asset_url }}search-data.js" defer></script><script src="{{ asset_url }}search.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="eyebrow"><span class="line"></span> A LITTLE KNOWLEDGE, EVERY DAY</div>

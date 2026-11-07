@@ -1,14 +1,17 @@
 "use strict";
-const paperBody = document.querySelector(".prose");
-if (paperBody && typeof window.renderMathInElement === "function") {
-  window.renderMathInElement(paperBody, {
-    delimiters: [
-      { left: "$$", right: "$$", display: true },
-      { left: "\\[", right: "\\]", display: true },
-      { left: "\\(", right: "\\)", display: false },
-      { left: "$", right: "$", display: false },
-    ],
-    throwOnError: false,
-    trust: false,
-  });
+if (typeof window.renderMathInElement === "function") {
+  for (const target of document.querySelectorAll(".prose, .card-title")) {
+    const body = target.matches(".prose");
+    window.renderMathInElement(target, {
+      delimiters: [
+        { left: "$$", right: "$$", display: body },
+        { left: "\\[", right: "\\]", display: body },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "$", right: "$", display: false },
+      ],
+      throwOnError: false,
+      trust: false,
+      ignoredClasses: ["katex"],
+    });
+  }
 }

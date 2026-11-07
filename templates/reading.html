@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ '필수 논문' if essential_view else '정리 대기 목록' }} · {{ config.title }}{% endblock %}
-{% block scripts %}{% if static_mode %}<script src="{{ asset_url }}search-data.js" defer></script><script src="{{ asset_url }}search.js" defer></script>{% endif %}{% endblock %}
+{% block scripts %}{% include "math-assets.html" %}{% if static_mode %}<script src="{{ asset_url }}search-data.js" defer></script><script src="{{ asset_url }}search.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
 <section class="reading-hero">
   <div class="eyebrow">READING LIBRARY</div>

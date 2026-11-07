@@ -213,7 +213,8 @@ class GardenTests(unittest.TestCase):
         self.garden.research()
         identifier = self.garden.posts()[0]["id"]
         self.assertIn("style-src-attr 'unsafe-inline'", self.client.get(f"/posts/{identifier}").headers["Content-Security-Policy"])
-        self.assertNotIn("style-src-attr 'unsafe-inline'", self.client.get("/").headers["Content-Security-Policy"])
+        self.assertIn("style-src-attr 'unsafe-inline'", self.client.get("/").headers["Content-Security-Policy"])
+        self.assertNotIn("style-src-attr 'unsafe-inline'", self.client.get("/settings").headers["Content-Security-Policy"])
 
     def test_pages_download_search_and_export(self):
         self.garden.research()
