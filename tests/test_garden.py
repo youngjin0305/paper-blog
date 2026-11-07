@@ -242,7 +242,7 @@ class GardenTests(unittest.TestCase):
             html = html_path.read_text(encoding="utf-8")
             for href in re.findall('href="([^"]+)"', html):
                 if not href.startswith(("https:", "http:", "#")):
-                    self.assertTrue((html_path.parent / href).exists(), f"Broken export link {href}")
+                    self.assertTrue((html_path.parent / href.split('#', 1)[0]).exists(), f"Broken export link {href}")
 
     def test_demo_is_explicit_and_idempotent(self):
         self.garden.seed_demo(); self.garden.seed_demo()

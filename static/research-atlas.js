@@ -5,7 +5,7 @@
   const research = data.research, byId = new Map(data.nodes.map(n => [n.id,n]));
   const detail = document.getElementById('atlas-detail');
   const controls = Object.fromEntries(['topic','method','target','search','pending','unclassified'].map(k => [k,document.getElementById('atlas-'+k)]));
-  let mode = research.taxonomy ? 'fields' : 'lineage', selected = null, comparison = [], frame;
+  let mode = location.hash==='#lineage' ? 'lineage' : research.taxonomy ? 'fields' : 'lineage', selected = null, comparison = [];
   let fieldPath = research.taxonomy ? [research.taxonomy.root] : [], fieldFacet = '', fieldQuery = '';
   const collapsedFields = new Set();
   const element = (tag,text,cls) => { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; };
@@ -37,14 +37,14 @@
       detail.append(element('h3',label));
       if(!rels.length)detail.append(element('p','현재 자료에서 직접 계승·분석 근거 미확인'));
       for(const r of rels){const other=byId.get(inbound?r.source:r.target);if(!other)continue;const box=element('div',undefined,'atlas-relation');
-        box.append(button(other.title,()=>{showNode(other);paint();}),element('strong',research.relationLabels[r.kind]),element('p',r.change));evidence(box,r);detail.append(box);}
+        box.append(button(other.title,()=>{showNode(other);}),element('strong',research.relationLabels[r.kind]),element('p',r.change));evidence(box,r);detail.append(box);}
     }
     describe(detail,'확인한 연구 조건',studies(n).map(s=>`${s.target} · ${research.methods[s.method]} · ${s.goal||''}\n${s.conditions||'기재 확인 안 됨'}`).join('\n\n'));
     describe(detail,'저자가 밝힌 한계',p?.limitations);
     detail.append(button(comparison.includes(n.id)?'비교에서 제외':'비교에 추가',()=>toggleCompare(n.id)));
     if(mode==='fields')detail.append(button('분야 설명과 논문 목록으로 돌아가기',()=>render()));
     if(window.innerWidth<=1150)detail.scrollIntoView({behavior:'smooth',block:'start'});
-    paint();
+    if(mode==='lineage'){canvas.replaceChildren();timeline(visible());}
   }
   function toggleCompare(id){comparison=comparison.includes(id)?comparison.filter(x=>x!==id):[...comparison.slice(-1),id];render();if(selected)showNode(byId.get(selected));}
   function card(n){const p=profile(n),box=element('article',undefined,'atlas-card'+(n.id===selected?' selected':''));box.dataset.paper=n.id;
@@ -52,30 +52,30 @@
     const tags=element('div',undefined,'atlas-tags'); for(const m of new Set(studies(n).map(s=>s.method)))tags.append(element('span',research.methods[m]));box.append(tags);
     for(const r of research.relations.filter(r=>r.target===n.id&&r.status==='reviewed'))box.append(element('small',research.relationLabels[r.kind]+' ← '+(byId.get(r.source)?.authors[0]||'선행 연구'),'atlas-parent'));
     const actions=element('div',undefined,'atlas-actions');actions.append(button(comparison.includes(n.id)?'비교 제외':'비교 +',()=>toggleCompare(n.id)));article(actions,n);box.append(actions);return box;}
-  function timeline(nodes){const wrap=element('div',undefined,'atlas-timeline');
-    wrap.append(element('p','연도별 계승·분석 지도 · 논문 선택 시 직접 연결 강조 · 의미가 다른 직접 연결은 생략하지 않음','atlas-hint'));
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('atlas-lines');svg.setAttribute('aria-hidden','true');wrap.append(svg);
-    for(const year of [...new Set(nodes.map(n=>n.year))]){const row=element('section',undefined,'atlas-year');row.append(element('h2',String(year)));const cards=element('div',undefined,'atlas-year-cards');
-      const yearNodes=nodes.filter(n=>n.year===year).sort((a,b)=>(studies(a)[0]?.method||'').localeCompare(studies(b)[0]?.method||''));
-      for(const n of yearNodes)cards.append(card(n));row.append(cards);wrap.append(row);}
-    canvas.append(wrap);requestAnimationFrame(paint);
+  function timeline(nodes){
+    const relations=research.relations.filter(r=>(r.status==='reviewed'||controls.pending.checked)&&byId.has(r.source)&&byId.has(r.target));
+    const degree=id=>relations.filter(r=>r.source===id||r.target===id).length;
+    const anchor=byId.get(selected)||[...nodes].sort((a,b)=>degree(b.id)-degree(a.id)||a.year-b.year)[0];
+    if(!anchor)return;selected=anchor.id;
+    const picker=element('label','기준 논문','succession-picker'),select=element('select');select.id='succession-paper';
+    const choices=nodes.some(n=>n.id===anchor.id)?nodes:[anchor,...nodes];
+    for(const n of choices){const option=element('option',`${n.year} · ${n.title}`);option.value=n.id;option.selected=n.id===anchor.id;select.append(option);}
+    select.addEventListener('change',()=>showNode(byId.get(select.value)));picker.append(select);canvas.append(picker);
+    canvas.append(element('p','한 논문의 직접 선행·후속 연구만 표시합니다. 다른 논문을 선택하면 그 논문의 연결로 이동합니다. 연결 논문은 필터 밖이어도 함께 표시합니다.','atlas-hint'));
+    const wrap=element('div',undefined,'succession-view');
+    const group=(label,rels,inbound)=>{const section=element('section',undefined,'succession-group');section.append(element('h2',`${label} · ${rels.length}`));
+      if(!rels.length)section.append(element('p','현재 자료에서 직접 관계 미확인. 연구가 없다는 뜻은 아닙니다.','atlas-hint'));
+      for(const r of [...rels].sort((a,b)=>byId.get(inbound?a.source:a.target).year-byId.get(inbound?b.source:b.target).year)){
+        const n=byId.get(inbound?r.source:r.target),item=element('div',undefined,'succession-relation');
+        item.append(element('span',`${n.year} · ${research.relationLabels[r.kind]}`,'succession-label'),element('p',r.change));
+        if(r.status==='pending')item.append(element('small','자동 추출 · 검토 전'));
+        if(!nodes.some(node=>node.id===n.id))item.append(element('small','현재 목록 필터 밖의 연결 논문'));
+        item.append(card(n),link('연결 근거 ↗',r.evidence.url),element('small',`${r.evidence.locator} · ${r.basis==='abstract'?'초록':'전문'} 근거`));section.append(item);}
+      return section;};
+    wrap.append(group('직접 선행 연구',relations.filter(r=>r.target===anchor.id),true));
+    const focus=element('section',undefined,'succession-focus');focus.append(element('h2','현재 기준 논문'),element('span',String(anchor.year),'succession-label'),card(anchor));wrap.append(focus);
+    wrap.append(group('직접 후속 연구',relations.filter(r=>r.source===anchor.id),false));canvas.append(wrap);
   }
-  function paint(){cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{
-    const wrap=canvas.querySelector('.atlas-timeline'),svg=canvas.querySelector('svg');if(!wrap||!svg)return;
-    svg.replaceChildren();const rect=wrap.getBoundingClientRect();svg.setAttribute('width',rect.width);svg.setAttribute('height',rect.height);
-    const shape=(tag,attrs)=>{const e=document.createElementNS(svg.namespaceURI,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);return e;};
-    const defs=shape('defs',{}),marker=shape('marker',{id:'atlas-arrow',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'});marker.append(shape('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'#467765'}));defs.append(marker);svg.append(defs);
-    const positions=new Map([...wrap.querySelectorAll('[data-paper]')].map(e=>[e.dataset.paper,e]));
-    let lane=0;
-    for(const r of research.relations){if((r.status!=='reviewed'&&!controls.pending.checked)||!positions.has(r.source)||!positions.has(r.target))continue;
-      const a=positions.get(r.source).getBoundingClientRect(),b=positions.get(r.target).getBoundingClientRect();
-      const x=a.left+a.width/2-rect.left,y=a.bottom-rect.top,tx=b.left+b.width/2-rect.left,ty=b.top-rect.top;
-      const active=!selected||r.source===selected||r.target===selected;
-      const gutter=48+(lane++%7)*4, out=y+12, into=ty-12;
-      const path=shape('path',{d:`M ${x} ${y} L ${x} ${out} L ${gutter} ${out} L ${gutter} ${into} L ${tx} ${into} L ${tx} ${ty}`,fill:'none','stroke-dasharray':r.status==='pending'?'5 5':'none',stroke:'#467765','stroke-width':active?2:1,opacity:active?.7:.12,'marker-end':'url(#atlas-arrow)'});path.append(shape('title',{}));path.firstChild.textContent=research.relationLabels[r.kind]+': '+r.change;svg.append(path);
-    }
-    for(const [id,box] of positions)box.classList.toggle('selected',id===selected);
-  });}
   function compare(){if(comparison.length<2){canvas.append(element('p','계승 지도에서 논문 두 편의 ‘비교 +’를 선택하세요.'));if(comparison.length)canvas.append(card(byId.get(comparison[0])));return;}
     const ns=comparison.map(id=>byId.get(id)),table=element('table',undefined,'atlas-compare');
     for(const [label,fn] of [['논문',n=>n.title],['근거 수준',n=>status(profile(n))],['출발점',n=>research.relations.filter(r=>r.target===n.id&&(r.status==='reviewed'||controls.pending.checked)).map(r=>byId.get(r.source)?.title+' — '+r.change).join('\n')],['변경점',n=>profile(n)?.contribution],['대상·기법·목표·조건',n=>studies(n).map(s=>`${s.target} / ${research.methods[s.method]} / ${s.goal||''}\n${s.conditions||'기재 확인 안 됨'}`).join('\n\n')],['저자 명시 한계',n=>profile(n)?.limitations]]){const row=element('tr');row.append(element('th',label));for(const n of ns)row.append(element('td',fn(n)||'기재 확인 안 됨'));table.append(row);}
@@ -146,11 +146,12 @@
     const all=data.nodes.filter(n=>n.topic===controls.topic.value),classified=all.filter(n=>profile(n));document.getElementById('atlas-status').textContent=`현재 ${nodes.length}편 · 분야 전체 ${all.length}편 · 분류 있음 ${classified.length}편 / 미분류 ${all.length-classified.length}편 · 우선순위와 분류 근거는 별개`;
     for(const b of document.querySelectorAll('[data-mode]'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));
     if(mode==='fields'){document.getElementById('atlas-status').textContent='Cryptography / 대칭키 암호분석 · 두 수집 카테고리의 논문을 기법별로 함께 탐색합니다.';fields();}else if(mode==='compare')compare();else if(!nodes.length)canvas.append(element('p','조건에 맞는 논문이 없습니다. 필터를 바꾸거나 미분류 논문을 포함하세요.'));else timeline(nodes);
+    if(mode==='lineage'&&selected&&nodes.length)showNode(byId.get(selected));
   }
   for(const [id,label] of Object.entries(research.methods)){const o=element('option',label);o.value=id;controls.method.append(o);}
   for(const t of [...new Set(data.nodes.flatMap(n=>studies(n).map(s=>s.target)))].sort()){const o=element('option',t);o.value=t;controls.target.append(o);}
   for(const el of Object.values(controls))el.addEventListener(el.type==='search'?'input':'change',()=>{selected=null;detail.replaceChildren(element('h2','논문 또는 연구 조합을 선택하세요'));render();});
   for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{mode=b.dataset.mode;render();});
   for(const s of research.searches){const box=element('div');box.append(element('h3',s.checkedAt+' · '+s.scope),element('p',s.queries.join(' / ')),element('p',s.note));document.getElementById('atlas-search-log').append(box);}
-  window.addEventListener('resize',paint);render();
+  render();
 })();

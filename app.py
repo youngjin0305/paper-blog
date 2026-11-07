@@ -11,7 +11,7 @@ import webbrowser
 from pathlib import Path
 
 import bleach
-from flask import Flask, Response, abort, jsonify, render_template, request
+from flask import Flask, Response, abort, jsonify, render_template, request, redirect
 import markdown
 from markupsafe import Markup
 
@@ -148,8 +148,7 @@ def create_app(garden=None):
 
     @app.get("/research-lineage")
     def lineage_page():
-        return render_template("lineage.html", selected=None, graph_view=True, lineage_view=True,
-                               graph_data_url="/research-flow/data.js")
+        return redirect("/research-flow#lineage")
 
     @app.get("/research-connections")
     def connections_page():
@@ -252,7 +251,6 @@ def export_site(app, garden):
         save_research_scope(garden.root, graph)
         atomic_write(output / "assets/research-graph-data.js", graph_script(graph))
         atomic_write(output / "assets/research-graph.js", (ROOT / "static/research-graph.js").read_text(encoding="utf-8"))
-        atomic_write(output / "assets/research-lineage.js", (ROOT / "static/research-lineage.js").read_text(encoding="utf-8"))
         for name, papers, essential_view in (("reading-list", reading, False), ("essentials", essentials, True)):
             atomic_write(output / (name + ".html"), page("reading.html", papers=papers, criteria=criteria,
                          essential_view=essential_view, selected=None, category="", reading_view=True))

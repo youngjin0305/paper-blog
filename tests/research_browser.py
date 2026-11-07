@@ -70,8 +70,19 @@ with sync_playwright() as pw:
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 2')
     page.set_viewport_size({'width':1600,'height':1000})
     page.locator('[data-mode=lineage]').click()
-    expect(page.locator('.atlas-card')).to_have_count(14)
-    assert page.locator('.sidebar a[href*=research-lineage]').count() == 0
+    expect(page.locator('#succession-paper option')).to_have_count(14)
+    assert page.locator('a[href*=research-lineage]').count() == 0
+    expect(page.locator('#atlas-canvas svg')).to_have_count(0)
+    anchor = page.locator('#succession-paper').input_value()
+    expected = page.evaluate("id => {const rs=researchGraph.research.relations.filter(r=>r.status==='reviewed'&&(r.source===id||r.target===id));return [...new Set([id,...rs.flatMap(r=>[r.source,r.target])])].sort()}",anchor)
+    shown = sorted(page.locator('.succession-view .atlas-card').evaluate_all('els => els.map(e=>e.dataset.paper)'))
+    assert shown == expected
+    expect(page.locator('.succession-relation')).not_to_have_count(0)
+    other = page.locator('.succession-relation .atlas-card').first.get_attribute('data-paper')
+    page.locator('.succession-relation .atlas-title').first.click()
+    expect(page.locator('#succession-paper')).to_have_value(other)
+    page.locator('#succession-paper').select_option(anchor)
+
     page.locator('.atlas-title').first.click()
     expect(page.locator('#atlas-detail')).to_contain_text('이 논문이 바꾼 점')
     expect(page.locator('#atlas-detail')).to_contain_text('후속 연구')
@@ -86,7 +97,8 @@ with sync_playwright() as pw:
     expect(page.locator('#atlas-canvas')).to_contain_text('조건에 맞는 논문이 없습니다')
     page.locator('#atlas-search').fill('Pruning')
     page.locator('#atlas-search').fill('Deep Neural Networks Aiding')
-    expect(page.locator('.atlas-card')).to_have_count(1)
+    expect(page.locator('#succession-paper option')).to_have_count(1)
+    expect(page.locator('.succession-relation')).to_contain_text('필터 밖')
     page.locator('#atlas-search').fill('')
     page.locator('[data-mode=lineage]').click()
     page.screenshot(path=str(ROOT/'data/papers/research-atlas-preview.png'),full_page=True)
@@ -94,7 +106,7 @@ with sync_playwright() as pw:
     page.screenshot(path=str(ROOT/'data/papers/research-mobile-preview.png'),full_page=True)
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 2')
     page.locator('#atlas-topic').select_option('cryptanalysis')
-    expect(page.locator('.atlas-card')).to_have_count(14)
+    expect(page.locator('#succession-paper option')).to_have_count(14)
     page.locator('[data-mode=lineage]').click()
     page.locator('#atlas-unclassified').check()
     assert page.locator('.atlas-card').count() > 0
