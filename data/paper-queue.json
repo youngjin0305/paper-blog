@@ -4613,13 +4613,13 @@
       "researchSeed": true,
       "selectionReason": "Lu 등(2022)의 관련키 구별자 후속 연구; 입력 차분 선택·두 차분 결합 갈래 보충. 우선순위 평가 전.",
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "Lu 등(2022)의 관련키 구별자 후속 연구; 입력 차분 선택·두 차분 결합 갈래 보충. 우선순위 평가 전.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4646,8 +4646,8 @@
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
       "failCount": 0,
       "postPath": null
     },
@@ -4671,14 +4671,75 @@
       "researchSeed": true,
       "selectionReason": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
       "failCount": 0,
-      "postPath": null
+      "postPath": "content/cryptanalysis/1994-01-01-a8086cc4a97cff97f914.md",
+      "researchCandidate": {
+        "contribution": "차분 특성과 선형 패리티 관계를 결합해 8라운드 DES에 필요한 선택 평문 수를 줄인 차분-선형 공격을 제시했다.",
+        "studies": [
+          {
+            "target": "DES",
+            "method": "differential-linear",
+            "goal": "8라운드에서 차분으로 선형 관계의 입력을 유지하고 출력 패리티의 불변성을 구별한다.",
+            "conditions": "8라운드 축소 DES, 선택 평문 쌍, 패리티 불변 확률 0.576"
+          },
+          {
+            "target": "DES",
+            "method": "data",
+            "goal": "평문 구조를 이용해 키 탐색에 쓸 차분 쌍을 구성한다.",
+            "conditions": "구조당 선택 평문 64개와 서로 다른 차분 쌍 96개"
+          },
+          {
+            "target": "DES",
+            "method": "key-recovery",
+            "goal": "8라운드 DES의 키 10비트를 복구한다.",
+            "conditions": "선택 평문 512개에서 성공률 80%, 768개에서 95%; 각각 64개 평문으로 된 구조 8개와 12개"
+          },
+          {
+            "target": "DES",
+            "method": "key-recovery",
+            "goal": "추가 선형 관계를 사용해 복구하는 키를 16비트로 늘린다.",
+            "conditions": "8라운드 DES, 선택 평문 768개, 16비트 복구 성공률 85%"
+          }
+        ],
+        "limitations": "선행 공격보다 복구하는 키 비트가 적고 16라운드로의 확장 효율도 낮다. 분석에서 같은 구조의 차분 쌍을 독립으로 취급하지만 실제로는 독립이 아니다.",
+        "relations": [
+          {
+            "source": "manual:4772153072351b952954",
+            "kind": "extends",
+            "change": "Matsui의 선형 패리티 관계에 차분 특성을 결합하고 마지막 라운드의 부분 복호화를 이용한다.",
+            "evidence": {
+              "url": "https://link.springer.com/content/pdf/10.1007/3-540-48658-5_3.pdf",
+              "locator": "4 Differential-Linear Cryptanalysis",
+              "checkedAt": "2026-11-10T00:05:12+00:00"
+            }
+          }
+        ],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://link.springer.com/content/pdf/10.1007/3-540-48658-5_3.pdf",
+          "locator": "1 Summary; 4 Differential-Linear Cryptanalysis; 5 Structures; 6 Additional Bits of Key; 7 Work in Progress",
+          "checkedAt": "2026-11-10T00:05:12+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "manual:4772153072351b952954",
+          "evidence": {
+            "url": "https://link.springer.com/content/pdf/10.1007/3-540-48658-5_3.pdf",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "une 1977, pp. 74-84. **3.** M. Matsui, “Linear Cryptanalysis Method for DES Cipher,” Advances _in_ Cryptology-E _UROCRYPT_ _**`’93`**_ Proceed",
+            "checkedAt": "2026-11-10T00:00:08+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "manual:33563d6ef471f0a426e3",
@@ -4704,8 +4765,8 @@
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
       "failCount": 0,
       "postPath": null
     },
@@ -4733,8 +4794,8 @@
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
       "failCount": 0,
       "postPath": null
     },
@@ -4762,8 +4823,8 @@
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
       "failCount": 0,
       "postPath": null
     },
@@ -4771,8 +4832,6 @@
       "id": "eprint:2018/161",
       "source": "eprint",
       "title": "Boomerang Connectivity Table: A New Cryptanalysis Tool",
-      "journal_ref": "Cryptology ePrint Archive",
-      "doi": "",
       "authors": [
         "Carlos Cid",
         "Tao Huang",
@@ -4789,21 +4848,20 @@
       "researchSeed": true,
       "selectionReason": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "eprint:2015/682",
       "source": "eprint",
       "title": "Integral Cryptanalysis on Full MISTY1",
-      "journal_ref": "Cryptology ePrint Archive",
-      "doi": "",
       "authors": [
         "Yosuke Todo"
       ],
@@ -4816,21 +4874,20 @@
       "researchSeed": true,
       "selectionReason": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "Cryptology ePrint Archive"
     },
     {
       "id": "eprint:2015/095",
       "source": "eprint",
       "title": "Rotational Cryptanalysis of ARX Revisited",
-      "journal_ref": "Cryptology ePrint Archive",
-      "doi": "",
       "authors": [
         "Dmitry Khovratovich",
         "Ivica Nikolic",
@@ -4847,14 +4904,81 @@
       "researchSeed": true,
       "selectionReason": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "기법의 발전·한계 재평가를 보여주는 일반 암호분석 후속 연구; 우선순위 평가 전",
-      "weeksInQueue": 0,
-      "lastRankedAt": null,
-      "failCount": 0,
-      "postPath": null
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2746",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2746",
+      "pdfUrl": "https://eprint.iacr.org/2026/2746.pdf",
+      "title": "Differential Cryptanalysis of SPEEDY: Revised Security Evaluation and Improved Key Recovery Attack",
+      "authors": [
+        "Xinwei Yu",
+        "Wentao Zhang",
+        "Zairui Zhang",
+        "Chunning Zhou"
+      ],
+      "abstract": "The resistance of a block cipher against differential cryptanalysis (DC) is a fundamental criterion for evaluating its security. SPEEDY is a family of low-latency SPS-type block ciphers designed by Leander et al. The designers presented two evaluations of SPEEDY against DC: the first restricted 1-bit-to-1-bit differential propagations through the S-box and used the higher-order branch numbers to estimate the maximum expected differential probability (EDP) of differential trails; the second imposed a structural restriction and assumed that all 1-bit-to-1-bit propagations through an active S-box are possible to estimate the minimum number of active S-boxes. Zhang later exhibited a counterexample to the designers' first evaluation and introduced the notion of partition branch number, relaxing some of the propagation restrictions to allow multi-bit-to-1-bit transitions on some S-box layers and refining the evaluation. However, these evaluations consider only restricted spaces of differential characteristics and therefore inaccurately estimate the security of SPEEDY against DC, which means that the resistance of SPEEDY against DC remains unclear so far. To address this problem, we propose an efficient search method based on search patterns. Unlike previous evaluations, our method imposes no a priori structural restrictions on the allowed differential characteristics; it uses computational pruning to keep the search tractable and performs a conservative security evaluation of the pruned region, thereby providing an accurate evaluation over the global space. At the framework level, we decompose an r-round differential characteristic into an (r-1)-round core trail and an r-round extended trail. By extending a core trail independently at both ends, the two additional S-box layers are handled by two separate models, each containing only one S-box layer and solvable efficiently. At the implementation level, we further introduce a short-round reuse via hash-map concatenation technique, which concatenates short-round core trails to construct longer-round core trails, thereby avoiding expensive long-round MILP models. For 4 rounds, we narrow the minimum number of active S-boxes from the previously reported 35 to [33,34] and find a characteristic with 34 active S-boxes outside the previous search spaces. We also obtain the highest-probability differential characteristics known to date for 2 to 5 rounds. In particular, the 2-, 3-, and 4-round characteristics disprove the designers' branch-number-based security claims. Furthermore, using the quasidifferential framework, we evaluate the found characteristics and obtain several 5-round distinguishers outperforming those used in existing key recovery attacks in terms of EDP. Finally, we optimize the probabilistic extension parameters used in a previous key recovery attack, which yields the best known key recovery attack on SPEEDY-7-192, with data complexity $2^{173.48}$ and time complexity $2^{173.69}$ encryptions.",
+      "published": "2026-11-03T15:50:00+00:00",
+      "categories": [],
+      "addedAt": "2026-11-08T23:00:02+00:00",
+      "status": "failed",
+      "score": 4.0,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "cryptanalysis",
+            "key recovery",
+            "block cipher",
+            "encryption"
+          ],
+          "categories": [],
+          "score": 4,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "cryptanalysis",
+              "key recovery",
+              "block cipher",
+              "encryption"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "SPEEDY의 차분 구별자와 키 복구 공격을 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "기존 탐색 범위를 확장하고 기존보다 나은 공격을 보고하나, 독창성의 최종 판단은 원문 검토가 필요하다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "탐색 분해·가지치기·경로 결합 방법과 공격 복잡도를 구체적으로 제시한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "메타데이터에 코드·데이터 공개 여부가 없다."
+          },
+          "rationale": "관심 분야에 직접 부합하며 공격 결과가 구체적이다."
+        }
+      },
+      "rationale": "관심 분야에 직접 부합하며 공격 결과가 구체적이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-08T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
     }
   ],
   "seen": [
@@ -4862,6 +4986,10 @@
     "arxiv:1806.02877",
     "arxiv:1809.00888",
     "arxiv:1901.08971",
+    "arxiv:2112.05061",
+    "arxiv:2201.03767",
+    "arxiv:2301.11601",
+    "arxiv:2511.06336",
     "arxiv:2609.18751",
     "arxiv:2609.18783",
     "arxiv:2609.21344",
@@ -4890,10 +5018,15 @@
     "arxiv:2610.21127",
     "arxiv:2610.27506",
     "arxiv:2610.29224",
+    "eprint:2015/095",
+    "eprint:2015/682",
+    "eprint:2018/161",
     "eprint:2019/037",
     "eprint:2021/287",
     "eprint:2021/719",
+    "eprint:2023/235",
     "eprint:2024/1300",
+    "eprint:2024/2002",
     "eprint:2026/2095",
     "eprint:2026/2097",
     "eprint:2026/2127",
@@ -4909,29 +5042,21 @@
     "eprint:2026/2599",
     "eprint:2026/2602",
     "eprint:2026/2654",
+    "eprint:2026/2746",
     "manual:055d293f4c53fadaf731",
     "manual:16661c9151450f07fa3b",
+    "manual:19104d4ca90393296dc9",
+    "manual:1d7dad302624b347beaa",
     "manual:27d827b6e7accfdbd227",
+    "manual:33563d6ef471f0a426e3",
     "manual:4772153072351b952954",
+    "manual:509a1bad9c19a2d7283e",
     "manual:5d39689454a587183ada",
+    "manual:99a4b02dd25a1fbf8d4a",
+    "manual:cafe7a3b19d70ea60608",
     "manual:cf168ef7c911b4f838dd",
     "manual:dc5a855034dfdba1899d",
-    "arxiv:2301.11601",
-    "arxiv:2201.03767",
-    "arxiv:2511.06336",
-    "arxiv:2112.05061",
-    "eprint:2024/2002",
-    "eprint:2023/235",
-    "manual:1d7dad302624b347beaa",
-    "manual:f599bdaeb6e8aa2a2c31",
-    "manual:99a4b02dd25a1fbf8d4a",
-    "manual:19104d4ca90393296dc9",
-    "manual:33563d6ef471f0a426e3",
-    "manual:509a1bad9c19a2d7283e",
-    "manual:cafe7a3b19d70ea60608",
-    "eprint:2018/161",
-    "eprint:2015/682",
-    "eprint:2015/095"
+    "manual:f599bdaeb6e8aa2a2c31"
   ],
-  "lastWeeklyAt": "2026-11-01T23:00:02+00:00"
+  "lastWeeklyAt": "2026-11-08T23:00:02+00:00"
 }
