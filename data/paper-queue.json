@@ -4023,7 +4023,7 @@
       "journal_ref": "",
       "publication_note": "22 pages, 3 figures",
       "doi": "",
-      "published": "2023-01-27T09:00:09Z",
+      "published": "2023-01-27T09:00:09+00:00",
       "updated": "2023-01-27T09:00:09Z",
       "authors": [
         "Liu Zhang",
@@ -4034,22 +4034,135 @@
       "url": "https://arxiv.org/abs/2301.11601v1",
       "source": "arxiv",
       "pdfUrl": "https://arxiv.org/pdf/2301.11601v1",
-      "categories": [
-        "cs.CR",
-        "cs.AI"
-      ],
+      "categories": [],
       "topic_id": "ai-cryptanalysis",
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "failed",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 1,
-      "postPath": null
+      "failCount": 2,
+      "postPath": "content/ai-cryptanalysis/2023-01-27-5c187188370dbbab14ee.md",
+      "studyType": "empirical",
+      "localPdf": "data/papers/796a93eed7d14d6767fb/original.pdf",
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관",
+      "researchCandidate": {
+        "contribution": "Simeck32/64의 라운드 함수에 맞춘 Inception 신경망과 다중 암호문 쌍으로 구별자 정확도를 높이고, 차분 분포와 잘못된 키 응답을 분석해 15라운드 공격을 개선하고 16·17라운드 실용 키 복구 공격을 구현했다.",
+        "studies": [
+          {
+            "target": "Simeck32/64",
+            "method": "architecture",
+            "goal": "9~12라운드 신경망 구별자의 정확도 개선",
+            "conditions": "입력 차분 (0x0000, 0x0040), 샘플당 암호문 쌍 8개, 기본·단계별 훈련"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "differential",
+            "goal": "신경망 구별자와 비교할 차분 기반 구별자의 기준선 산출",
+            "conditions": "입력 차분 (0x0000, 0x0040), 최대 13라운드, 다중 암호문 쌍의 독립성 가정"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "interpretation",
+            "goal": "잘못된 키 응답에서 영향이 큰 하위 키 비트를 찾아 키 탐색 가속",
+            "conditions": "9~12라운드 신경망 구별자의 잘못된 키 응답 프로파일, 12~15번째 하위 키 비트"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "key-recovery",
+            "goal": "15라운드 키 복구 공격 개선",
+            "conditions": "3라운드 고전 차분과 10·9라운드 신경망 구별자, m=8, 이론적 데이터 복잡도 2^22 평문, 120회 중 119회 성공"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "key-recovery",
+            "goal": "16라운드 실용 키 복구",
+            "conditions": "3라운드 고전 차분과 11·10라운드 신경망 구별자, m=8, 이론적 데이터 복잡도 2^24 평문, 남은 100회 실험 모두 성공"
+          },
+          {
+            "target": "Simeck32/64",
+            "method": "key-recovery",
+            "goal": "17라운드 실용 키 복구",
+            "conditions": "3라운드 고전 차분과 12·11라운드 신경망 구별자, m=8, 이론적 데이터 복잡도 2^26 평문, 50회 중 15회 성공"
+          }
+        ],
+        "limitations": "17라운드 공격의 성공률은 30%다. 4라운드 고전 차분과 11라운드 신경망 구별자를 결합한 17라운드 공격은 필요한 데이터가 많고 중립 비트가 부족해 수행하지 않았다. 16라운드 실험에서는 메모리 한도로 한 프로세스가 종료됐다.",
+        "relations": [
+          {
+            "source": "eprint:2019/037",
+            "kind": "extends",
+            "change": "Gohr의 신경망 구별자 기반 키 복구 틀을 Simeck32/64 공격에 적용하고 개선했다.",
+            "evidence": {
+              "url": "https://arxiv.org/pdf/2301.11601v1",
+              "locator": "§4",
+              "checkedAt": "2026-11-18T14:56:58+00:00"
+            }
+          },
+          {
+            "source": "arxiv:2201.03767",
+            "kind": "extends",
+            "change": "Lu 등의 데이터 형식을 사용하면서 Simeck32/64 신경망 구별자의 정확도를 개선했다.",
+            "evidence": {
+              "url": "https://arxiv.org/pdf/2301.11601v1",
+              "locator": "§3.1",
+              "checkedAt": "2026-11-18T14:56:58+00:00"
+            }
+          }
+        ],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://arxiv.org/pdf/2301.11601v1",
+          "locator": "§1 Our Contribution; §§3–5, Tables 1–3",
+          "checkedAt": "2026-11-18T14:56:58+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2301.11601v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": ". 805–835. Springer (2021) 8. Gohr, A.: Improving attacks on round-reduced speck32/64 using deep learning. In: Annual International Cryptology Conference. pp. 150–17",
+            "checkedAt": "2026-11-18T14:55:40+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2301.11601v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "A., Gerault, D., Peyrin, T., Tan, Q.Q.: A deeper look at machine learning-based cryptanalysis. In: Annual International Conference on the Theory and Appl",
+            "checkedAt": "2026-11-18T14:55:40+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/719",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2301.11601v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": ", Z., Guo, J., Liu, M., Ma, L., Tu, Y.: Enhancing differential-neural cryptanalysis. In: International Conference on the Theory and Application",
+            "checkedAt": "2026-11-18T14:55:40+00:00"
+          }
+        },
+        {
+          "citedId": "manual:1d7dad302624b347beaa",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2301.11601v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Gerault, D., Hambitzer, A., Rossi, M.: A cipher-agnostic neural training pipeline with automated finding of good input differences. Cryptology ePrint Archive (2022) 7. Benamira, A., Gerault,",
+            "checkedAt": "2026-11-18T14:55:40+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:2201.03767",
@@ -4256,7 +4369,7 @@
       "id": "arxiv:2511.06336",
       "title": "Enhancing Deep Learning-Based Rotational-XOR Attacks on Lightweight Block Ciphers Simon32/64 and Simeck32/64",
       "abstract": "At CRYPTO 2019, Gohr pioneered neural cryptanalysis by introducing differential-based neural distinguishers to attack Speck32/64, establishing a novel paradigm combining deep learning with differential cryptanalysis.Since then, constructing neural distinguishers has become a significant approach to achieving the deep learning-based cryptanalysis for block ciphers.This paper advances rotational-XOR (RX) attacks through neural networks, focusing on optimizing distinguishers and presenting key-recovery attacks for the lightweight block ciphers Simon32/64 and Simeck32/64.In particular, we first construct the fundamental data formats specially designed for training RX-neural distinguishers by refining the existing data formats for differential-neural distinguishers. Based on these data formats, we systematically identify optimal RX-differences with Hamming weights 1 and 2 that develop high-accuracy RX-neural distinguishers. Then, through innovative application of the bit sensitivity test, we achieve significant compression of data format without sacrificing the distinguisher accuracy. This optimization enables us to add more multi-ciphertext pairs into the data formats, further strengthening the performance of RX-neural distinguishers. As an application, we obtain 14- and 17-round RX-neural distinguishers for Simon32/64 and Simeck32/64, which improves the previous ones by 3 and 2 rounds, respectively.In addition, we propose two novel techniques, key bit sensitivity test and the joint wrong key response, to tackle the challenge of applying Bayesian's key-recovery strategy to the target cipher that adopts nonlinear key schedule in the related-key setting without considering of weak-key space. By this, we can straightforwardly mount a 17-round key-recovery attack on Simeck32/64 based on the improved 16-round RX-nerual distinguisher. To the best of our knowledge, the presented RX-neural......",
-      "published": "2025-11-09T11:35:11Z",
+      "published": "2025-11-09T11:35:11+00:00",
       "updated": "2025-11-09T11:35:11Z",
       "authors": [
         "Chengcai Liu",
@@ -4268,21 +4381,22 @@
       "url": "https://arxiv.org/abs/2511.06336v1",
       "source": "arxiv",
       "pdfUrl": "https://arxiv.org/pdf/2511.06336v1",
-      "categories": [
-        "cs.CR"
-      ],
+      "categories": [],
       "topic_id": "ai-cryptanalysis",
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "failed",
+      "status": "pinned",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 1,
-      "postPath": null
+      "postPath": null,
+      "studyType": "empirical",
+      "localPdf": "data/papers/a09502fd0ce692e806fb/original.pdf",
+      "note": "공개 arXiv 서지와 원본 캐시 SHA-256·PDF 제목·저자 대조 후 재개"
     },
     {
       "id": "arxiv:2112.05061",
@@ -4291,7 +4405,7 @@
       "journal_ref": "",
       "publication_note": "12 pages, 6 figures, 3 tables, 1 algorithm",
       "doi": "",
-      "published": "2021-12-09T17:36:48Z",
+      "published": "2021-12-09T17:36:48+00:00",
       "updated": "2021-12-09T17:36:48Z",
       "authors": [
         "Aayush Jain",
@@ -4301,21 +4415,22 @@
       "url": "https://arxiv.org/abs/2112.05061v1",
       "source": "arxiv",
       "pdfUrl": "https://arxiv.org/pdf/2112.05061v1",
-      "categories": [
-        "cs.CR"
-      ],
+      "categories": [],
       "topic_id": "ai-cryptanalysis",
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "failed",
+      "status": "pinned",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 1,
-      "postPath": null
+      "postPath": null,
+      "studyType": "empirical",
+      "localPdf": "data/papers/a1f44557b2ed6e5effc0/original.pdf",
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
     },
     {
       "id": "eprint:2024/2002",
@@ -4642,13 +4757,13 @@
       "researchSeed": true,
       "selectionReason": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-11-08T23:00:02+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4761,13 +4876,13 @@
       "researchSeed": true,
       "selectionReason": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-11-08T23:00:02+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4790,13 +4905,13 @@
       "researchSeed": true,
       "selectionReason": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-11-08T23:00:02+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4819,13 +4934,13 @@
       "researchSeed": true,
       "selectionReason": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "addedAt": "2026-11-02T06:09:39+00:00",
-      "status": "candidate",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "일반 암호분석 주요 기법의 대표·후속 연구 보충; 우선순위 평가 전",
       "weeksInQueue": 1,
       "lastRankedAt": "2026-11-08T23:00:02+00:00",
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null
     },
     {
@@ -4979,6 +5094,181 @@
       "postPath": null,
       "topic_id": "cryptanalysis",
       "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "eprint:2026/2867",
+      "source": "eprint",
+      "url": "https://eprint.iacr.org/2026/2867",
+      "pdfUrl": "https://eprint.iacr.org/2026/2867.pdf",
+      "title": "Collision Attacks on SHA-2: 39-Step SHA-256 below the Birthday Bound",
+      "authors": [
+        "Jiaying Gong",
+        "Yongzhuang Wei",
+        "Fengrong Zhang",
+        "Bohua Wei"
+      ],
+      "abstract": "SHA-2 is the most widely deployed family of hash functions, and its security margin is measured by the number of steps collision attacks reach. Li et al. gave the first classical collision attack on 38-step SHA-256, with an estimated complexity of $2^{104.3}$. The challenge is to extend the attack to more steps while retaining its advantage over generic collision search. In this paper, we show that collisions for 39-step SHA-256 can be found at an estimated cost below the $2^{128}$ birthday bound. We keep the published 39-step characteristic and change how its conditions are satisfied. We introduce joint message-word pinning, a technique that fixes two expanded message words, $W_{16}$ and $W_{17}$, to the values prescribed by the characteristic. For each chaining value, we solve for assignments to two state words that carry no direct condition, and every assignment returned gives both message words their prescribed values. To find these assignments, we first fix the value of a function with a small image and then solve the coupled equations for $W_{16}$ and $W_{17}$ in sequence. On 39-step SHA-256, pinning $W_{16}$ alone gives an estimated cost of $2^{123.4}$ scalar compressions per expected collision, and pinning both words reduces it by 14.6 bits to $2^{108.8}$. Under the uniform-chaining-value model, the measured probabilities and the cost of processing one first block give an upper bound of approximately $2^{124.6}$ on the expected cost of finding the first collision, even under worst-case clustering. For 38-step SHA-256, we reduce the estimated cost per expected collision from $2^{104.3}$ to $2^{90.9}$ by using a new differential characteristic and pinning $W_{16}$ alone. On SHA-512, pinning $W_{16}$ alone reduces this cost from $2^{125.4}$ to $2^{100.7}$ for 38 steps and from $2^{178}$ to $2^{131.3}$ for 39 steps.",
+      "published": "2026-11-11T11:56:17+00:00",
+      "categories": [],
+      "addedAt": "2026-11-15T23:00:02+00:00",
+      "status": "failed",
+      "score": 3.7,
+      "scoreDetail": {
+        "rule": {
+          "keywords": [
+            "collision attack",
+            "hash function",
+            "SHA"
+          ],
+          "categories": [],
+          "score": 3,
+          "topic": "cryptanalysis",
+          "topicMatches": {
+            "cryptanalysis": [
+              "collision attack",
+              "hash function",
+              "SHA"
+            ]
+          }
+        },
+        "llm": {
+          "relevance": {
+            "score": 5,
+            "reason": "SHA-256 충돌 공격과 생일 경계 이하의 계산 복잡도를 직접 다룬다."
+          },
+          "novelty": {
+            "score": 4,
+            "reason": "39단계 SHA-256 공격의 복잡도 개선과 메시지 워드 공동 고정을 제시한다."
+          },
+          "methodology": {
+            "score": 5,
+            "reason": "고정할 워드, 연립 방정식 풀이 순서, 단계별 복잡도를 구체적으로 설명한다."
+          },
+          "reproducibility": {
+            "score": 2,
+            "reason": "측정 확률과 복잡도는 제시했으나 코드·데이터 공개 여부는 기재되지 않았다."
+          },
+          "rationale": "수집 범위에 직접 해당하는 고전적 해시 충돌 공격이다."
+        }
+      },
+      "rationale": "수집 범위에 직접 해당하는 고전적 해시 충돌 공격이다.",
+      "weeksInQueue": 1,
+      "lastRankedAt": "2026-11-15T23:00:02+00:00",
+      "failCount": 1,
+      "postPath": null,
+      "topic_id": "cryptanalysis",
+      "journal_ref": "Cryptology ePrint Archive"
+    },
+    {
+      "id": "arxiv:1510.05836",
+      "source": "arxiv",
+      "title": "Quantum Differential and Linear Cryptanalysis",
+      "authors": [
+        "Marc Kaplan",
+        "Gaëtan Leurent",
+        "Anthony Leverrier",
+        "María Naya-Plasencia"
+      ],
+      "abstract": "Quantum computers, that may become available one day, would impact many scientific fields, most notably cryptography since many asymmetric primitives are insecure against an adversary with quantum capabilities. Cryptographers are already anticipating this threat by proposing and studying a number of potentially quantum-safe alternatives for those primitives. On the other hand, symmetric primitives seem less vulnerable against quantum computing: the main known applicable result is Grover's algorithm that gives a quadratic speed-up for exhaustive search. In this work, we examine more closely the security of symmetric ciphers against quantum attacks. Since our trust in symmetric ciphers relies mostly on their ability to resist cryptanalysis techniques, we investigate quantum cryptanalysis techniques. More specifically, we consider quantum versions of differential and linear cryptanalysis. We show that it is usually possible to use quantum computations to obtain a quadratic speed-up for these attack techniques, but the situation must be nuanced: we don't get a quadratic speed-up for all variants of the attacks. This allows us to demonstrate the following non-intuitive result: the best attack in the classical world does not necessarily lead to the best quantum one. We give some examples of application on ciphers LAC and KLEIN. We also discuss the important difference between an adversary that can only perform quantum computations, and an adversary that can also make quantum queries to a keyed primitive.",
+      "url": "https://arxiv.org/abs/1510.05836v3",
+      "pdfUrl": "https://arxiv.org/pdf/1510.05836v3",
+      "published": "2015-10-20T11:20:04+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "localPdf": "data/papers/6483d032db3c1f7f4a5a/original.pdf",
+      "topic_id": "cryptanalysis",
+      "addedAt": "2026-11-18T14:55:35+00:00",
+      "status": "pinned",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": null,
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
+    },
+    {
+      "id": "arxiv:2004.10686",
+      "source": "arxiv",
+      "title": "Grover on SIMON",
+      "authors": [
+        "Ravi Anand",
+        "Arpita Maitra",
+        "Sourav Mukhopadhyay"
+      ],
+      "abstract": "For any symmetric key cryptosystem with $n$-bit secret key, the key can be recovered in $O(2^{n/2})$ exploiting Grover search algorithm, resulting in the effective key length to be half. In this direction, subsequent work has been done on AES and some other block ciphers. On the other hand, lightweight ciphers like SIMON was left unexplored. In this backdrop, we present Grover's search algorithm on all the variants of SIMON and enumerate the quantum resources to implement such attack in terms of NOT, CNOT and Toffoli gates. We also provide the T-depth of the circuits and the number of qubits required for the attack. We show that the number of qubits required for implementing Grover on SIMON $2n/mn$ is $O(2nr+mn)$, where $r$ is the number of chosen plaintext-cipher text pairs. We run a reduced version of SIMON in IBMQ quantum simulator and the 14-qubits processor as well. We found that where simulation supports theory, the actual implementation is far from the reality due to the infidelity of the gates and short decoherence time of the qubits. The complete codes for all version of SIMON have also been presented.",
+      "url": "https://arxiv.org/abs/2004.10686v2",
+      "pdfUrl": "https://arxiv.org/pdf/2004.10686v2",
+      "published": "2020-04-22T16:38:41+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "localPdf": "data/papers/ecb9778c2035bf77da16/original.pdf",
+      "topic_id": "cryptanalysis",
+      "addedAt": "2026-11-18T14:55:35+00:00",
+      "status": "pinned",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": null,
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
+    },
+    {
+      "id": "arxiv:2012.08321",
+      "source": "arxiv",
+      "title": "Quantum Key Recovery Attack on SIMON Block Cipher",
+      "authors": [
+        "Hui Liu",
+        "Li Yang"
+      ],
+      "abstract": "The quantum security of lightweight block ciphers is receiving more and more attention. However, the existing quantum attacks on lightweight block ciphers mainly focused on the quantum exhaustive search, while the quantum dedicated attacks combined with classical cryptanalysis methods haven't been well studied. In this paper, we study quantum key recovery attack on SIMON block cipher using Quantum Amplitude Amplification algorithm in Q1 model. At first, we reanalyze the quantum circuit complexity of quantum master key exhaustive search on SIMON block cipher. The Clifford gates count is estimated more accurately and the T gate count is reduced. We also reduce the T-depth and Full-depth due to some minor modifications to the circuit. Then, based on the differential cryptanalysis on SIMON32, SIMON48 and SIMON64 given by Biryukov et al. in FSE 2014, we give quantum round key recovery attacks on these SIMON variants and analyze quantum circuit complexity separately. We take the quantum attack on 19-round SIMON32/64 for an example and design the quantum circuit of the key recovery process. The two phases of this attack could be regarded as two QAA instances separately, and the first QAA instance consists of four sub-QAA instances. We conclude that the encryption complexity and circuit complexity of quantum dedicated attacks on 19-round SIMON32/64, 19-round SIMON 48 and 26-round SIMON64/128 are both lower than those of the quantum exhaustive search on these variants separately. Our work firstly studies the quantum dedicated attack on SIMON block cipher from the perspective of quantum circuit complexity, which is a more fine-grained analysis of quantum dedicated attacks' complexity.",
+      "url": "https://arxiv.org/abs/2012.08321v2",
+      "pdfUrl": "https://arxiv.org/pdf/2012.08321v2",
+      "published": "2020-12-12T02:15:47+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "localPdf": "data/papers/017b0c04c97d73376342/original.pdf",
+      "topic_id": "cryptanalysis",
+      "addedAt": "2026-11-18T14:55:36+00:00",
+      "status": "pinned",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": null,
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
+    },
+    {
+      "id": "arxiv:2204.06341",
+      "source": "arxiv",
+      "title": "Improving Differential-Neural Distinguisher Model For DES, Chaskey, and PRESENT",
+      "authors": [
+        "Liu Zhang",
+        "Zilong Wang"
+      ],
+      "abstract": "In CRYPTO'19, Gohr proposed a new cryptanalysis strategy using machine learning algorithms. Combining the differential-neural distinguisher with a differential path and integrating the advanced key recovery procedure, Gohr achieved a 12-round key recovery attack on Speck32/64. Chen and Yu improved prediction accuracy of differential-neural distinguisher considering derived features from multiple-ciphertext pairs instead of single-ciphertext pairs. By modifying the kernel size of initial convolutional layer to capture more dimensional information, the prediction accuracy of differential-neural distinguisher can be improved for for three reduced symmetric ciphers. For DES, we improve the prediction accuracy of (5-6)-round differential-neural distinguisher and train a new 7-round differential-neural distinguisher. For Chaskey, we improve the prediction accuracy of (3-4)-round differential-neural distinguisher. For PRESENT, we improve the prediction accuracy of (6-7)-round differential-neural distinguisher. The source codes are available in https://drive.google.com/drive/folders/1i0RciZlGZsEpCyW-wQAy7zzJeOLJNWqL?usp=sharing.",
+      "url": "https://arxiv.org/abs/2204.06341v1",
+      "pdfUrl": "https://arxiv.org/pdf/2204.06341v1",
+      "published": "2022-04-13T12:43:13+00:00",
+      "categories": [],
+      "studyType": "empirical",
+      "localPdf": "data/papers/1751bfccf987bcde425b/original.pdf",
+      "topic_id": "ai-cryptanalysis",
+      "addedAt": "2026-11-18T14:55:37+00:00",
+      "status": "pinned",
+      "score": 0,
+      "scoreDetail": {},
+      "rationale": "",
+      "weeksInQueue": 0,
+      "lastRankedAt": null,
+      "failCount": 0,
+      "postPath": null,
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
     }
   ],
   "seen": [
@@ -5043,6 +5333,7 @@
     "eprint:2026/2602",
     "eprint:2026/2654",
     "eprint:2026/2746",
+    "eprint:2026/2867",
     "manual:055d293f4c53fadaf731",
     "manual:16661c9151450f07fa3b",
     "manual:19104d4ca90393296dc9",
@@ -5056,7 +5347,11 @@
     "manual:cafe7a3b19d70ea60608",
     "manual:cf168ef7c911b4f838dd",
     "manual:dc5a855034dfdba1899d",
-    "manual:f599bdaeb6e8aa2a2c31"
+    "manual:f599bdaeb6e8aa2a2c31",
+    "arxiv:1510.05836",
+    "arxiv:2004.10686",
+    "arxiv:2012.08321",
+    "arxiv:2204.06341"
   ],
-  "lastWeeklyAt": "2026-11-08T23:00:02+00:00"
+  "lastWeeklyAt": "2026-11-15T23:00:02+00:00"
 }
