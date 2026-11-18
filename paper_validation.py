@@ -66,6 +66,11 @@ def normalized_numeric_text(text):
     # English decade suffixes carry the same year as Korean '1970년대'.
     # Keep ASCII identifier boundaries so hashes remain nonnumeric.
     text = re.sub(r"(?<![A-Za-z0-9_])((?:18|19|20)\d0)['’]?s(?![A-Za-z0-9_])", r"\1", text, flags=re.I)
+    # PDF prose often attaches time units (407.901s). Separate known units
+    # before tokenizing, without treating cipher/model names as numbers.
+    text = re.sub(r"(?<![A-Za-z0-9_.])([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)"
+                  r"(ms|µs|μs|ns|ps|s|secs?|seconds?|minutes?|hours?)(?![A-Za-z0-9_])",
+                  r"\1 \2", text)
     # A comma followed by whitespace separates values, not thousands. In a
     # network list such as "784-16(4)-10, 784-16(6)-10", joining "10, 784"
     # invents -10784. Also keep unspaced commas before hyphenated structures.

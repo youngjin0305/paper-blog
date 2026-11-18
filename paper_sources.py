@@ -231,7 +231,7 @@ class Sources:
                         and any(citation_key(title) == citation_key(paper["title"]) for title in values.get("citation_title", []))):
                     candidates = [url for url in values.get("citation_pdf_url", []) if public_https(url)]
         if not candidates:
-            raise ValueError("The DOI publisher has no verified public PDF link")
+            raise SourceUnavailable("The DOI publisher has no verified public PDF link")
         # One alternate download; no retry loops or access-control workarounds.
         url = candidates[0]
         data = self.download_pdf(url)

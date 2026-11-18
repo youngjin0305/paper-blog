@@ -11,7 +11,7 @@ import pymupdf
 import requests
 
 from paper_config import validate_pipeline
-from paper_sources import Sources
+from paper_sources import Sources, SourceUnavailable
 
 
 def http_error(status):
@@ -106,7 +106,7 @@ class PublisherDownloadTests(unittest.TestCase):
         record = {**self.record, "link": [{"URL": "https://127.0.0.1/content/pdf/private"}]}
         with patch.object(self.source, "get", return_value=SimpleNamespace(json=lambda: dict(message=record))), \
              patch.object(self.source, "download_pdf", side_effect=http_error(403)) as download:
-            with self.assertRaisesRegex(ValueError, "no verified public PDF"):
+            with self.assertRaisesRegex(SourceUnavailable, "no verified public PDF"):
                 self.source.paper_pdf(self.paper)
         self.assertEqual(download.call_count, 1)
 

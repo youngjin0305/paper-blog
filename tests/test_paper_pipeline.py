@@ -199,6 +199,12 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(unsupported_numbers("정확도 95.61%", source), [])
         self.assertEqual(unsupported_numbers("정확도 95.62%", source), ["95.62"])
 
+    def test_attached_time_units_match_spaced_and_korean_values(self):
+        source = "Runtime 407.901s, 2889.648s, 25774.822s; latency 3.5ms and 2e-3s."
+        self.assertEqual(unsupported_numbers("407.901초; 2889.648 s; 25774.822초; 3.5 ms; 0.002 s", source), [])
+        self.assertEqual(unsupported_numbers("407.902초", source), ["407.902"])
+        self.assertEqual(numbers("SHA256 ND12 GPT6 407.901speck"), set())
+
     def test_flattened_pdf_scientific_exponent_matches_tex(self):
         source = "0.929 ± 5.13 × 10−4; 0.514 ± 1.00 × 10−3"
         self.assertEqual(unsupported_numbers(r"$5.13\\times10^{-4}$; $1.00\\times10^{-3}$", source), [])
