@@ -4386,17 +4386,89 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 1,
-      "postPath": null,
+      "postPath": "content/ai-cryptanalysis/2025-11-09-187e9cf9edbbfdcd8587.md",
       "studyType": "empirical",
       "localPdf": "data/papers/a09502fd0ce692e806fb/original.pdf",
-      "note": "공개 arXiv 서지와 원본 캐시 SHA-256·PDF 제목·저자 대조 후 재개"
+      "note": "공개 arXiv 서지와 원본 캐시 SHA-256·PDF 제목·저자 대조 후 재개",
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "일치한 제목: Differential cryptanalysis of DES-like cryptosystems",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "no. 1, pp. 57–70, 2016. [9] A. Gohr, “Improving attacks on round-reduced speck32/64 using deep learning,” in _Advances_ _in_ _Cryptology_ _-_ _CRYPTO_ _2019_ _-_ _",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "manual:4772153072351b952954",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "no. 1, pp. 3–72, 1991. [7] M. Matsui, “Linear cryptanalysis method for DES cipher,” in _Advances_ _in_ _Cryptology_ _-_ _EUROCRYPT_ _’93,_ _",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/287",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "D. G´erault, T. Peyrin, and Q. Q. Tan, “A deeper look at machine learning-based cryptanalysis,” in _Advances_ _in_ _Cryptology_ _-_ _EUROCRYPT_ _2021_ _",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2021/719",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Bao, J. Guo, M. Liu, L. Ma, and Y. Tu, “Enhancing differential neural cryptanalysis,” in _Advances_ _in_ _Cryptology_ _-_ _ASIACRYPT_ _2022_ _",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "arxiv:2301.11601",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "] L. Zhang, J. Lu, Z. Wang, and C. Li, “Improved differential-neural cryptanalysis for round-reduced SIMECK32/64,” _Frontiers Comput. Sci._, vol. 17, no. 6, p. 176817, 2023",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        },
+        {
+          "citedId": "arxiv:2201.03767",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2511.06336v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Lu, G. Liu, B. Sun, C. Li, and L. Liu, “Improved (related-key) differential-based neural distinguishers for SIMON and SIMECK block ciphers,” _Comput._ _J._, vol. 67, no. 2, pp. 537–547, 2024. [18]",
+            "checkedAt": "2026-11-19T00:00:09+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:2112.05061",
