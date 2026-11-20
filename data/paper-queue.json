@@ -4492,17 +4492,87 @@
       "selectionReason": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "researchSeed": true,
       "addedAt": "2026-11-02T05:13:40+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "신경망 구별자의 데이터·구조·적용 대상 갈래 보충. 우선순위 평가 전이며 필수 논문 지정 아님.",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 1,
-      "postPath": null,
+      "postPath": "content/ai-cryptanalysis/2021-12-09-6bd44ed5002b159e5da0.md",
       "studyType": "empirical",
       "localPdf": "data/papers/a1f44557b2ed6e5effc0/original.pdf",
-      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관",
+      "researchCandidate": {
+        "contribution": "고확률 입력 차분 하나에서 시프트로 차분 세 개를 생성하고, 더 작은 MLP를 적용해 PRESENT-80과 Simeck64/128의 신경망 차분 구별자를 평가했다.",
+        "studies": [
+          {
+            "target": "PRESENT-80",
+            "method": "difference",
+            "goal": "선택한 입력 차분이 무작위 차분보다 구별 성능을 높이는지 평가",
+            "conditions": "3~6라운드, 80비트 키 변형, 입력 차분 4종, 키·평문 쌍 10,000개"
+          },
+          {
+            "target": "Simeck64/128",
+            "method": "difference",
+            "goal": "PRESENT용으로 고른 입력 차분을 Simeck에도 적용해 구별 성능을 평가",
+            "conditions": "3~7라운드로 데이터 수집을 기술함, 128비트 키 변형, 입력 차분 4종, 키·평문 쌍 10,000개; Table 5의 Simeck 결과는 2~6라운드만 제시"
+          },
+          {
+            "target": "PRESENT-80",
+            "method": "architecture",
+            "goal": "층과 매개변수를 줄인 MLP를 기존 권장 MLP와 비교",
+            "conditions": "M1·M3은 4층 (128, 1024, 1024, t), M2·M4는 3층 (128, 1024, t); t는 차분 클래스 수인 4"
+          },
+          {
+            "target": "Simeck64/128",
+            "method": "architecture",
+            "goal": "층과 매개변수를 줄인 MLP를 기존 권장 MLP와 비교",
+            "conditions": "M1·M3은 4층 (128, 1024, 1024, t), M2·M4는 3층 (128, 1024, t); t는 차분 클래스 수인 4"
+          }
+        ],
+        "limitations": "키 복구 방법은 포함하지 않았다. 구조가 다른 암호 전반에 대한 적용 가능성과 시프트를 통한 입력 차분 선택은 향후 연구 과제로 제시했다.",
+        "relations": [],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://arxiv.org/pdf/2112.05061v1",
+          "locator": "§1, §3–§6, Tables 3–5",
+          "checkedAt": "2026-11-20T00:03:33+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "manual:27d827b6e7accfdbd227",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2112.05061v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "3 (pp. 133–148). 14. Biham E, Shamir A. Differential cryptanalysis of DES-like cryptosystems. Journal of CRYPTOLOGY 1991; 4(1): 3–72. 15. Aoki K, Ohta K",
+            "checkedAt": "2026-11-20T00:00:04+00:00"
+          }
+        },
+        {
+          "citedId": "eprint:2019/037",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2112.05061v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "iences 1996; 79(1): 20– 27. 16. Gohr A. Improving Attacks on Round-Reduced Speck32/64 Using Deep Learning. In: Springer. ; 2019: 150–179. 17. Dinur I. Improved diffe",
+            "checkedAt": "2026-11-20T00:00:04+00:00"
+          }
+        },
+        {
+          "citedId": "manual:19104d4ca90393296dc9",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2112.05061v1",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "Y 1991; 4(1): 3–72. 15. Aoki K, Ohta K. Differential-linear cryptanalysis of FEAL-8. IEICE Transactions on Fundamentals of Electronic",
+            "checkedAt": "2026-11-20T00:00:04+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "eprint:2024/2002",
