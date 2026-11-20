@@ -7,9 +7,9 @@
       "id": "cryptanalysis",
       "name": "CryptAnalysis",
       "group": "Cryptography",
-      "description": "AI를 사용하지 않는 차분·선형·불능차분·부메랑 등 암호분석 연구",
-      "query": "(all:cryptanalysis OR all:\"differential attack\" OR all:\"boomerang attack\" OR all:\"key recovery\") AND (all:\"block cipher\" OR all:\"stream cipher\" OR all:hash OR all:RSA OR all:lattice) ANDNOT (all:neural OR all:\"machine learning\" OR all:\"deep learning\" OR all:\"large language model\" OR all:LLM)",
-      "instructions": "고전 및 현대 암호분석 기법을 다룬 논문을 수집한다. 암호 자체에 대한 구별, 키 복구, 역상·충돌 공격과 계산·데이터 복잡도를 중심으로 평가한다. AI 기반 공격은 AI CryptAnalysis로 분류하고 일반 사이버보안·포렌식은 제외한다.",
+      "description": "블록암호·스트림암호·대칭키 인증암호의 차분·선형·적분·부메랑 등 암호분석 연구",
+      "query": "(all:cryptanalysis OR all:\"differential attack\" OR all:\"linear attack\" OR all:\"key recovery\" OR all:distinguisher) AND (all:\"block cipher\" OR all:\"stream cipher\" OR all:\"authenticated encryption\" OR all:AES OR all:ChaCha OR all:Ascon OR all:SKINNY OR all:Simeck) ANDNOT (all:neural OR all:\"machine learning\" OR all:\"side channel\" OR all:\"fault injection\")",
+      "instructions": "대칭키 블록암호·스트림암호·AEAD와 그 내부 순열의 암호분석을 수집한다. 공격 모델, 비교 기준, 라운드·시간·데이터 조건이 구체적인 연구를 높게 평가한다. 기존 결과를 검증하거나 가정을 보완하는 연구, 공개 코드가 있는 분석 방법과 정식 출판 기록이 있는 연구를 우선한다. 공개키·격자 암호, 독립 해시 함수만 분석한 연구, AI·구현 부채널·결함 주입은 수집 범위 밖이다.",
       "interval_hours": 24,
       "lookback_days": 7,
       "max_papers": 5,
@@ -24,7 +24,7 @@
       "interval_hours": 24,
       "lookback_days": 7,
       "max_papers": 5,
-      "enabled": true,
+      "enabled": false,
       "group": "Cryptography"
     },
     {
@@ -66,8 +66,12 @@
   ],
   "pipeline": {
     "keywords": [
-      "Neural distinguishers and AI-assisted cryptanalytic attacks",
-      "Classical cryptanalysis of cryptographic primitives"
+      "symmetric-key cryptanalysis",
+      "differential cryptanalysis",
+      "linear cryptanalysis",
+      "integral cryptanalysis",
+      "boomerang attack",
+      "truncated differential"
     ],
     "topic_filters": {
       "ai-cryptanalysis": [
@@ -112,27 +116,38 @@
           "boomerang attack",
           "integral attack",
           "key recovery",
-          "collision attack",
-          "preimage attack"
+          "distinguisher",
+          "differential characteristic",
+          "linear characteristic",
+          "differential-linear",
+          "division property"
         ],
         [
+          "symmetric-key primitive",
           "block cipher",
           "stream cipher",
+          "authenticated encryption",
+          "AEAD",
           "Speck",
-          "Simon",
+          "Simon cipher",
           "Simeck",
           "AES",
           "DES",
           "ChaCha",
-          "ASCON",
+          "Ascon",
           "GIFT",
           "PRESENT",
-          "RSA",
-          "lattice",
-          "hash function",
-          "SHA",
-          "Keccak",
-          "encryption"
+          "SKINNY",
+          "Serpent",
+          "SM4",
+          "Camellia",
+          "LEA",
+          "ARIA",
+          "FRAST",
+          "SPEEDY",
+          "Romulus",
+          "Deoxys",
+          "Xoodoo"
         ]
       ]
     },
@@ -140,12 +155,12 @@
       "cs.CR"
     ],
     "use_eprint": true,
-    "weekly_new": 10,
+    "weekly_new": 3,
     "pool_limit": 20,
     "expiry_weeks": 3,
     "llm_shortlist": 30,
     "rank_batch_size": 5,
-    "min_relevance_score": 3,
+    "min_relevance_score": 4,
     "visuals_enabled": true,
     "visual_plans_path": "data/paper-visual-plans.json",
     "visuals_max_pages": 5,
@@ -153,8 +168,8 @@
     "visuals_dpi": 180,
     "method_min_chars": 1200,
     "experiment_min_chars": 1000,
-    "post_dir": "content/ai-cryptanalysis",
-    "category": "ai-cryptanalysis",
+    "post_dir": "content/cryptanalysis",
+    "category": "cryptanalysis",
     "queue_path": "data/paper-queue.json",
     "draft_dir": "drafts",
     "archive_dir": "data/papers",
@@ -183,14 +198,20 @@
         "artificial intelligence",
         "neural distinguisher",
         "large language model",
-        "LLM"
+        "LLM",
+        "side channel",
+        "side-channel attack",
+        "fault injection",
+        "differential fault analysis"
       ],
       "ai-cryptanalysis": [
         "side channel",
         "side-channel"
       ]
     },
-    "core_catalog_path": "data/core-papers.json"
+    "core_catalog_path": "data/core-papers.json",
+    "use_tosc": true,
+    "min_methodology_score": 4
   },
   "research_graph": {
     "evidence_path": "data/paper-graph-evidence.json",

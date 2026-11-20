@@ -20,7 +20,7 @@ from paper_llm import AgyBackend, QuotaExceeded, AgyPermissionError, configure_w
 from paper_pipeline import Pipeline, FixtureBackend, assemble
 from paper_queue import canonical_id, empty_queue, entry, merge_weekly, ordered, pin, weekly_completed
 from paper_sources import Sources, SourceUnavailable, identify, parse_eprint_feed, rule_score, keyword_matches
-from paper_validation import parse_rank, parse_references, numbers, unsupported_numbers, validate_document, validate_group
+from paper_validation import RUBRIC, parse_rank, parse_references, numbers, unsupported_numbers, validate_document, validate_group
 
 
 FIXTURE = json.loads((ROOT / "tests/fixtures/paper-pipeline.json").read_text(encoding="utf-8"))
@@ -603,6 +603,25 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(generate.call_count, 1)
         self.assertEqual(self.pipeline.queue, empty_queue())
 
+    def test_weekly_prioritizes_verified_venue_and_filters_weak_methodology(self):
+        self.pipeline.config.update(use_tosc=True, weekly_new=1, min_methodology_score=4)
+        published = {**PAPER, "id": "manual:published", "source": "manual", "title": "Verified journal paper",
+                     "verifiedVenue": "ToSC", "doi": "10.46586/tosc.example"}
+        duplicate = {**published, "id": "arxiv:2609.00002", "source": "arxiv", "verifiedVenue": None}
+        weak = {**published, "id": "manual:weak", "title": "Weak journal paper", "doi": "10.46586/tosc.weak"}
+        self.pipeline.fixture["papers"] = [PAPER, duplicate, published, weak]
+        ranks = []
+        for score in (4, 3, 5):
+            rank = deepcopy(FIXTURE["rank"])
+            for category in RUBRIC:
+                rank[category]["score"] = score
+            ranks.append(json.dumps(rank))
+        with patch.object(self.pipeline.backend, "generate", side_effect=ranks) as generate:
+            self.pipeline.weekly()
+        self.assertEqual(generate.call_count, 3)
+        self.assertIn("Excluded paper with insufficient methodology detail", self.output.getvalue())
+        self.assertEqual([paper["id"] for paper in self.pipeline.queue["papers"]], [published["id"]])
+
     def test_completed_ranks_survive_mid_weekly_service_failure(self):
         self.pipeline.dry_run = False
         self.pipeline.fixture["papers"].append({**PAPER, "id": "arxiv:2609.00002"})
@@ -674,6 +693,23 @@ class PipelineTests(unittest.TestCase):
 
 
 class SourceTests(unittest.TestCase):
+    def test_tosc_source_requires_registered_public_version_of_record(self):
+        import requests
+        valid = {"DOI": "10.46586/tosc.example", "title": ["Differential Analysis"], "subtitle": ["Block ciphers"],
+                 "author": [{"given": "Ada", "family": "Example"}],
+                 "abstract": "<jats:p>Study of block ciphers</jats:p>", "published": {"date-parts": [[2026, 11, 13]]},
+                 "link": [{"URL": "https://tosc.iacr.org/index.php/ToSC/article/download/123/456",
+                           "content-type": "application/pdf", "content-version": "vor"}]}
+        invalid = {**valid, "DOI": "10.46586/tosc.other", "link": [{**valid["link"][0], "URL": "https://example.org/p.pdf"}]}
+        response = requests.Response()
+        response._content = json.dumps({"message": {"items": [invalid, valid]}}).encode()
+        source = Sources(CONFIG)
+        with patch.object(source, "get", return_value=response):
+            paper, = source.recent_tosc(datetime(2026, 11, 20, tzinfo=timezone.utc))
+        self.assertEqual(paper["title"], "Differential Analysis: Block ciphers")
+        self.assertEqual(paper["abstract"], "Study of block ciphers")
+        self.assertEqual(paper["verifiedVenue"], "ToSC")
+
     def test_local_pdf_is_cached_for_daily_without_remote_download(self):
         import pymupdf
         with tempfile.TemporaryDirectory() as directory:
@@ -898,6 +934,17 @@ class TopicTests(unittest.TestCase):
             self.assertNotIn("ai-cryptanalysis", pipeline.config["topic_filters"])
             self.assertIn("cryptanalysis", pipeline.config["topic_filters"])
             self.assertNotIn("ai-digital-forensics", pipeline.config["topic_filters"])
+
+    def test_deployed_weekly_scope_is_classical_symmetric_cryptanalysis(self):
+        pipeline = Pipeline(ROOT, dry_run=True, fixture=deepcopy(FIXTURE))
+        self.assertEqual(set(pipeline.config["topic_filters"]), {"cryptanalysis"})
+        def score(abstract):
+            return rule_score({**PAPER, "title": "Research", "abstract": abstract}, pipeline.config)[0]
+        self.assertGreater(score("Truncated differential cryptanalysis of a block cipher"), 0)
+        for abstract in ("Neural cryptanalysis of AES", "Lattice cryptanalysis of RSA",
+                         "A collision attack on SHA-256", "Side-channel key recovery against AES"):
+            with self.subTest(abstract=abstract):
+                self.assertEqual(score(abstract), 0)
 
     def test_invalid_empty_keyword_group_rejected(self):
         with self.assertRaises(ValueError):

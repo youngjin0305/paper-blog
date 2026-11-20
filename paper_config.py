@@ -12,7 +12,8 @@ DEFAULTS = {
     "arxiv_categories": ["cs.AI", "cs.CL", "cs.CR"], "use_eprint": True,
     "weekly_new": 10, "pool_limit": 20, "expiry_weeks": 3, "llm_shortlist": 30,
     "rank_batch_size": 5,
-    "min_relevance_score": 3,
+    "min_relevance_score": 3, "min_methodology_score": 1,
+    "use_tosc": False,
     "method_min_chars": 1200, "experiment_min_chars": 1000,
     "post_dir": "content/ai", "category": "ai", "queue_path": "data/paper-queue.json",
     "draft_dir": "drafts", "archive_dir": "data/papers", "log_dir": "logs",
@@ -68,8 +69,9 @@ def validate_pipeline(value):
             raise ValueError("topic_exclusions requires keyword lists for existing topic_filters")
     if config["abstract_mode"] not in ("korean", "original"):
         raise ValueError("abstract_mode must be korean or original")
-    if config["min_relevance_score"] > 5:
-        raise ValueError("min_relevance_score must be between 1 and 5")
+    for key in ("min_relevance_score", "min_methodology_score"):
+        if config[key] > 5:
+            raise ValueError(f"{key} must be between 1 and 5")
     if config["rule_weight"] + config["llm_weight"] <= 0:
         raise ValueError("Scoring weights must have a positive sum")
     if config["llm_shortlist"] < config["weekly_new"]:

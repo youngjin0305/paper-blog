@@ -1,6 +1,7 @@
 """Public metadata and PDF retrieval; visual excerpts are handled separately."""
 from datetime import datetime, timedelta
 import json
+from html import unescape
 from email.utils import parsedate_to_datetime
 from hashlib import sha256
 from html.parser import HTMLParser
@@ -125,6 +126,44 @@ class Sources:
                 published = datetime.fromisoformat(item["published"])
                 if cutoff <= published <= current:
                     papers.append(item)
+        if self.config.get("use_tosc"):
+            try:
+                papers.extend(self.recent_tosc(current))
+            except (requests.RequestException, ValueError) as exc:
+                self.log(f"ToSC catalog unavailable ({type(exc).__name__}); using other sources")
+        return papers
+
+    def recent_tosc(self, current):
+        """Read deposited articles and version-of-record PDFs from ToSC's journal feed."""
+        # Issues appear in batches. Keep a rolling window so a weekly cap does not lose the whole issue.
+        cutoff = current - timedelta(days=90)
+        response = self.get("https://api.crossref.org/journals/2519-173X/works", params={
+            "filter": f"from-pub-date:{cutoff.date()},until-pub-date:{current.date()},type:journal-article",
+            "sort": "published", "order": "desc", "rows": 100,
+        })
+        papers = []
+        for record in response.json()["message"]["items"]:
+            doi = record.get("DOI", "").lower()
+            if not re.fullmatch(r"10\.46586/tosc\.[a-z0-9.-]+", doi):
+                continue
+            date = record.get("published", {}).get("date-parts", [[]])[0]
+            titles = record.get("title") or []
+            authors = [" ".join(filter(None, (a.get("given"), a.get("family")))) for a in record.get("author", [])]
+            abstract = " ".join(unescape(re.sub(r"<[^>]*>", " ", record.get("abstract") or "")).split())
+            pdf_url = next((link["URL"] for link in (record.get("link") or [])
+                            if link.get("content-type") == "application/pdf" and link.get("content-version") == "vor"
+                            and re.fullmatch(r"https://tosc\.iacr\.org/index\.php/ToSC/article/download/\d+(?:/\d+)+", link.get("URL", ""))), None)
+            if len(date) != 3 or not titles or not authors or not all(authors) or not abstract or not pdf_url:
+                continue
+            url = "https://doi.org/" + doi
+            source, identifier = identify(url)
+            subtitle = (record.get("subtitle") or [""])[0]
+            title = f"{titles[0]}: {subtitle}" if subtitle else titles[0]
+            papers.append({"id": identifier, "source": source, "title": title, "authors": authors,
+                           "abstract": re.sub(r"^Abstract\s+", "", abstract), "url": url, "pdfUrl": pdf_url,
+                           "published": datetime(*date, tzinfo=UTC).isoformat(), "doi": doi,
+                           "journal_ref": "IACR Transactions on Symmetric Cryptology", "verifiedVenue": "ToSC",
+                           "categories": []})
         return papers
 
     def metadata(self, value):
@@ -265,6 +304,8 @@ class Sources:
                     return data
         try:
             data = self.download_pdf(paper["pdfUrl"])
+            if paper.get("verifiedVenue") == "ToSC":
+                self.verify_publisher_pdf(data, paper)
             if cache is not None and self.cache_writes:
                 atomic_write_bytes(cache / "downloaded.pdf", data)
                 saved = {key: paper.get(key) for key in ("id", "title", "authors", "pdfUrl")}

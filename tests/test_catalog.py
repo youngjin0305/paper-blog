@@ -148,7 +148,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(classify("Deep learning side-channel key recovery on AES")[0], 0)
 
     def test_collection_query_enforces_exclusions_before_fetching(self):
-        config = {**validate_pipeline(self.raw["pipeline"]), "use_eprint": False}
+        config = {**validate_pipeline(self.raw["pipeline"]), "use_eprint": False, "use_tosc": False}
         source = Sources(config)
         with patch.object(source, "arxiv", return_value=([], 0)) as fetch:
             self.assertEqual(source.recent(), [])
