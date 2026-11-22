@@ -5320,13 +5320,13 @@
       "localPdf": "data/papers/6483d032db3c1f7f4a5a/original.pdf",
       "topic_id": "cryptanalysis",
       "addedAt": "2026-11-18T14:55:35+00:00",
-      "status": "pinned",
+      "status": "failed",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
-      "failCount": 0,
+      "failCount": 1,
       "postPath": null,
       "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
     },
@@ -5348,15 +5348,53 @@
       "localPdf": "data/papers/ecb9778c2035bf77da16/original.pdf",
       "topic_id": "cryptanalysis",
       "addedAt": "2026-11-18T14:55:35+00:00",
-      "status": "pinned",
+      "status": "done",
       "score": 0,
       "scoreDetail": {},
       "rationale": "",
       "weeksInQueue": 0,
       "lastRankedAt": null,
       "failCount": 0,
-      "postPath": null,
-      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관"
+      "postPath": "content/cryptanalysis/2020-04-22-84059b2b150183ec79d2.md",
+      "note": "2026-11-18 재개: 공개 서지·PDF 제목·저자 대조 후 원본 보관",
+      "researchCandidate": {
+        "contribution": "모든 SIMON 변형의 가역 양자 회로를 설계하고, Grover 키 탐색에 필요한 게이트·T-depth·큐비트 자원을 추정했다. 축소형은 IBM 양자 시뮬레이터에서 검증했다.",
+        "studies": [
+          {
+            "target": "SIMON 전체 변형",
+            "method": "quantum",
+            "goal": "알려진 평문·암호문 쌍을 이용한 Grover 키 탐색의 자원 비용 추정",
+            "conditions": "모든 변형; 알려진 평문·암호문 쌍 사용; 변형별 라운드와 쌍의 수는 표 1·4에 기재"
+          },
+          {
+            "target": "축소형 SIMON",
+            "method": "quantum",
+            "goal": "Grover 오라클의 시뮬레이터 실행 검증",
+            "conditions": "6비트 키·6비트 상태, 4라운드; IBMQ 시뮬레이터 사용"
+          }
+        ],
+        "limitations": "큐비트 수의 제약으로 실제 프로세서에서 전체 규모의 SIMON을 실행하지 못했다. 축소형 암호 회로의 실제 프로세서 출력에는 게이트 오류와 짧은 결맞음 시간에 따른 큰 오류가 있었으며, Grover 회로는 실제 프로세서에서 실행하지 않았다.",
+        "relations": [],
+        "status": "pending",
+        "basis": "fulltext",
+        "evidence": {
+          "url": "https://arxiv.org/pdf/2004.10686v2",
+          "locator": "1절 Our Contribution; 2.4절; 3.3–3.5절, 표 1·4",
+          "checkedAt": "2026-11-22T00:05:32+00:00"
+        }
+      },
+      "graphReferences": [
+        {
+          "citedId": "arxiv:1510.05836",
+          "evidence": {
+            "url": "https://arxiv.org/pdf/2004.10686v2",
+            "origin": "original-references",
+            "match": "title",
+            "excerpt": "rrier, A. and Naya-Plasencia, M., 2015. Quantum differential and linear cryptanalysis. IACR Transactions on Symmetric Cryptology (2016): 71-94.",
+            "checkedAt": "2026-11-22T00:00:05+00:00"
+          }
+        }
+      ]
     },
     {
       "id": "arxiv:2012.08321",
